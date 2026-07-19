@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Detalhes do evento esportivo na IngressoTop."
+  >
+
+  <meta name="theme-color" content="#8ec8ff">
+
+  <title>Evento | IngressoTop</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/images/favicon.png"
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/style.css"
+  >
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+
+      <a class="brand" href="index.html">
+        <img
+          src="assets/images/logo-ingressotop.png"
+          alt="IngressoTop"
+        >
+      </a>
+
+      <nav class="main-nav">
+        <a href="index.html#eventos">Eventos</a>
+        <a href="index.html#como-funciona">Como funciona</a>
+        <a href="index.html#organizadores">Organizadores</a>
+        <a href="index.html#contato">Contato</a>
+      </nav>
+
+      <div class="nav-actions">
+        <a
+          class="btn btn-outline"
+          href="index.html#organizadores"
+        >
+          Criar evento <span>＋</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <section
+      class="event-page"
+      id="eventPage"
+    >
+
+      <div
+        class="container"
+        id="eventLoading"
+      >
+        <div class="starter-empty">
+          <div class="starter-icon">⌛</div>
+
+          <h3>Carregando evento...</h3>
+
+          <p>
+            Aguarde enquanto buscamos as informações.
+          </p>
+        </div>
+      </div>
+
+
+      <div
+        class="container hidden"
+        id="eventContent"
+      >
+
+        <a
+          class="event-back-link"
+          href="index.html#eventos"
+        >
+          ← Voltar para eventos
+        </a>
+
+
+        <div class="event-page-grid">
+
+          <div class="event-page-main">
+
+            <div
+              class="event-page-banner"
+              id="eventBanner"
+            >
+              <span
+                class="event-page-symbol"
+                id="eventSymbol"
+              >
+                🏆
+              </span>
+            </div>
+
+
+            <div class="event-page-info">
+
+              <div class="event-page-tags">
+
+                <span
+                  class="pill"
+                  id="eventType"
+                >
+                  Evento
+                </span>
+
+                <span id="eventDate">
+                  Data a definir
+                </span>
+
+              </div>
+
+
+              <h1 id="eventName">
+                Nome do evento
+              </h1>
+
+
+              <p
+                class="event-page-location"
+                id="eventLocation"
+              >
+                Local a definir
+              </p>
+
+
+              <div class="event-page-description">
+
+                <h2>Sobre o evento</h2>
+
+                <p id="eventDescription">
+                  Informações do evento.
+                </p>
+
+              </div>
+
+            </div>
+          </div>
+
+
+          <aside class="event-page-sidebar">
+
+            <div class="event-registration-card">
+
+              <span class="eyebrow">
+                INSCRIÇÃO
+              </span>
+
+              <p class="event-price-label">
+                Valor da inscrição
+              </p>
+
+              <strong
+                class="event-page-price"
+                id="eventPrice"
+              >
+                Valor não informado
+              </strong>
+
+              <button
+                class="btn btn-primary full"
+                id="registrationButton"
+                type="button"
+              >
+                Fazer inscrição
+              </button>
+
+              <small>
+                O formulário de inscrição será conectado
+                na próxima etapa.
+              </small>
+
+            </div>
+
+          </aside>
+
+        </div>
+
+      </div>
+
+
+      <div
+        class="container hidden"
+        id="eventError"
+      >
+        <div class="starter-empty">
+
+          <div class="starter-icon">!</div>
+
+          <h3>Evento não encontrado</h3>
+
+          <p>
+            O evento solicitado não existe ou não está publicado.
+          </p>
+
+          <a
+            class="btn btn-primary"
+            href="index.html#eventos"
+          >
+            Ver outros eventos
+          </a>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+
+  <footer
+    class="site-footer"
+    id="contato"
+  >
+    <div class="container footer-grid">
+
+      <div class="footer-brand">
+
+        <img
+          src="assets/images/logo-ingressotop.png"
+          alt="IngressoTop"
+        >
+
+        <p>
+          Eventos que te levam mais longe.
+        </p>
+
+      </div>
+
+      <div>
+        <h3>Plataforma</h3>
+        <a href="index.html#eventos">Eventos</a>
+        <a href="index.html#como-funciona">Como funciona</a>
+        <a href="index.html#organizadores">Organizadores</a>
+      </div>
+
+      <div>
+        <h3>Contato</h3>
+
+        <a href="mailto:contato@ingressotop.com.br">
+          contato@ingressotop.com.br
+        </a>
+
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp</a>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <span>
+        © <span id="year"></span> IngressoTop.
+      </span>
+
+      <span>
+        Plataforma de eventos esportivos.
+      </span>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/evento.js"></script>
+
+</body>
+</html>
