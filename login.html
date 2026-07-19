@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | CorraAgora</title>
+
+    <link rel="stylesheet" href="assets/css/auth.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase.js"></script>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <img src="assets/images/logo-corraagora.png" class="logo">
+
+        <h1>Entrar</h1>
+
+        <p>Faça login para acessar o painel do organizador.</p>
+
+        <form id="loginForm">
+
+            <input
+                type="email"
+                id="email"
+                placeholder="E-mail"
+                required
+            >
+
+            <input
+                type="password"
+                id="password"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">
+                Entrar
+            </button>
+
+        </form>
+
+        <a href="cadastro.html">
+            Criar uma conta
+        </a>
+
+    </div>
+
+</div>
+
+<script src="assets/js/auth.js"></script>
+
+</body>
+</html>
