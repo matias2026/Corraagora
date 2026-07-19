@@ -2,119 +2,552 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="IngressoTop — inscrições rápidas e seguras para eventos esportivos.">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="IngressoTop — inscrições rápidas e seguras para eventos esportivos."
+  >
+
   <meta name="theme-color" content="#8ec8ff">
+
   <title>IngressoTop | Eventos esportivos</title>
-  <link rel="icon" type="image/png" href="assets/images/favicon.png">
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="assets/images/favicon.png"
+  >
+
   <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/style.css"
+  >
 </head>
+
 <body>
+
   <header class="site-header">
     <div class="container nav-wrap">
-      <a class="brand" href="#inicio"><img src="assets/images/logo-ingressotop.png" alt="IngressoTop"></a>
-      <button class="menu-toggle" type="button" aria-label="Abrir menu" aria-expanded="false"><span></span><span></span><span></span></button>
+
+      <a class="brand" href="#inicio">
+        <img
+          src="assets/images/logo-ingressotop.png"
+          alt="IngressoTop"
+        >
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <nav class="main-nav">
-        <a href="#eventos">Eventos</a><a href="#como-funciona">Como funciona</a><a href="#organizadores">Organizadores</a><a href="#sobre">Sobre</a><a href="#contato">Contato</a>
+        <a href="#eventos">Eventos</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#organizadores">Organizadores</a>
+        <a href="#sobre">Sobre</a>
+        <a href="#contato">Contato</a>
       </nav>
+
       <div class="nav-actions">
-        <a class="btn btn-outline" href="#organizadores">Criar evento <span>＋</span></a>
-        <button class="login-link" type="button" id="loginButton"><span class="user-icon"></span>Entrar</button>
+
+        <a
+          class="btn btn-outline"
+          href="#organizadores"
+        >
+          Criar evento <span>＋</span>
+        </a>
+
+        <button
+          class="login-link"
+          type="button"
+          id="loginButton"
+        >
+          <span class="user-icon"></span>
+          Entrar
+        </button>
+
       </div>
     </div>
   </header>
 
+
   <main id="inicio">
+
     <section class="hero">
-      <div class="hero-glow hero-glow-one"></div><div class="hero-glow hero-glow-two"></div>
+
+      <div class="hero-glow hero-glow-one"></div>
+      <div class="hero-glow hero-glow-two"></div>
+
       <div class="container hero-grid">
+
         <div class="hero-content">
-          <span class="eyebrow">EVENTOS ESPORTIVOS EM UM SÓ LUGAR</span>
-          <h1>Encontre os melhores <strong>eventos esportivos</strong></h1>
-          <p>Inscreva-se de forma rápida, segura e prática nos principais eventos esportivos do Brasil.</p>
-          <div class="hero-actions"><a class="btn btn-primary" href="#eventos">🎟 Ver eventos</a><a class="btn btn-soft" href="#como-funciona">ⓘ Como funciona</a></div>
-        </div>
-        <div class="hero-ticket" aria-hidden="true"><div class="ticket-shape"><span class="speed speed-1"></span><span class="speed speed-2"></span><span class="speed speed-3"></span><div class="runner"><span class="runner-head"></span><span class="runner-body"></span><span class="runner-arm"></span><span class="runner-leg runner-leg-one"></span><span class="runner-leg runner-leg-two"></span></div></div></div>
-      </div>
-      <div class="container search-panel">
-        <label class="search-field search-main"><span>⌕</span><input id="searchInput" type="search" placeholder="Buscar evento, cidade ou modalidade..."></label>
-        <label class="search-field"><span>⌖</span><select id="cityFilter"><option value="">Todas as cidades</option><option>Nísia Floresta</option><option>Natal</option><option>João Pessoa</option><option>Serra de Martins</option></select></label>
-        <label class="search-field"><span>▣</span><select id="typeFilter"><option value="">Todas as modalidades</option><option>MTB</option><option>Corrida</option><option>Triathlon</option><option>Off-road</option></select></label>
-        <button class="btn btn-primary search-button" id="searchButton" type="button">Buscar eventos</button>
-      </div>
-    </section>
 
-    <section class="events-section section" id="eventos">
-      <div class="container">
-        <div class="section-heading"><div><span class="eyebrow">ESCOLHA SEU PRÓXIMO DESAFIO</span><h2>Eventos em destaque</h2></div><button class="link-button" id="showAllButton" type="button">Ver todos →</button></div>
-        <div class="events-grid" id="eventsGrid">
-          <!--
-            ADICIONE SEU PRIMEIRO EVENTO AQUI.
+          <span class="eyebrow">
+            EVENTOS ESPORTIVOS EM UM SÓ LUGAR
+          </span>
 
-            Copie este modelo e altere os dados:
+          <h1>
+            Encontre os melhores
+            <strong>eventos esportivos</strong>
+          </h1>
 
-            <article class="event-card" data-name="Nome do evento" data-city="Cidade" data-type="Modalidade">
-              <div class="event-cover cover-mtb">
-                <span class="date-badge"><strong>03</strong> MAI</span>
-                <span class="cover-symbol">🏃</span>
-              </div>
-              <div class="event-body">
-                <div class="event-meta">
-                  <span class="pill">CORRIDA</span>
-                  <span>📅 03 Mai 2027</span>
-                </div>
-                <span class="location">⌖ Cidade - UF</span>
-                <h3>Nome do evento</h3>
-                <p>Descrição curta do evento</p>
-                <a class="event-link active" href="LINK_DO_EVENTO" target="_blank" rel="noopener">Ver evento</a>
-              </div>
-            </article>
-          -->
-        </div>
+          <p>
+            Inscreva-se de forma rápida, segura e prática
+            nos principais eventos esportivos do Brasil.
+          </p>
 
-        <div class="starter-empty" id="starterEmpty">
-          <div class="starter-icon">＋</div>
-          <h3>Nenhum evento cadastrado</h3>
-          <p>O site está pronto para você aprender a adicionar seu primeiro evento.</p>
-          <a class="btn btn-primary" href="#como-adicionar">Ver como adicionar</a>
-        </div>
+          <div class="hero-actions">
 
-        <section class="add-guide" id="como-adicionar">
-          <span class="eyebrow">PRIMEIRO PASSO</span>
-          <h2>Como adicionar seu primeiro evento</h2>
-          <p>Abra o arquivo <strong>index.html</strong>, procure por <code>ADICIONE SEU PRIMEIRO EVENTO AQUI</code> e copie o modelo comentado.</p>
-          <div class="guide-grid">
-            <article><span>1</span><h3>Copie o modelo</h3><p>Copie o bloco completo do evento que está dentro do comentário.</p></article>
-            <article><span>2</span><h3>Altere os dados</h3><p>Troque nome, cidade, modalidade, data, descrição e link.</p></article>
-            <article><span>3</span><h3>Salve e publique</h3><p>Salve o arquivo, faça commit no GitHub e a Vercel atualizará automaticamente.</p></article>
+            <a
+              class="btn btn-primary"
+              href="#eventos"
+            >
+              🎟 Ver eventos
+            </a>
+
+            <a
+              class="btn btn-soft"
+              href="#como-funciona"
+            >
+              ⓘ Como funciona
+            </a>
+
           </div>
-        </section>
+        </div>
 
-        <p class="empty-state hidden" id="emptyState">Nenhum evento encontrado com esses filtros.</p>
+        <div
+          class="hero-ticket"
+          aria-hidden="true"
+        >
+          <div class="ticket-shape">
+
+            <span class="speed speed-1"></span>
+            <span class="speed speed-2"></span>
+            <span class="speed speed-3"></span>
+
+            <div class="runner">
+              <span class="runner-head"></span>
+              <span class="runner-body"></span>
+              <span class="runner-arm"></span>
+              <span class="runner-leg runner-leg-one"></span>
+              <span class="runner-leg runner-leg-two"></span>
+            </div>
+
+          </div>
+        </div>
+
+      </div>
+
+
+      <div class="container search-panel">
+
+        <label class="search-field search-main">
+          <span>⌕</span>
+
+          <input
+            id="searchInput"
+            type="search"
+            placeholder="Buscar evento, cidade ou modalidade..."
+          >
+        </label>
+
+        <label class="search-field">
+          <span>⌖</span>
+
+          <select id="cityFilter">
+            <option value="">Todas as cidades</option>
+            <option value="Nísia Floresta">Nísia Floresta</option>
+            <option value="Natal">Natal</option>
+            <option value="João Pessoa">João Pessoa</option>
+            <option value="Serra de Martins">Serra de Martins</option>
+          </select>
+        </label>
+
+        <label class="search-field">
+          <span>▣</span>
+
+          <select id="typeFilter">
+            <option value="">Todas as modalidades</option>
+            <option value="MTB">MTB</option>
+            <option value="Corrida">Corrida</option>
+            <option value="Triathlon">Triathlon</option>
+            <option value="Off-road">Off-road</option>
+          </select>
+        </label>
+
+        <button
+          class="btn btn-primary search-button"
+          id="searchButton"
+          type="button"
+        >
+          Buscar eventos
+        </button>
+
+      </div>
+
+    </section>
+
+
+    <section
+      class="events-section section"
+      id="eventos"
+    >
+      <div class="container">
+
+        <div class="section-heading">
+
+          <div>
+            <span class="eyebrow">
+              ESCOLHA SEU PRÓXIMO DESAFIO
+            </span>
+
+            <h2>Eventos em destaque</h2>
+          </div>
+
+          <button
+            class="link-button"
+            id="showAllButton"
+            type="button"
+          >
+            Ver todos →
+          </button>
+
+        </div>
+
+
+        <div
+          class="events-grid"
+          id="eventsGrid"
+        ></div>
+
+
+        <div
+          class="starter-empty"
+          id="starterEmpty"
+        >
+          <div class="starter-icon">＋</div>
+
+          <h3>Nenhum evento cadastrado</h3>
+
+          <p>
+            Ainda não existem eventos publicados na plataforma.
+          </p>
+        </div>
+
+
+        <p
+          class="empty-state hidden"
+          id="emptyState"
+        >
+          Nenhum evento encontrado com esses filtros.
+        </p>
+
       </div>
     </section>
 
-    <section class="trust-strip"><div class="container trust-grid">
-      <div class="trust-item"><span>✓</span><div><strong>Seguro e confiável</strong><small>Seus dados protegidos com segurança.</small></div></div>
-      <div class="trust-item"><span>ϟ</span><div><strong>Inscrição rápida</strong><small>Processo simples e 100% online.</small></div></div>
-      <div class="trust-item"><span>▤</span><div><strong>Comprovante na hora</strong><small>Confirmação organizada e acessível.</small></div></div>
-      <div class="trust-item"><span>◉</span><div><strong>Suporte dedicado</strong><small>Atendimento próximo ao organizador.</small></div></div>
-    </div></section>
 
-    <section class="section how-section" id="como-funciona"><div class="container"><div class="center-heading"><span class="eyebrow">SIMPLES DO INÍCIO AO FIM</span><h2>Como funciona</h2><p>Três passos para garantir sua participação.</p></div><div class="steps-grid"><article><span>1</span><h3>Escolha o evento</h3><p>Encontre a prova ideal por modalidade, cidade ou data.</p></article><article><span>2</span><h3>Faça sua inscrição</h3><p>Preencha seus dados e escolha a categoria correta.</p></article><article><span>3</span><h3>Receba a confirmação</h3><p>Acompanhe o status e fique pronto para o desafio.</p></article></div></div></section>
+    <section class="trust-strip">
+      <div class="container trust-grid">
 
-    <section class="section organizer-section" id="organizadores"><div class="container organizer-card"><div><span class="eyebrow">PARA ORGANIZADORES</span><h2>Seu evento merece uma inscrição profissional.</h2><p>Cadastre participantes, acompanhe pagamentos, visualize comprovantes e exporte relatórios em um painel simples.</p><a class="btn btn-primary" href="mailto:contato@ingressotop.com.br?subject=Quero cadastrar meu evento">Quero cadastrar meu evento</a></div><div class="organizer-preview"><div class="preview-top"><span></span><span></span><span></span></div><div class="preview-chart"><i></i><i></i><i></i><i></i><i></i></div><div class="preview-list"><b></b><b></b><b></b></div></div></div></section>
+        <div class="trust-item">
+          <span>✓</span>
 
-    <section class="section about-section" id="sobre"><div class="container about-grid"><div><span class="eyebrow">SOBRE A PLATAFORMA</span><h2>Mais do que inscrições. É o próximo desafio.</h2></div><p>A IngressoTop foi pensada para aproximar atletas e organizadores com uma experiência leve, segura e feita para eventos esportivos de todos os tamanhos.</p></div></section>
+          <div>
+            <strong>Seguro e confiável</strong>
+            <small>Seus dados protegidos com segurança.</small>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <span>ϟ</span>
+
+          <div>
+            <strong>Inscrição rápida</strong>
+            <small>Processo simples e 100% online.</small>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <span>▤</span>
+
+          <div>
+            <strong>Comprovante na hora</strong>
+            <small>Confirmação organizada e acessível.</small>
+          </div>
+        </div>
+
+        <div class="trust-item">
+          <span>◉</span>
+
+          <div>
+            <strong>Suporte dedicado</strong>
+            <small>Atendimento próximo ao organizador.</small>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+
+    <section
+      class="section how-section"
+      id="como-funciona"
+    >
+      <div class="container">
+
+        <div class="center-heading">
+
+          <span class="eyebrow">
+            SIMPLES DO INÍCIO AO FIM
+          </span>
+
+          <h2>Como funciona</h2>
+
+          <p>
+            Três passos para garantir sua participação.
+          </p>
+
+        </div>
+
+        <div class="steps-grid">
+
+          <article>
+            <span>1</span>
+            <h3>Escolha o evento</h3>
+            <p>
+              Encontre a prova ideal por modalidade,
+              cidade ou data.
+            </p>
+          </article>
+
+          <article>
+            <span>2</span>
+            <h3>Faça sua inscrição</h3>
+            <p>
+              Preencha seus dados e escolha a categoria correta.
+            </p>
+          </article>
+
+          <article>
+            <span>3</span>
+            <h3>Receba a confirmação</h3>
+            <p>
+              Acompanhe o status e fique pronto para o desafio.
+            </p>
+          </article>
+
+        </div>
+      </div>
+    </section>
+
+
+    <section
+      class="section organizer-section"
+      id="organizadores"
+    >
+      <div class="container organizer-card">
+
+        <div>
+
+          <span class="eyebrow">
+            PARA ORGANIZADORES
+          </span>
+
+          <h2>
+            Seu evento merece uma inscrição profissional.
+          </h2>
+
+          <p>
+            Cadastre participantes, acompanhe pagamentos,
+            visualize comprovantes e exporte relatórios
+            em um painel simples.
+          </p>
+
+          <a
+            class="btn btn-primary"
+            href="mailto:contato@ingressotop.com.br?subject=Quero cadastrar meu evento"
+          >
+            Quero cadastrar meu evento
+          </a>
+
+        </div>
+
+        <div class="organizer-preview">
+
+          <div class="preview-top">
+            <span></span>
+            <span></span>
+            <span></span>
+          </div>
+
+          <div class="preview-chart">
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+            <i></i>
+          </div>
+
+          <div class="preview-list">
+            <b></b>
+            <b></b>
+            <b></b>
+          </div>
+
+        </div>
+
+      </div>
+    </section>
+
+
+    <section
+      class="section about-section"
+      id="sobre"
+    >
+      <div class="container about-grid">
+
+        <div>
+          <span class="eyebrow">
+            SOBRE A PLATAFORMA
+          </span>
+
+          <h2>
+            Mais do que inscrições.
+            É o próximo desafio.
+          </h2>
+        </div>
+
+        <p>
+          A IngressoTop foi pensada para aproximar atletas
+          e organizadores com uma experiência leve, segura
+          e feita para eventos esportivos de todos os tamanhos.
+        </p>
+
+      </div>
+    </section>
+
   </main>
 
-  <footer class="site-footer" id="contato"><div class="container footer-grid"><div class="footer-brand"><img src="assets/logo-ingressotop.png" alt="IngressoTop"><p>Eventos que te levam mais longe.</p></div><div><h3>Plataforma</h3><a href="#eventos">Eventos</a><a href="#como-funciona">Como funciona</a><a href="#organizadores">Organizadores</a></div><div><h3>Contato</h3><a href="mailto:contato@ingressotop.com.br">contato@ingressotop.com.br</a><a href="#">Instagram</a><a href="#">WhatsApp</a></div></div><div class="container footer-bottom"><span>© <span id="year"></span> IngressoTop.</span><span>Projeto inicial da plataforma.</span></div></footer>
 
-  <div class="modal hidden" id="loginModal"><div class="modal-card"><button class="modal-close" id="modalClose" type="button">×</button><span class="eyebrow">ÁREA RESTRITA</span><h2>Acesso do organizador</h2><p>O login será conectado ao Supabase na próxima etapa.</p><button class="btn btn-primary full" id="modalOk" type="button">Entendi</button></div></div>
-<script src="assets/js/events.js"></script>
-<script src="assets/js/script.js"></script>
+  <footer
+    class="site-footer"
+    id="contato"
+  >
+    <div class="container footer-grid">
+
+      <div class="footer-brand">
+
+        <img
+          src="assets/images/logo-ingressotop.png"
+          alt="IngressoTop"
+        >
+
+        <p>
+          Eventos que te levam mais longe.
+        </p>
+
+      </div>
+
+      <div>
+        <h3>Plataforma</h3>
+        <a href="#eventos">Eventos</a>
+        <a href="#como-funciona">Como funciona</a>
+        <a href="#organizadores">Organizadores</a>
+      </div>
+
+      <div>
+        <h3>Contato</h3>
+
+        <a href="mailto:contato@ingressotop.com.br">
+          contato@ingressotop.com.br
+        </a>
+
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp</a>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <span>
+        © <span id="year"></span> IngressoTop.
+      </span>
+
+      <span>
+        Projeto inicial da plataforma.
+      </span>
+    </div>
+
+  </footer>
+
+
+  <div
+    class="modal hidden"
+    id="loginModal"
+  >
+    <div class="modal-card">
+
+      <button
+        class="modal-close"
+        id="modalClose"
+        type="button"
+      >
+        ×
+      </button>
+
+      <span class="eyebrow">
+        ÁREA RESTRITA
+      </span>
+
+      <h2>
+        Acesso do organizador
+      </h2>
+
+      <p>
+        O login será conectado ao Supabase
+        na próxima etapa.
+      </p>
+
+      <button
+        class="btn btn-primary full"
+        id="modalOk"
+        type="button"
+      >
+        Entendi
+      </button>
+
+    </div>
+  </div>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/events.js"></script>
+  <script src="assets/js/script.js"></script>
+
 </body>
 </html>
