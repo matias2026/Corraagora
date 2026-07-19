@@ -12,5 +12,17 @@ function filterEvents(){const term=norm(searchInput.value),city=norm(cityFilter.
 document.getElementById('searchButton')?.addEventListener('click',filterEvents);searchInput?.addEventListener('input',filterEvents);cityFilter?.addEventListener('change',filterEvents);typeFilter?.addEventListener('change',filterEvents);
 document.getElementById('showAllButton')?.addEventListener('click',()=>{searchInput.value='';cityFilter.value='';typeFilter.value='';filterEvents()});
 document.querySelectorAll('.soon').forEach(b=>b.addEventListener('click',()=>{b.textContent='Evento em preparação';setTimeout(()=>b.textContent='Em breve',1600)}));
-const modal=document.getElementById('loginModal');const close=()=>modal.classList.add('hidden');document.getElementById('loginButton')?.addEventListener('click',()=>modal.classList.remove('hidden'));document.getElementById('modalClose')?.addEventListener('click',close);document.getElementById('modalOk')?.addEventListener('click',close);modal?.addEventListener('click',e=>{if(e.target===modal)close()});document.addEventListener('keydown',e=>{if(e.key==='Escape')close()});
+document.getElementById("loginButton")?.addEventListener("click", async () => {
+
+    const {
+        data: { session }
+    } = await supabaseClient.auth.getSession();
+
+    if (session) {
+        window.location.href = "organizador/index.html";
+    } else {
+        window.location.href = "login.html";
+    }
+
+});
 document.getElementById('year').textContent=new Date().getFullYear();
