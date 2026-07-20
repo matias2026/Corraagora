@@ -20,6 +20,21 @@ mainNav?.querySelectorAll('a').forEach((link) => {
     document.body.classList.remove('menu-open');
   });
 });
+window.addEventListener('resize', () => {
+  if (window.innerWidth > 760 && mainNav) {
+    mainNav.classList.remove('open');
+    menuToggle?.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('menu-open');
+  }
+});
+
+document.addEventListener('keydown', (event) => {
+  if (event.key !== 'Escape' || !mainNav) return;
+
+  mainNav.classList.remove('open');
+  menuToggle?.setAttribute('aria-expanded', 'false');
+  document.body.classList.remove('menu-open');
+});
 
 const normalizeText = (value) => String(value ?? '')
   .normalize('NFD')
