@@ -1,114 +1,115 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Painel do Organizador | CorraAgora</title>
 
-    <title>Painel do Organizador | CorraAgora</title>
+<link rel="stylesheet" href="../assets/css/dashboard.css">
 
-    <link rel="stylesheet" href="../assets/css/dashboard.css">
-
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <script src="../assets/js/supabase.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="../assets/js/supabase.js"></script>
 </head>
 
 <body>
 
 <div class="dashboard-layout">
 
-    <aside class="sidebar">
+<aside class="sidebar">
 
-        <a href="index.html" class="sidebar-brand">
-            <img
-                src="../images/logo-corraagora-compacta.png"
-                alt="CorraAgora">
-        </a>
+<a href="index.html" class="sidebar-brand">
+<img src="../images/logo-corraagora-compacta.png" alt="CorraAgora">
+</a>
 
-        <nav class="sidebar-nav">
+<nav class="sidebar-nav">
+<a href="index.html" class="active">🏠 Dashboard</a>
+<a href="eventos.html">🏁 Meus eventos</a>
+<a href="novo-evento.html">➕ Novo evento</a>
+<a href="inscritos.html">👥 Inscritos</a>
 
-            <a href="index.html" class="active">
-                Dashboard
-            </a>
+<button id="logoutButton" type="button">
+🚪 Sair
+</button>
+</nav>
 
-            <a href="eventos.html">
-                Meus eventos
-            </a>
+</aside>
 
-            <a href="novo-evento.html">
-                Novo evento
-            </a>
+<main class="dashboard-main">
 
-            <a href="inscritos.html">
-                Inscritos
-            </a>
+<header class="dashboard-header">
 
-            <button id="logoutButton" type="button">
-                Sair
-            </button>
+<div>
 
-        </nav>
+<p class="eyebrow">
+PAINEL DO ORGANIZADOR
+</p>
 
-    </aside>
+<h1>
+Olá, <span id="organizerName">Organizador</span> 👋
+</h1>
 
-    <main class="dashboard-main">
+<p class="dashboard-subtitle">
+Gerencie seus eventos, acompanhe inscrições e publique novas provas em poucos minutos.
+</p>
 
-        <header class="dashboard-header">
+</div>
 
-            <div>
-                <p class="eyebrow">PAINEL DO ORGANIZADOR</p>
-                <h1>Bem-vindo ao CorraAgora</h1>
-            </div>
+<a href="novo-evento.html" class="primary-button">
++ Criar novo evento
+</a>
 
-            <div class="user-info">
-                <span id="organizerName">Organizador</span>
-            </div>
+</header>
 
-        </header>
+<section class="summary-grid">
 
-        <section class="summary-grid">
+<article class="summary-card">
+<div class="summary-icon">🏁</div>
+<span>Eventos publicados</span>
+<strong id="totalEvents">0</strong>
+</article>
 
-            <article class="summary-card">
-                <span>Eventos publicados</span>
-                <strong id="totalEvents">0</strong>
-            </article>
+<article class="summary-card">
+<div class="summary-icon">👥</div>
+<span>Total de inscritos</span>
+<strong id="totalRegistrations">0</strong>
+</article>
 
-            <article class="summary-card">
-                <span>Total de inscritos</span>
-                <strong id="totalRegistrations">0</strong>
-            </article>
+<article class="summary-card">
+<div class="summary-icon">✅</div>
+<span>Inscrições confirmadas</span>
+<strong id="confirmedRegistrations">0</strong>
+</article>
 
-            <article class="summary-card">
-                <span>Inscrições confirmadas</span>
-                <strong id="confirmedRegistrations">0</strong>
-            </article>
+<article class="summary-card">
+<div class="summary-icon">📅</div>
+<span>Próximo evento</span>
+<strong id="nextEvent">Nenhum</strong>
+</article>
 
-            <article class="summary-card">
-                <span>Próximo evento</span>
-                <strong id="nextEvent">Nenhum</strong>
-            </article>
+</section>
 
-        </section>
+<section class="dashboard-section">
 
-        <section class="dashboard-section">
+<div class="section-header">
 
-            <div class="section-header">
-                <div>
-                    <p class="eyebrow">EVENTOS</p>
-                    <h2>Seus eventos recentes</h2>
-                </div>
+<div>
+<p class="eyebrow">SEUS EVENTOS</p>
+<h2>Eventos recentes</h2>
+</div>
 
-                <a href="novo-evento.html" class="primary-button">
-                    Criar evento
-                </a>
-            </div>
+<a href="novo-evento.html" class="primary-button">
+Criar evento
+</a>
 
-            <div id="eventsList" class="events-list">
-                <p>Carregando eventos...</p>
-            </div>
+</div>
 
-        </section>
+<div id="eventsList" class="events-list">
+<p>Carregando eventos...</p>
+</div>
 
-    </main>
+</section>
+
+</main>
 
 </div>
 

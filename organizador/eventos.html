@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Meus Eventos | CorraAgora</title>
+
+    <link rel="stylesheet"
+          href="../assets/css/dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../assets/js/supabase.js"></script>
+
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <a href="index.html"
+           class="sidebar-brand">
+
+            <img src="../images/logo-corraagora-compacta.png"
+                 alt="CorraAgora">
+
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html">
+                🏠 Dashboard
+            </a>
+
+            <a href="eventos.html"
+               class="active">
+                🏁 Meus eventos
+            </a>
+
+            <a href="novo-evento.html">
+                ➕ Novo evento
+            </a>
+
+            <a href="inscritos.html">
+                👥 Inscritos
+            </a>
+
+            <button id="logoutButton">
+                🚪 Sair
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    ORGANIZAÇÃO
+                </p>
+
+                <h1>
+                    Meus Eventos
+                </h1>
+
+                <p class="dashboard-subtitle">
+
+                    Gerencie todos os eventos publicados,
+                    acompanhe inscrições
+                    e edite informações sempre que precisar.
+
+                </p>
+
+            </div>
+
+            <a href="novo-evento.html"
+               class="primary-button">
+
+                + Criar evento
+
+            </a>
+
+        </header>
+
+        <section class="summary-grid">
+
+            <article class="summary-card">
+
+                <div class="summary-icon">
+                    🏁
+                </div>
+
+                <span>
+                    Eventos ativos
+                </span>
+
+                <strong id="totalEventos">
+                    0
+                </strong>
+
+            </article>
+
+            <article class="summary-card">
+
+                <div class="summary-icon">
+                    👥
+                </div>
+
+                <span>
+                    Total de inscritos
+                </span>
+
+                <strong id="totalInscritos">
+                    0
+                </strong>
+
+            </article>
+
+            <article class="summary-card">
+
+                <div class="summary-icon">
+                    ✅
+                </div>
+
+                <span>
+                    Confirmados
+                </span>
+
+                <strong id="totalConfirmados">
+                    0
+                </strong>
+
+            </article>
+
+            <article class="summary-card">
+
+                <div class="summary-icon">
+                    💰
+                </div>
+
+                <span>
+                    Receita
+                </span>
+
+                <strong id="receitaTotal">
+
+                    R$ 0,00
+
+                </strong>
+
+            </article>
+
+        </section>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+
+                <div>
+
+                    <p class="eyebrow">
+                        EVENTOS
+                    </p>
+
+                    <h2>
+                        Todos os eventos
+                    </h2>
+
+                </div>
+
+            </div>
+            <div class="events-toolbar">
+
+    <input
+        type="text"
+        id="searchEvento"
+        placeholder="🔍 Buscar evento..."
+    >
+
+    <select id="statusFiltro">
+
+        <option value="">
+            Todos
+        </option>
+
+        <option value="publicado">
+            Publicados
+        </option>
+
+        <option value="rascunho">
+            Rascunhos
+        </option>
+
+        <option value="encerrado">
+            Encerrados
+        </option>
+
+    </select>
+
+</div>
+
+            <div id="listaEventos" class="eventos-grid">
+
+    <div class="evento-card">
+
+        <div class="evento-banner">
+            🏁
+        </div>
+
+        <div class="evento-content">
+
+            <h3>2º Desafio MTB Nísia Floresta</h3>
+
+            <div class="evento-info">
+
+                <span>📅 03/05/2027</span>
+
+                <span>📍 Nísia Floresta • RN</span>
+
+                <span>🚴 MTB XCM</span>
+
+                <span>👥 126 inscritos</span>
+
+                <span>💰 R$ 120,00</span>
+
+            </div>
+
+            <div class="evento-actions">
+
+                <a href="editar-evento.html"
+                   class="btn-edit">
+                    ✏️ Editar
+                </a>
+
+                <a href="inscritos.html"
+                   class="btn-users">
+                    👥 Inscritos
+                </a>
+
+                <a href="#"
+                   class="btn-delete">
+                    🗑️ Excluir
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="../assets/js/eventos.js"></script>
+
+</body>
+
+</html>
