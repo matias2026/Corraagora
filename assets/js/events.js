@@ -12,27 +12,29 @@
   const showAllButton = document.getElementById("showAllButton");
 
   let todosOsEventos = [];
-  let mostrarTodos = false;
-
   async function carregarEventos() {
     mostrarCarregamento();
 
-    const { data, error } = await supabaseClient
-      .from("eventos")
-      .select("*")
-      .eq("status", "publicado")
-      .order("data_evento", { ascending: true });
+    try {
+      if (typeof supabaseClient === "undefined" || !supabaseClient?.from) {
+        throw new Error("Cliente do Supabase não configurado.");
+      }
 
-    if (error) {
+      const { data, error } = await supabaseClient
+        .from("eventos")
+        .select("*")
+        .eq("status", "publicado")
+        .order("data_evento", { ascending: true });
+
+      if (error) throw error;
+
+      todosOsEventos = Array.isArray(data) ? data : [];
+      preencherFiltroDeCidades();
+      exibirEventosIniciais();
+    } catch (error) {
       console.error("Erro ao carregar eventos:", error);
       mostrarErro();
-      return;
     }
-
-    todosOsEventos = data || [];
-
-    preencherFiltroDeCidades();
-    exibirEventosIniciais();
   }
 
   function exibirEventosIniciais() {
@@ -79,7 +81,7 @@
       .join("");
   }
 
-  {function criarCardEvento(evento) {
+  function criarCardEvento(evento) {
   const data = obterDadosDaData(evento.data_evento);
 
   const nome = escaparHTML(
@@ -175,11 +177,9 @@
 
     </article>
   `;
-}}
+  }
 
   function aplicarFiltros() {
-    mostrarTodos = true;
-
     const pesquisa = normalizarTexto(searchInput?.value || "");
     const cidadeSelecionada = normalizarTexto(
       cityFilter?.value || ""
@@ -232,8 +232,6 @@
   }
 
   function mostrarTodosOsEventos() {
-    mostrarTodos = true;
-
     if (searchInput) searchInput.value = "";
     if (cityFilter) cityFilter.value = "";
     if (typeFilter) typeFilter.value = "";
@@ -280,8 +278,29 @@
       };
     }
 
-    const [ano, mes, dia] = dataEvento.split("-").map(Number);
+    const partes = String(dataEvento).slice(0, 10).split("-").map(Number);
+    if (partes.length !== 3 || partes.some((parte) => !Number.isInteger(parte))) {
+      return {
+        dia: "--",
+        mes: "---",
+        dataCompleta: "Data a definir"
+      };
+    }
+
+    const [ano, mes, dia] = partes;
     const data = new Date(ano, mes - 1, dia);
+
+    if (
+      data.getFullYear() !== ano ||
+      data.getMonth() !== mes - 1 ||
+      data.getDate() !== dia
+    ) {
+      return {
+        dia: "--",
+        mes: "---",
+        dataCompleta: "Data a definir"
+      };
+    }
 
     const mesCurto = new Intl.DateTimeFormat("pt-BR", {
       month: "short"
@@ -314,7 +333,10 @@
       return "";
     }
 
-    return Number(valor).toLocaleString("pt-BR", {
+    const numero = Number(valor);
+    if (!Number.isFinite(numero) || numero < 0) return "";
+
+    return numero.toLocaleString("pt-BR", {
       style: "currency",
       currency: "BRL"
     });
@@ -416,9 +438,7 @@
   }
 
   function escaparAtributo(valor) {
-    return String(valor)
-      .replaceAll("\\", "\\\\")
-      .replaceAll("'", "\\'");
+    return escaparHTML(valor);
   }
 
   searchButton?.addEventListener("click", aplicarFiltros);
