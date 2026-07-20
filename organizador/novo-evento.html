@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Novo Evento | CorraAgora</title>
+
+    <link rel="stylesheet" href="../assets/css/dashboard.css">
+    <link rel="stylesheet" href="../assets/css/novo-evento.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <a href="index.html" class="sidebar-brand">
+            <img
+                src="../images/logo-corraagora-compacta.png"
+                alt="CorraAgora">
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html">
+                Dashboard
+            </a>
+
+            <a href="eventos.html">
+                Meus eventos
+            </a>
+
+            <a href="novo-evento.html" class="active">
+                Novo evento
+            </a>
+
+            <a href="inscritos.html">
+                Inscritos
+            </a>
+
+            <button id="logoutButton" type="button">
+                Sair
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div>
+                <p class="eyebrow">PAINEL DO ORGANIZADOR</p>
+                <h1>Criar novo evento</h1>
+            </div>
+
+            <div class="user-info">
+                <span id="organizerName">Organizador</span>
+            </div>
+
+        </header>
+
+        <section class="form-card">
+
+            <form id="eventForm" autocomplete="off">
+
+                <div class="form-section">
+                    <h2>Informações do evento</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group full-width">
+                            <label for="nome">Nome do evento</label>
+                            <input
+                                type="text"
+                                id="nome"
+                                placeholder="Ex.: 2º Desafio XCM Nísia Floresta"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="modalidade">Modalidade</label>
+
+                            <select id="modalidade" required>
+                                <option value="">Selecione</option>
+                                <option value="MTB">MTB</option>
+                                <option value="Speed">Ciclismo de estrada</option>
+                                <option value="Corrida">Corrida</option>
+                                <option value="Trail Run">Trail Run</option>
+                                <option value="Triathlon">Triathlon</option>
+                                <option value="Outro">Outro</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="status">Status</label>
+
+                            <select id="status" required>
+                                <option value="rascunho">Rascunho</option>
+                                <option value="publicado">Publicado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="descricao">Descrição</label>
+
+                            <textarea
+                                id="descricao"
+                                rows="6"
+                                placeholder="Descreva o evento, percurso, estrutura e informações importantes."></textarea>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Data e localização</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="dataEvento">Data</label>
+                            <input type="date" id="dataEvento" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="horarioEvento">Horário</label>
+                            <input type="time" id="horarioEvento">
+                        </div>
+
+                        <div class="form-group full-width">
+                            <label for="endereco">Endereço</label>
+
+                            <input
+                                type="text"
+                                id="endereco"
+                                placeholder="Local da largada ou endereço completo"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="cidade">Cidade</label>
+                            <input type="text" id="cidade" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="estado">Estado</label>
+
+                            <select id="estado" required>
+                                <option value="">Selecione</option>
+                                <option value="AC">AC</option>
+                                <option value="AL">AL</option>
+                                <option value="AP">AP</option>
+                                <option value="AM">AM</option>
+                                <option value="BA">BA</option>
+                                <option value="CE">CE</option>
+                                <option value="DF">DF</option>
+                                <option value="ES">ES</option>
+                                <option value="GO">GO</option>
+                                <option value="MA">MA</option>
+                                <option value="MT">MT</option>
+                                <option value="MS">MS</option>
+                                <option value="MG">MG</option>
+                                <option value="PA">PA</option>
+                                <option value="PB">PB</option>
+                                <option value="PR">PR</option>
+                                <option value="PE">PE</option>
+                                <option value="PI">PI</option>
+                                <option value="RJ">RJ</option>
+                                <option value="RN">RN</option>
+                                <option value="RS">RS</option>
+                                <option value="RO">RO</option>
+                                <option value="RR">RR</option>
+                                <option value="SC">SC</option>
+                                <option value="SP">SP</option>
+                                <option value="SE">SE</option>
+                                <option value="TO">TO</option>
+                            </select>
+                        </div>
+
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Inscrições</h2>
+
+                    <div class="form-grid">
+
+                        <div class="form-group">
+                            <label for="valor">Valor da inscrição</label>
+
+                            <input
+                                type="number"
+                                id="valor"
+                                min="0"
+                                step="0.01"
+                                placeholder="0,00"
+                                required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="vagas">Número de vagas</label>
+
+                            <input
+                                type="number"
+                                id="vagas"
+                                min="0"
+                                placeholder="Ex.: 150"
+                                required>
+                        </div>
+
+                        <label class="checkbox-card">
+                            <input
+                                type="checkbox"
+                                id="inscricoesAbertas"
+                                checked>
+
+                            <span>
+                                <strong>Inscrições abertas</strong>
+                                <small>Permitir novas inscrições neste evento.</small>
+                            </span>
+                        </label>
+
+                        <label class="checkbox-card">
+                            <input type="checkbox" id="destaque">
+
+                            <span>
+                                <strong>Evento em destaque</strong>
+                                <small>Destacar o evento na página principal.</small>
+                            </span>
+                        </label>
+
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Banner do evento</h2>
+
+                    <label class="upload-area" for="banner">
+                        <input
+                            type="file"
+                            id="banner"
+                            accept="image/png,image/jpeg,image/webp">
+
+                        <span class="upload-title">
+                            Clique ou arraste uma imagem
+                        </span>
+
+                        <span class="upload-description">
+                            PNG, JPG ou WEBP
+                        </span>
+                    </label>
+
+                    <div id="bannerPreviewContainer" class="preview-container hidden">
+                        <img id="bannerPreview" alt="Prévia do banner">
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h2>Regulamento</h2>
+
+                    <label class="upload-area" for="regulamento">
+                        <input
+                            type="file"
+                            id="regulamento"
+                            accept="application/pdf">
+
+                        <span class="upload-title">
+                            Selecionar regulamento
+                        </span>
+
+                        <span class="upload-description">
+                            Arquivo em PDF
+                        </span>
+                    </label>
+
+                    <p id="regulamentoNome" class="file-name"></p>
+                </div>
+
+                <div id="formMessage" class="form-message"></div>
+
+                <div class="form-actions">
+
+                    <a href="index.html" class="secondary-button">
+                        Cancelar
+                    </a>
+
+                    <button
+                        id="saveButton"
+                        class="primary-button form-submit"
+                        type="submit">
+
+                        Salvar evento
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </section>
+
+    </main>
+
+</div>
+<script src="../assets/js/utils.js"></script>
+<script src="../assets/js/storage.js"></script>
+<script src="../assets/js/novo-evento.js"></script>
+
+</body>
+</html>
