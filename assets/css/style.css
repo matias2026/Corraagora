@@ -48,10 +48,39 @@ button{cursor:pointer}
 
 .btn-soft{border-color:#cfe6fb;background:rgba(255,255,255,.82);color:#203044}
 
-.menu-toggle{display:none;border:0;background:transparent;padding:8px}
+.menu-toggle{
+    display:none;
 
-.menu-toggle span{display:block;width:27px;height:2px;background:#111;margin:6px 0;border-radius:99px}
+    width:46px;
+    height:46px;
 
+    border:1px solid #dbe8f5;
+    border-radius:12px;
+
+    background:#fff;
+    box-shadow:0 4px 12px rgba(0,0,0,.08);
+
+    padding:0;
+
+    align-items:center;
+    justify-content:center;
+    flex-direction:column;
+
+    transition:.2s;
+}
+
+.menu-toggle:hover{
+    background:#f6fbff;
+}
+
+.menu-toggle span{
+    display:block;
+    width:22px;
+    height:2.5px;
+    margin:3px 0;
+    background:#20252d;
+    border-radius:999px;
+}
 .eyebrow{display:inline-block;font-size:12px;letter-spacing:.19em;font-weight:800;color:var(--blue-strong);margin-bottom:14px}
 
 h1,h2,h3{font-family:Montserrat,Inter,sans-serif;line-height:1.1;margin-top:0}
@@ -120,7 +149,7 @@ h1 strong{display:block;color:var(--blue)}
     }
 
     .menu-toggle{
-        display:block;
+        display:flex;
         margin-left:auto;
     }
 
