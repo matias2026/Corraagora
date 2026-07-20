@@ -91,12 +91,13 @@ h1 strong{display:block;color:var(--blue)}
 .full{width:100%;margin-top:10px}
 
 @media(max-width:1050px){
-.main-nav{display:none}
+.brand{width:230px}
+.main-nav{gap:18px}
 .nav-actions .btn-outline{display:none}
 }
 
 @media(max-width:760px){
-.container{width:min(100% - 28px,1180px)}
+.container{width:min(calc(100% - 28px),1180px)}
 .nav-wrap{height:72px}
 .brand{width:210px}
 .brand img{height:48px}
