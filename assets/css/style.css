@@ -139,3 +139,25 @@ h1{font-size:43px}
 .add-guide{padding:28px 20px}
 .guide-grid{grid-template-columns:1fr}
 }
+.mobile-create-event{
+    display:none;
+}
+
+@media (max-width:760px){
+
+    .mobile-create-event{
+        display:flex;
+        justify-content:center;
+        align-items:center;
+
+        margin-top:16px;
+        padding:14px;
+
+        border-radius:12px;
+        background:linear-gradient(135deg,var(--blue-strong),var(--blue));
+
+        color:#fff !important;
+        font-weight:700;
+    }
+
+}
