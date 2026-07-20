@@ -92,5 +92,13 @@ document.addEventListener("DOMContentLoaded", async () => {
         regulamentoNome.textContent =
             `Arquivo selecionado: ${arquivo.name}`;
     });
+const form = document.getElementById("eventForm");
 
+form.addEventListener("submit", async (event) => {
+    event.preventDefault();
+
+    console.log("Formulário interceptado");
+
+    alert("O botão está funcionando. Agora falta salvar no Supabase.");
+});
 });
