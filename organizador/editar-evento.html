@@ -1,0 +1,553 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Editar Evento | CorraAgora</title>
+
+    <link
+        rel="stylesheet"
+        href="../assets/css/dashboard.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+
+    <style>
+        .edit-event-form {
+            display: grid;
+            gap: 24px;
+        }
+
+        .form-section {
+            background: #ffffff;
+            border-radius: 18px;
+            padding: 24px;
+            box-shadow: 0 10px 30px rgba(15, 23, 42, 0.06);
+        }
+
+        .form-section h2 {
+            margin: 0 0 20px;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 18px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group.full {
+            grid-column: 1 / -1;
+        }
+
+        .form-group label {
+            font-weight: 700;
+        }
+
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 13px 14px;
+            border: 1px solid #d8e0ee;
+            border-radius: 10px;
+            font: inherit;
+            background: #ffffff;
+            box-sizing: border-box;
+        }
+
+        .form-group textarea {
+            min-height: 140px;
+            resize: vertical;
+        }
+
+        .categorias-lista {
+            display: grid;
+            gap: 16px;
+        }
+
+        .categoria-card {
+            border: 1px solid #dbe5f2;
+            border-radius: 14px;
+            padding: 18px;
+            background: #f8fbff;
+        }
+
+        .categoria-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .categoria-header h3 {
+            margin: 0;
+        }
+
+        .categoria-grid {
+            display: grid;
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .danger-button {
+            border: none;
+            border-radius: 9px;
+            padding: 10px 14px;
+            cursor: pointer;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-weight: 700;
+        }
+
+        .secondary-button {
+            border: 1px solid #2563eb;
+            border-radius: 10px;
+            padding: 12px 16px;
+            cursor: pointer;
+            background: #ffffff;
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+        }
+
+        .message {
+            display: none;
+            padding: 14px 16px;
+            border-radius: 10px;
+            font-weight: 600;
+        }
+
+        .message.success {
+            display: block;
+            background: #dcfce7;
+            color: #166534;
+        }
+
+        .message.error {
+            display: block;
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .current-file {
+            font-size: 14px;
+        }
+
+        .current-file a {
+            color: #2563eb;
+            font-weight: 700;
+        }
+
+        @media (max-width: 850px) {
+            .form-grid,
+            .categoria-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-group.full {
+                grid-column: auto;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <a
+            href="index.html"
+            class="sidebar-brand"
+        >
+            <img
+                src="../images/logo-corraagora-compacta.png"
+                alt="CorraAgora"
+            >
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html">
+                🏠 Dashboard
+            </a>
+
+            <a
+                href="eventos.html"
+                class="active"
+            >
+                🏁 Meus eventos
+            </a>
+
+            <a href="novo-evento.html">
+                ➕ Novo evento
+            </a>
+
+            <a href="inscritos.html">
+                👥 Inscritos
+            </a>
+
+            <button id="logoutButton">
+                🚪 Sair
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div>
+                <p class="eyebrow">
+                    ORGANIZAÇÃO
+                </p>
+
+                <h1>
+                    Editar Evento
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Atualize as informações, categorias e configurações do evento.
+                </p>
+            </div>
+
+            <a
+                href="eventos.html"
+                class="primary-button"
+            >
+                ← Voltar
+            </a>
+
+        </header>
+
+        <div
+            id="mensagem"
+            class="message"
+        ></div>
+
+        <form
+            id="editarEventoForm"
+            class="edit-event-form"
+        >
+
+            <section class="form-section">
+
+                <h2>Informações do evento</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group full">
+                        <label for="nome">
+                            Nome do evento
+                        </label>
+
+                        <input
+                            type="text"
+                            id="nome"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="modalidade">
+                            Modalidade
+                        </label>
+
+                        <input
+                            type="text"
+                            id="modalidade"
+                            placeholder="Ex.: MTB, Corrida, Triathlon"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status">
+                            Status
+                        </label>
+
+                        <select
+                            id="status"
+                            required
+                        >
+                            <option value="rascunho">
+                                Rascunho
+                            </option>
+
+                            <option value="publicado">
+                                Publicado
+                            </option>
+
+                            <option value="encerrado">
+                                Encerrado
+                            </option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="cidade">
+                            Cidade
+                        </label>
+
+                        <input
+                            type="text"
+                            id="cidade"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="estado">
+                            Estado
+                        </label>
+
+                        <input
+                            type="text"
+                            id="estado"
+                            maxlength="2"
+                            placeholder="RN"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dataEvento">
+                            Data do evento
+                        </label>
+
+                        <input
+                            type="date"
+                            id="dataEvento"
+                            required
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="valorInscricao">
+                            Valor geral da inscrição
+                        </label>
+
+                        <input
+                            type="number"
+                            id="valorInscricao"
+                            min="0"
+                            step="0.01"
+                        >
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="descricao">
+                            Descrição
+                        </label>
+
+                        <textarea
+                            id="descricao"
+                            placeholder="Descreva o evento..."
+                        ></textarea>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="form-section">
+
+                <h2>Arquivos atuais</h2>
+
+                <div class="form-grid">
+
+                    <div class="form-group">
+                        <label>Banner atual</label>
+
+                        <div
+                            id="bannerAtual"
+                            class="current-file"
+                        >
+                            Nenhum banner cadastrado.
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Regulamento atual</label>
+
+                        <div
+                            id="regulamentoAtual"
+                            class="current-file"
+                        >
+                            Nenhum regulamento cadastrado.
+                        </div>
+                    </div>
+
+                </div>
+
+            </section>
+
+            <section class="form-section">
+
+                <div class="categoria-header">
+
+                    <h2>Categorias</h2>
+
+                    <button
+                        type="button"
+                        id="addCategoriaButton"
+                        class="secondary-button"
+                    >
+                        + Adicionar categoria
+                    </button>
+
+                </div>
+
+                <div
+                    id="categoriasContainer"
+                    class="categorias-lista"
+                ></div>
+
+            </section>
+
+            <div class="form-actions">
+
+                <a
+                    href="eventos.html"
+                    class="secondary-button"
+                >
+                    Cancelar
+                </a>
+
+                <button
+                    type="submit"
+                    id="salvarButton"
+                    class="primary-button"
+                >
+                    Salvar alterações
+                </button>
+
+            </div>
+
+        </form>
+
+    </main>
+
+</div>
+
+<template id="categoriaTemplate">
+
+    <article class="categoria-card">
+
+        <div class="categoria-header">
+
+            <h3>Categoria</h3>
+
+            <button
+                type="button"
+                class="danger-button remover-categoria"
+            >
+                Remover
+            </button>
+
+        </div>
+
+        <div class="categoria-grid">
+
+            <div class="form-group">
+                <label>Nome</label>
+
+                <input
+                    type="text"
+                    class="categoria-nome"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Valor</label>
+
+                <input
+                    type="number"
+                    class="categoria-valor"
+                    min="0"
+                    step="0.01"
+                    required
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Limite de inscritos</label>
+
+                <input
+                    type="number"
+                    class="categoria-limite"
+                    min="1"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Idade mínima</label>
+
+                <input
+                    type="number"
+                    class="categoria-idade-min"
+                    min="0"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Idade máxima</label>
+
+                <input
+                    type="number"
+                    class="categoria-idade-max"
+                    min="0"
+                >
+            </div>
+
+            <div class="form-group">
+                <label>Sexo</label>
+
+                <select class="categoria-sexo">
+                    <option value="">
+                        Livre
+                    </option>
+
+                    <option value="masculino">
+                        Masculino
+                    </option>
+
+                    <option value="feminino">
+                        Feminino
+                    </option>
+                </select>
+            </div>
+
+        </div>
+
+    </article>
+
+</template>
+
+<script src="../assets/js/editar-evento.js"></script>
+
+</body>
+</html>
