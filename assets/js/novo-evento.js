@@ -145,6 +145,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         regulamentoNome.textContent =
             `Arquivo selecionado: ${arquivo.name}`;
     });
+    const categoriasContainer =
+    document.getElementById("categoriasContainer");
+
+const addCategoriaButton =
+    document.getElementById("addCategoriaButton");
+
+const categoriaTemplate =
+    document.getElementById("categoriaTemplate");
+
+function adicionarCategoria() {
+
+    const clone =
+        categoriaTemplate.content.cloneNode(true);
+
+    clone
+        .querySelector(".removeCategoriaButton")
+        .addEventListener("click", function () {
+
+            this.closest(".categoria-card").remove();
+
+        });
+
+    categoriasContainer.appendChild(clone);
+
+}
+
+addCategoriaButton.addEventListener(
+    "click",
+    adicionarCategoria
+);
+
+adicionarCategoria();
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -185,6 +217,37 @@ document.addEventListener("DOMContentLoaded", async () => {
         const bannerFile = bannerInput.files[0] || null;
         const regulamentoFile =
             regulamentoInput.files[0] || null;
+            const categorias = [];
+
+document
+    .querySelectorAll(".categoria-card")
+    .forEach(card => {
+
+        categorias.push({
+
+            nome: card.querySelector(".categoria-nome").value.trim(),
+
+            valor: Number(
+                card.querySelector(".categoria-valor").value || 0
+            ),
+
+            limite_inscritos: Number(
+                card.querySelector(".categoria-limite").value || 0
+            ),
+
+            idade_min: Number(
+                card.querySelector(".categoria-idade-min").value || 0
+            ),
+
+            idade_max: Number(
+                card.querySelector(".categoria-idade-max").value || 0
+            ),
+
+            sexo: card.querySelector(".categoria-sexo").value
+
+        });
+
+    });
 
         if (
             !nome ||
@@ -222,6 +285,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             );
             return;
         }
+        const categoriasValidas = categorias.filter(categoria =>
+    categoria.nome !== ""
+);
+
+if (categoriasValidas.length === 0) {
+    mostrarMensagem(
+        "Adicione pelo menos uma categoria.",
+        "error"
+    );
+    return;
+}
 
         if (!bannerFile) {
             mostrarMensagem(
@@ -278,13 +352,37 @@ document.addEventListener("DOMContentLoaded", async () => {
                 inscricoes_abertas: inscricoesAbertas
             };
 
-            const { error } = await supabaseClient
-                .from("eventos")
-                .insert(novoEvento);
+            const { data: eventoCriado, error } =
+    await supabaseClient
+        .from("eventos")
+        .insert(novoEvento)
+        .select()
+        .single();
 
-            if (error) {
-                throw error;
-            }
+if (error) {
+    throw error;
+}
+
+if (categoriasValidas.length > 0) {
+    const categoriasInsert = categoriasValidas.map((categoria, index) => ({
+        evento_id: eventoCriado.id,
+        nome: categoria.nome,
+        valor: categoria.valor,
+        limite_inscritos: categoria.limite_inscritos,
+        idade_min: categoria.idade_min,
+        idade_max: categoria.idade_max,
+        sexo: categoria.sexo || null,
+        ordem: index + 1
+    }));
+
+    const { error: categoriaError } = await supabaseClient
+        .from("categorias")
+        .insert(categoriasInsert);
+
+    if (categoriaError) {
+        throw categoriaError;
+    }
+}
 
             mostrarMensagem(
                 "Evento criado com sucesso!",

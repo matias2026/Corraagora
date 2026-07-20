@@ -187,80 +187,133 @@
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <h2>Inscrições</h2>
+                <!-- INSCRIÇÕES -->
 
-                    <div class="form-grid">
+<div class="form-section">
 
-                        <div class="form-group">
-                            <label for="valor">Valor da inscrição</label>
+    <h2>Inscrições</h2>
 
-                            <input
-                                type="number"
-                                id="valor"
-                                min="0"
-                                step="0.01"
-                                placeholder="0,00"
-                                required>
-                        </div>
+    <div class="form-grid">
 
-                        <div class="form-group">
-                            <label for="vagas">Número de vagas</label>
+        <div class="form-group">
+            <label for="valor">Valor da inscrição</label>
 
-                            <input
-                                type="number"
-                                id="vagas"
-                                min="0"
-                                placeholder="Ex.: 150"
-                                required>
-                        </div>
+            <input
+                type="number"
+                id="valor"
+                min="0"
+                step="0.01"
+                placeholder="0,00"
+                required>
+        </div>
 
-                        <label class="checkbox-card">
-                            <input
-                                type="checkbox"
-                                id="inscricoesAbertas"
-                                checked>
+        <div class="form-group">
+            <label for="vagas">Número de vagas</label>
 
-                            <span>
-                                <strong>Inscrições abertas</strong>
-                                <small>Permitir novas inscrições neste evento.</small>
-                            </span>
-                        </label>
+            <input
+                type="number"
+                id="vagas"
+                min="0"
+                placeholder="Ex.: 150"
+                required>
+        </div>
 
-                        <label class="checkbox-card">
-                            <input type="checkbox" id="destaque">
+        <label class="checkbox-card">
 
-                            <span>
-                                <strong>Evento em destaque</strong>
-                                <small>Destacar o evento na página principal.</small>
-                            </span>
-                        </label>
+            <input
+                type="checkbox"
+                id="inscricoesAbertas"
+                checked>
 
-                    </div>
-                </div>
+            <span>
 
-                <div class="form-section">
-                    <h2>Banner do evento</h2>
+                <strong>Inscrições abertas</strong>
 
-                    <label class="upload-area" for="banner">
-                        <input
-                            type="file"
-                            id="banner"
-                            accept="image/png,image/jpeg,image/webp">
+                <small>
+                    Permitir novas inscrições neste evento.
+                </small>
 
-                        <span class="upload-title">
-                            Clique ou arraste uma imagem
-                        </span>
+            </span>
 
-                        <span class="upload-description">
-                            PNG, JPG ou WEBP
-                        </span>
-                    </label>
+        </label>
 
-                    <div id="bannerPreviewContainer" class="preview-container hidden">
-                        <img id="bannerPreview" alt="Prévia do banner">
-                    </div>
-                </div>
+        <label class="checkbox-card">
+
+            <input
+                type="checkbox"
+                id="destaque">
+
+            <span>
+
+                <strong>Evento em destaque</strong>
+
+                <small>
+                    Destacar o evento na página principal.
+                </small>
+
+            </span>
+
+        </label>
+
+    </div>
+
+</div>
+
+<!-- CATEGORIAS -->
+
+<div class="form-section">
+
+    <h2>Categorias</h2>
+
+    <p class="section-description">
+
+        Adicione as categorias disponíveis para este evento.
+
+    </p>
+
+    <div id="categoriasContainer">
+
+    </div>
+
+    <button
+        type="button"
+        id="addCategoriaButton"
+        class="secondary-button">
+
+        + Adicionar categoria
+
+    </button>
+
+</div>
+
+<!-- BANNER -->
+
+<div class="form-section">
+
+    <h2>Banner do evento</h2>
+
+    <label class="upload-area" for="banner">
+
+        <input
+            type="file"
+            id="banner"
+            accept="image/png,image/jpeg,image/webp">
+
+        <span class="upload-title">
+            Clique ou arraste uma imagem
+        </span>
+
+        <span class="upload-description">
+            PNG, JPG ou WEBP
+        </span>
+
+    </label>
+
+    <div id="bannerPreviewContainer" class="preview-container hidden">
+        <img id="bannerPreview" alt="Prévia do banner">
+    </div>
+
+</div>
 
                 <div class="form-section">
                     <h2>Regulamento</h2>
@@ -312,6 +365,60 @@
 <script src="../assets/js/utils.js"></script>
 <script src="../assets/js/storage.js"></script>
 <script src="../assets/js/novo-evento.js"></script>
+<template id="categoriaTemplate">
 
+    <div class="categoria-card">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Nome da categoria</label>
+                <input type="text" class="categoria-nome" placeholder="Ex.: Elite Masculino">
+            </div>
+
+            <div class="form-group">
+                <label>Valor (R$)</label>
+                <input type="number" class="categoria-valor" min="0" step="0.01">
+            </div>
+
+            <div class="form-group">
+                <label>Limite</label>
+                <input type="number" class="categoria-limite" min="0">
+            </div>
+
+            <div class="form-group">
+                <label>Idade mínima</label>
+                <input type="number" class="categoria-idade-min">
+            </div>
+
+            <div class="form-group">
+                <label>Idade máxima</label>
+                <input type="number" class="categoria-idade-max">
+            </div>
+
+            <div class="form-group">
+                <label>Sexo</label>
+
+                <select class="categoria-sexo">
+                    <option value="">Todos</option>
+                    <option value="Masculino">Masculino</option>
+                    <option value="Feminino">Feminino</option>
+                </select>
+
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="removeCategoriaButton secondary-button">
+
+            Remover categoria
+
+        </button>
+
+    </div>
+
+</template>
 </body>
 </html>
