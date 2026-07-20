@@ -120,23 +120,29 @@ function renderizarEventos() {
 
                 <div class="evento-actions">
 
-                    <a
-                        href="editar-evento.html?id=${evento.id}"
-                        class="btn-edit"
-                    >
-                        ✏️ Editar
-                    </a>
+    <a
+        href="editar-evento.html?id=${evento.id}"
+        class="btn-edit"
+    >
+        ✏️ Editar
+    </a>
 
-                    <a
-                        href="inscritos.html?evento=${evento.id}"
-                        class="btn-users"
-                    >
-                        👥 Inscritos
-                    </a>
+    <a
+        href="inscritos.html?evento_id=${evento.id}"
+        class="btn-users"
+    >
+        👥 Inscritos
+    </a>
 
-                </div>
+    <button
+        type="button"
+        class="btn-delete"
+        onclick="excluirEvento(${evento.id})"
+    >
+        🗑️ Excluir
+    </button>
 
-            </div>
+</div>
 
         </div>
 
@@ -165,5 +171,55 @@ logoutButton.addEventListener("click", async () => {
     window.location.href = "../login.html";
 
 });
+async function excluirEvento(eventoId) {
+
+    const confirmar = window.confirm(
+        "Tem certeza de que deseja excluir este evento? Essa ação não poderá ser desfeita."
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+
+        const { error: categoriasError } = await supabaseClient
+            .from("categorias")
+            .delete()
+            .eq("evento_id", eventoId);
+
+        if (categoriasError) {
+            throw categoriasError;
+        }
+
+        const { error: eventoError } = await supabaseClient
+            .from("eventos")
+            .delete()
+            .eq("id", eventoId)
+            .eq("organizador_id", usuario.id);
+
+        if (eventoError) {
+            throw eventoError;
+        }
+
+        eventos = eventos.filter(evento =>
+            evento.id !== eventoId
+        );
+
+        atualizarResumo();
+        renderizarEventos();
+
+        alert("Evento excluído com sucesso.");
+
+    } catch (error) {
+
+        console.error("Erro ao excluir evento:", error);
+
+        alert(
+            error.message ||
+            "Não foi possível excluir o evento."
+        );
+    }
+}
 
 verificarUsuario();
