@@ -79,83 +79,103 @@
       .join("");
   }
 
-  function criarCardEvento(evento) {
-    const data = obterDadosDaData(evento.data_evento);
-    const nome = escaparHTML(evento.nome || "Evento esportivo");
-    const cidade = escaparHTML(evento.cidade || "");
-    const estado = escaparHTML(evento.estado || "");
-    const modalidade = escaparHTML(
-      evento.modalidade || "Evento"
-    );
+  {function criarCardEvento(evento) {
+  const data = obterDadosDaData(evento.data_evento);
 
-    const descricao = escaparHTML(
-      evento.descricao || "Confira os detalhes deste evento."
-    );
+  const nome = escaparHTML(
+    evento.nome || "Evento esportivo"
+  );
 
-    const slug = encodeURIComponent(evento.slug || "");
-    const simbolo = obterSimboloModalidade(evento.modalidade);
+  const cidade = escaparHTML(evento.cidade || "");
+  const estado = escaparHTML(evento.estado || "");
 
-    const estiloBanner = evento.banner_url
-      ? `style="background-image: linear-gradient(
-          rgba(4, 18, 35, 0.18),
-          rgba(4, 18, 35, 0.35)
-        ), url('${escaparAtributo(evento.banner_url)}');
-        background-size: cover;
-        background-position: center;"`
-      : "";
+  const modalidade = escaparHTML(
+    evento.modalidade || "Evento"
+  );
 
-    const valor = formatarValor(evento.valor);
+  const slug = encodeURIComponent(evento.slug || "");
 
-    return `
-      <article
-        class="event-card"
-        data-name="${nome.toLowerCase()}"
-        data-city="${cidade.toLowerCase()}"
-        data-type="${modalidade.toLowerCase()}"
+  const simbolo = obterSimboloModalidade(
+    evento.modalidade
+  );
+
+  const valor = formatarValor(evento.valor);
+
+  const banner = evento.banner_url
+    ? `
+      <img
+        src="${escaparAtributo(evento.banner_url)}"
+        alt="Banner do evento ${nome}"
+        loading="lazy"
       >
-        <div class="event-cover cover-mtb" ${estiloBanner}>
-          <span class="date-badge">
-            <strong>${data.dia}</strong>
-            ${data.mes}
+    `
+    : `
+      <div class="event-banner-placeholder">
+        <span>${simbolo}</span>
+        <strong>${nome}</strong>
+      </div>
+    `;
+
+  return `
+    <article
+      class="event-card"
+      data-name="${nome.toLowerCase()}"
+      data-city="${cidade.toLowerCase()}"
+      data-type="${modalidade.toLowerCase()}"
+    >
+
+      <div class="event-banner">
+        ${banner}
+      </div>
+
+      <div class="event-card-content">
+
+        <div class="event-info-list">
+
+          <span class="event-category">
+            ${simbolo} ${modalidade}
           </span>
 
-          ${
-            evento.banner_url
-              ? ""
-              : `<span class="cover-symbol">${simbolo}</span>`
-          }
+          <span class="event-date">
+            📅 ${data.dataCompleta}
+          </span>
+
+          <span class="event-location">
+            📍 ${cidade}${estado ? ` • ${estado}` : ""}
+          </span>
+
         </div>
 
-        <div class="event-body">
-          <div class="event-meta">
-            <span class="pill">${modalidade}</span>
-            <span>📅 ${data.dataCompleta}</span>
+        <h3 class="event-title">
+          ${nome}
+        </h3>
+
+        <div class="event-official">
+          <span aria-hidden="true">★★★★★</span>
+          Evento oficial
+        </div>
+
+        <div class="event-card-footer">
+
+          <div class="event-price">
+            <small>Inscrição a partir de</small>
+            <strong>${valor || "Consulte"}</strong>
           </div>
 
-          <span class="location">
-            ⌖ ${cidade} - ${estado}
-          </span>
-
-          <h3>${nome}</h3>
-
-          <p>${descricao}</p>
-
-          ${
-            valor
-              ? `<strong class="event-price">${valor}</strong>`
-              : ""
-          }
-
           <a
-            class="event-link active"
+            class="event-button"
             href="evento.html?slug=${slug}"
           >
-            Ver evento
+            Inscrever-se
           </a>
+
         </div>
-      </article>
-    `;
-  }
+
+      </div>
+
+    </article>
+  `;
+}}
 
   function aplicarFiltros() {
     mostrarTodos = true;
