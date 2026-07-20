@@ -25,9 +25,6 @@ const estadoInput =
 const dataEventoInput =
     document.getElementById("dataEvento");
 
-const valorInscricaoInput =
-    document.getElementById("valorInscricao");
-
 const descricaoInput =
     document.getElementById("descricao");
 
@@ -339,9 +336,6 @@ function preencherFormulario(evento, categorias) {
     dataEventoInput.value =
         evento.data_evento || "";
 
-    valorInscricaoInput.value =
-        evento.valor_inscricao ?? "";
-
     descricaoInput.value =
         evento.descricao || "";
 
@@ -433,27 +427,19 @@ form.addEventListener(
             }
 
             const categorias =
-                obterCategoriasFormulario();
+    obterCategoriasFormulario();
 
-            const eventoAtualizado = {
-                nome,
-                slug: criarSlug(nome),
-                modalidade,
-                cidade,
-                estado,
-                data_evento:
-                    dataEventoInput.value,
-                descricao:
-                    descricaoInput.value.trim() ||
-                    null,
-                status:
-                    statusInput.value,
-                valor_inscricao:
-                    valorOuNull(
-                        valorInscricaoInput.value
-                    )
-            };
-
+const eventoAtualizado = {
+    nome,
+    slug: criarSlug(nome),
+    modalidade,
+    cidade,
+    estado,
+    data_evento: dataEventoInput.value,
+    descricao:
+        descricaoInput.value.trim() || null,
+    status: statusInput.value
+};
             const {
                 error: atualizarEventoError
             } = await supabaseClient

@@ -112,7 +112,7 @@ function renderizarEventos() {
 
                     <span>🚴 ${evento.modalidade}</span>
 
-                    <span>💰 R$ ${Number(evento.valor_inscricao || 0).toFixed(2)}</span>
+                    <span>💰 Valor por categoria</span>
 
                     <span>Status: ${evento.status}</span>
 
