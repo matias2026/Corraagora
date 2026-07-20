@@ -1,42 +1,80 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const organizerName = document.getElementById("organizerName");
-    const logoutButton = document.getElementById("logoutButton");
-
     try {
+
         const {
-            data: { session },
-            error
+            data: { session }
         } = await supabaseClient.auth.getSession();
 
-        if (error) {
-            throw error;
-        }
-
         if (!session) {
-            window.location.replace("../login.html");
+            window.location.href = "../login.html";
             return;
         }
 
-        organizerName.textContent =
-            session.user.user_metadata?.nome ||
-            session.user.email ||
-            "Organizador";
+        document.getElementById("organizerName").textContent =
+            session.user.email;
 
-        logoutButton.addEventListener("click", async () => {
-            const { error: logoutError } =
+        document
+            .getElementById("logoutButton")
+            .addEventListener("click", async () => {
+
                 await supabaseClient.auth.signOut();
 
-            if (logoutError) {
-                alert("Não foi possível sair da conta.");
-                console.error(logoutError);
-                return;
-            }
+                window.location.href = "../login.html";
 
-            window.location.replace("../login.html");
+            });
+
+        const { data: eventos, error } = await supabaseClient
+            .from("eventos")
+            .select("*")
+            .eq("organizador_id", session.user.id)
+            .order("data_evento", { ascending: true });
+
+        if (error) {
+            console.error(error);
+            return;
+        }
+
+        document.getElementById("totalEvents").textContent =
+            eventos.length;
+
+        const lista = document.getElementById("eventsList");
+
+        if (eventos.length === 0) {
+
+            lista.innerHTML = `
+                <p>Nenhum evento cadastrado.</p>
+            `;
+
+            return;
+
+        }
+
+        document.getElementById("nextEvent").textContent =
+            eventos[0].nome;
+
+        lista.innerHTML = "";
+
+        eventos.forEach(evento => {
+
+            lista.innerHTML += `
+                <div class="evento-card">
+
+                    <h3>${evento.nome}</h3>
+
+                    <p><strong>Data:</strong> ${evento.data_evento}</p>
+
+                    <p><strong>Cidade:</strong> ${evento.cidade}/${evento.estado}</p>
+
+                    <p><strong>Status:</strong> ${evento.status}</p>
+
+                </div>
+            `;
+
         });
 
-    } catch (error) {
-        console.error("Erro ao verificar autenticação:", error);
-        window.location.replace("../login.html");
+    } catch (e) {
+
+        console.error(e);
+
     }
 });

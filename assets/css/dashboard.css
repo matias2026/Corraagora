@@ -207,3 +207,18 @@ body{
 }
 
 }
+.evento-card{
+    background:#fff;
+    border:1px solid #e5e7eb;
+    border-radius:12px;
+    padding:20px;
+    margin-bottom:15px;
+}
+
+.evento-card h3{
+    margin-bottom:10px;
+}
+
+.evento-card p{
+    margin:5px 0;
+}
