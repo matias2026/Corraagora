@@ -89,18 +89,9 @@
     if (!evento) return;
 
     const arquivo = comprovanteInput.files[0];
-
-    if (!arquivo) {
-      mostrarMensagem(
-        "Selecione o comprovante de pagamento antes de enviar.",
-        "error"
-      );
-      return;
-    }
-
     const limiteArquivo = 10 * 1024 * 1024;
 
-    if (arquivo.size > limiteArquivo) {
+    if (arquivo && arquivo.size > limiteArquivo) {
       mostrarMensagem(
         "O comprovante deve ter no máximo 10 MB.",
         "error"
@@ -111,10 +102,9 @@
     ativarCarregamento(true);
 
     try {
-      const comprovanteUrl = await window.uploadComprovante(
-        arquivo,
-        evento.id
-      );
+      const comprovanteUrl = arquivo
+        ? await window.uploadComprovante(arquivo, evento.id)
+        : null;
 
       const inscricao = {
         evento_id: evento.id,
