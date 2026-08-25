@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Inscritos | CorraAgora</title>
+
+    <link rel="stylesheet"
+          href="../assets/css/dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+
+    <script src="../assets/js/supabase.js"></script>
+
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <a href="index.html"
+           class="sidebar-brand">
+
+            <img src="../images/logo-corraagora-compacta.png"
+                 alt="CorraAgora">
+
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html">
+                🏠 Dashboard
+            </a>
+
+            <a href="eventos.html">
+                🏁 Meus eventos
+            </a>
+
+            <a href="novo-evento.html">
+                ➕ Novo evento
+            </a>
+
+            <a href="inscritos.html"
+               class="active">
+                👥 Inscritos
+            </a>
+
+            <button id="logoutButton">
+                🚪 Sair
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    ORGANIZAÇÃO
+                </p>
+
+                <h1 id="pageTitle">
+                    Inscritos
+                </h1>
+
+                <p class="dashboard-subtitle" id="pageSubtitle">
+                    Selecione um evento para ver a lista de inscritos.
+                </p>
+
+            </div>
+
+            <a href="eventos.html" class="primary-button" id="voltarEventosButton">
+                ← Meus eventos
+            </a>
+
+        </header>
+
+        <!-- SELETOR DE EVENTOS (aparece quando nenhum evento foi escolhido) -->
+        <section class="dashboard-section" id="seletorEventos">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">EVENTOS</p>
+                    <h2>Escolha um evento</h2>
+                </div>
+            </div>
+
+            <div id="listaEventosSeletor" class="eventos-grid">
+                <p>Carregando eventos...</p>
+            </div>
+
+        </section>
+
+        <!-- TABELA DE INSCRITOS (aparece quando um evento foi escolhido) -->
+        <section class="dashboard-section hidden" id="painelInscritos">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">INSCRITOS</p>
+                    <h2 id="nomeEventoSelecionado">Evento</h2>
+                </div>
+
+                <button type="button" id="exportarExcelButton" class="primary-button">
+                    ⬇ Exportar Excel
+                </button>
+            </div>
+
+            <div class="events-toolbar">
+
+                <input
+                    type="text"
+                    id="buscarInscrito"
+                    placeholder="🔍 Buscar por nome, e-mail ou categoria...">
+
+                <select id="statusInscricaoFiltro">
+                    <option value="">Todos os status</option>
+                    <option value="confirmado">Confirmado</option>
+                    <option value="pendente">Pendente</option>
+                    <option value="cancelado">Cancelado</option>
+                </select>
+
+            </div>
+
+            <div class="summary-grid inscritos-summary">
+
+                <article class="summary-card">
+                    <span>Total de inscritos</span>
+                    <strong id="resumoTotal">0</strong>
+                </article>
+
+                <article class="summary-card">
+                    <span>Confirmados</span>
+                    <strong id="resumoConfirmados">0</strong>
+                </article>
+
+                <article class="summary-card">
+                    <span>Pendentes</span>
+                    <strong id="resumoPendentes">0</strong>
+                </article>
+
+            </div>
+
+            <div class="tabela-scroll">
+
+                <table class="tabela-inscritos" id="tabelaInscritos">
+
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Categoria</th>
+                            <th>Cidade</th>
+                            <th>Status</th>
+                            <th>Inscrito em</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="corpoTabelaInscritos"></tbody>
+
+                </table>
+
+                <div id="semInscritos" class="empty-state-box hidden">
+                    <h3>Nenhum inscrito ainda</h3>
+                    <p>
+                        Assim que atletas se inscreverem neste evento,
+                        eles vão aparecer aqui automaticamente.
+                    </p>
+                </div>
+
+                <div id="tabelaIndisponivel" class="empty-state-box hidden">
+                    <h3>Lista de inscritos ainda não disponível</h3>
+                    <p>
+                        Para exibir os inscritos, é preciso criar a tabela
+                        <code>inscricoes</code> no Supabase (com um campo
+                        <code>evento_id</code> relacionado à tabela de eventos).
+                        Assim que ela existir, os dados aparecem aqui automaticamente.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="../assets/js/inscritos.js"></script>
+
+</body>
+
+</html>

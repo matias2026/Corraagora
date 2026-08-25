@@ -20,7 +20,7 @@
   <link
     rel="icon"
     type="image/png"
-    href="assets/images/favicon.png"
+    href="images/favicon.png"
   >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -59,7 +59,7 @@
 
       <a class="brand" href="#inicio">
         <img
-  src="assets/images/logo-corraagora-compacta.png"
+  src="images/logo-corraagora-compacta.png"
   alt="CorraAgora"
 >
       </a>
@@ -77,16 +77,14 @@
 
      <nav class="main-nav">
     <a href="#eventos">Eventos</a>
-    <a href="#como-funciona">Como funciona</a>
-    <a href="#organizadores">Organizadores</a>
+    <a href="login.html" class="organizadores-link" id="organizadoresLink">Organizadores</a>
     <a href="#sobre">Sobre</a>
     <a href="#contato">Contato</a>
 
-    <a href="login.html" class="mobile-create-event" id="loginButton">
+    <a href="login.html" class="mobile-create-event" id="loginButtonMobile">
         ➕ Criar evento
     </a>
 </nav>
-      </nav>
 
       <div class="nav-actions">
   <a
@@ -138,9 +136,9 @@
 
             <a
               class="btn btn-soft"
-              href="#como-funciona"
+              href="#sobre"
             >
-              ⓘ Como funciona
+              ⓘ Sobre a CorraAgora
             </a>
 
           </div>
@@ -321,58 +319,6 @@
 
 
     <section
-      class="section how-section"
-      id="como-funciona"
-    >
-      <div class="container">
-
-        <div class="center-heading">
-
-          <span class="eyebrow">
-            SIMPLES DO INÍCIO AO FIM
-          </span>
-
-          <h2>Como funciona</h2>
-
-          <p>
-            Três passos para garantir sua participação.
-          </p>
-
-        </div>
-
-        <div class="steps-grid">
-
-          <article>
-            <span>1</span>
-            <h3>Escolha o evento</h3>
-            <p>
-              Encontre a prova ideal por modalidade,
-              cidade ou data.
-            </p>
-          </article>
-
-          <article>
-            <span>2</span>
-            <h3>Faça sua inscrição</h3>
-            <p>
-              Preencha seus dados e escolha a categoria correta.
-            </p>
-          </article>
-
-          <article>
-            <span>3</span>
-            <h3>Receba a confirmação</h3>
-            <p>
-              Acompanhe o status e fique pronto para o desafio.
-            </p>
-          </article>
-
-        </div>
-      </div>
-    </section>
-
-
-    <section
       class="section organizer-section"
       id="organizadores"
     >
@@ -394,12 +340,23 @@
             em um painel simples.
           </p>
 
-          <a
-            class="btn btn-primary"
-            href="mailto:contato@ingressotop.com.br?subject=Quero cadastrar meu evento"
-          >
-            Quero cadastrar meu evento
-          </a>
+          <div class="organizer-cta-row">
+
+            <a
+              class="btn btn-primary"
+              href="mailto:contato@ingressotop.com.br?subject=Quero cadastrar meu evento"
+            >
+              Quero cadastrar meu evento
+            </a>
+
+            <a
+              class="btn btn-outline"
+              href="login.html"
+            >
+              Já sou organizador — Entrar
+            </a>
+
+          </div>
 
         </div>
 
@@ -439,7 +396,7 @@
 
         <div>
           <span class="eyebrow">
-            SOBRE A PLATAFORMA
+            QUEM SOMOS
           </span>
 
           <h2>
@@ -449,9 +406,17 @@
         </div>
 
         <p>
-          A IngressoTop foi pensada para aproximar atletas
-          e organizadores com uma experiência leve, segura
-          e feita para eventos esportivos de todos os tamanhos.
+          A CorraAgora nasceu para aproximar atletas e organizadores
+          com uma experiência leve, segura e feita sob medida para
+          eventos esportivos de todos os tamanhos — de corridas de
+          bairro a provas de MTB e triathlon com centenas de inscritos.
+        </p>
+
+        <p>
+          Cuidamos de toda a parte burocrática das inscrições para
+          que o organizador foque no que importa: entregar um evento
+          incrível. E para o atleta, garantimos um processo rápido,
+          transparente e sem complicação, do cadastro à largada.
         </p>
 
       </div>
@@ -469,7 +434,7 @@
       <div class="footer-brand">
 
         <img
- src="assets/images/logo-corraagora.png"
+ src="images/logo-corraagora.png"
   alt="CorraAgora"
 >
 
@@ -482,8 +447,8 @@
       <div>
         <h3>Plataforma</h3>
         <a href="#eventos">Eventos</a>
-        <a href="#como-funciona">Como funciona</a>
-        <a href="#organizadores">Organizadores</a>
+        <a href="#sobre">Sobre</a>
+        <a href="login.html">Organizadores</a>
       </div>
 
       <div>
@@ -510,45 +475,6 @@
     </div>
 
   </footer>
-
-
-  <div
-    class="modal hidden"
-    id="loginModal"
-  >
-    <div class="modal-card">
-
-      <button
-        class="modal-close"
-        id="modalClose"
-        type="button"
-      >
-        ×
-      </button>
-
-      <span class="eyebrow">
-        ÁREA RESTRITA
-      </span>
-
-      <h2>
-        Acesso do organizador
-      </h2>
-
-      <p>
-        O login será conectado ao Supabase
-        na próxima etapa.
-      </p>
-
-      <button
-        class="btn btn-primary full"
-        id="modalOk"
-        type="button"
-      >
-        Entendi
-      </button>
-
-    </div>
-  </div>
 
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

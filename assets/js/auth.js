@@ -26,6 +26,61 @@ document.addEventListener("DOMContentLoaded", () => {
 
     });
 
+    const forgotLink = document.getElementById("forgotPasswordLink");
+    const forgotForm = document.getElementById("forgotPasswordForm");
+    const cancelForgot = document.getElementById("cancelForgotPassword");
+    const forgotMessage = document.getElementById("forgotMessage");
+
+    if (forgotLink && forgotForm) {
+
+        forgotLink.addEventListener("click", (e) => {
+            e.preventDefault();
+            form.classList.add("hidden");
+            forgotLink.classList.add("hidden");
+            forgotForm.classList.remove("hidden");
+            forgotMessage.classList.add("hidden");
+        });
+
+        cancelForgot?.addEventListener("click", (e) => {
+            e.preventDefault();
+            forgotForm.classList.add("hidden");
+            form.classList.remove("hidden");
+            forgotLink.classList.remove("hidden");
+            forgotMessage.classList.add("hidden");
+        });
+
+        forgotForm.addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const email = document.getElementById("forgotEmail").value.trim();
+            const submitButton = forgotForm.querySelector("button[type='submit']");
+
+            submitButton.disabled = true;
+            submitButton.textContent = "Enviando...";
+
+            const { error } = await supabaseClient.auth.resetPasswordForEmail(email, {
+                redirectTo: window.location.origin + "/login.html"
+            });
+
+            submitButton.disabled = false;
+            submitButton.textContent = "Enviar link de redefinição";
+
+            forgotMessage.classList.remove("hidden", "success", "error");
+
+            if (error) {
+                forgotMessage.classList.add("error");
+                forgotMessage.textContent = error.message;
+                return;
+            }
+
+            forgotMessage.classList.add("success");
+            forgotMessage.textContent =
+                "Se este e-mail estiver cadastrado, você receberá um link para redefinir sua senha.";
+
+            forgotForm.reset();
+        });
+    }
+
 });
 const registerForm = document.getElementById("registerForm");
 

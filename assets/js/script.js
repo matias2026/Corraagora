@@ -92,7 +92,7 @@ document.querySelectorAll('.soon').forEach((button) => {
   });
 });
 
-document.getElementById('loginButton')?.addEventListener('click', async (event) => {
+async function irParaAreaDoOrganizador(event) {
   event.preventDefault();
 
   try {
@@ -111,7 +111,11 @@ document.getElementById('loginButton')?.addEventListener('click', async (event) 
     console.error('Não foi possível verificar a sessão:', error);
     window.location.href = 'login.html';
   }
-});
+}
+
+document.getElementById('loginButton')?.addEventListener('click', irParaAreaDoOrganizador);
+document.getElementById('loginButtonMobile')?.addEventListener('click', irParaAreaDoOrganizador);
+document.getElementById('organizadoresLink')?.addEventListener('click', irParaAreaDoOrganizador);
 
 const year = document.getElementById('year');
 if (year) year.textContent = String(new Date().getFullYear());

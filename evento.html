@@ -20,7 +20,7 @@
   <link
     rel="icon"
     type="image/png"
-    href="assets/images/favicon.png"
+    href="images/favicon.png"
   >
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -50,21 +50,37 @@
       <a class="brand" href="index.html">
         <img
           src="images/logo-corraagora-compacta.png"
-          alt="IngressoTop"
+          alt="CorraAgora"
         >
       </a>
 
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
       <nav class="main-nav">
         <a href="index.html#eventos">Eventos</a>
-        <a href="index.html#como-funciona">Como funciona</a>
-        <a href="index.html#organizadores">Organizadores</a>
+        <a href="login.html" id="organizadoresLink">Organizadores</a>
+        <a href="index.html#sobre">Sobre</a>
         <a href="index.html#contato">Contato</a>
+
+        <a href="login.html" class="mobile-create-event" id="loginButtonMobile">
+          ➕ Criar evento
+        </a>
       </nav>
 
       <div class="nav-actions">
         <a
           class="btn btn-outline"
-          href="index.html#organizadores"
+          href="login.html"
+          id="loginButton"
         >
           Criar evento <span>＋</span>
         </a>
@@ -251,7 +267,7 @@
       <div class="footer-brand">
 
         <img
-          src="assets/images/logo-corraagora.png"
+          src="images/logo-corraagora.png"
           alt="IngressoTop"
         >
 
@@ -264,8 +280,8 @@
       <div>
         <h3>Plataforma</h3>
         <a href="index.html#eventos">Eventos</a>
-        <a href="index.html#como-funciona">Como funciona</a>
-        <a href="index.html#organizadores">Organizadores</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="login.html">Organizadores</a>
       </div>
 
       <div>
@@ -295,6 +311,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase.js"></script>
+<script src="assets/js/script.js"></script>
 <script src="assets/js/evento.js"></script>
 
 </body>

@@ -45,6 +45,35 @@
 
         </form>
 
+        <a href="#" id="forgotPasswordLink">
+            Esqueci minha senha
+        </a>
+
+        <form id="forgotPasswordForm" class="hidden">
+
+            <p class="forgot-text">
+                Informe seu e-mail para receber o link de redefinição de senha.
+            </p>
+
+            <input
+                type="email"
+                id="forgotEmail"
+                placeholder="Seu e-mail de cadastro"
+                required
+            >
+
+            <button type="submit">
+                Enviar link de redefinição
+            </button>
+
+            <a href="#" id="cancelForgotPassword">
+                Voltar para o login
+            </a>
+
+        </form>
+
+        <p id="forgotMessage" class="forgot-message hidden"></p>
+
         <a href="cadastro.html">
             Criar uma conta
         </a>
