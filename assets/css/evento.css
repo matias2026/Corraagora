@@ -28,8 +28,13 @@
 .event-page-description p{color:var(--text);line-height:1.75}
 
 .event-categories{padding-top:24px;border-top:1px solid var(--line);margin-top:24px}
-.event-categories h2{font-size:20px;margin-bottom:6px}
-.event-lote-vigente{color:var(--blue-strong);font-size:13px;font-weight:700;margin-bottom:16px}
+.event-categories h2{font-size:20px;margin-bottom:16px}
+
+.event-lotes-info{margin-top:24px;padding-top:20px;border-top:1px dashed var(--line)}
+.event-lotes-info h3{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:10px}
+
+.event-lote-row{display:flex;align-items:center;justify-content:space-between;gap:12px;padding:9px 14px;border-radius:10px;font-size:13.5px;color:var(--text)}
+.event-lote-row-vigente{background:#eaf5ff;font-weight:700;color:var(--blue-strong)}
 
 .event-category-group{margin-bottom:20px}
 .event-category-group:last-child{margin-bottom:0}

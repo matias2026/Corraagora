@@ -22,7 +22,8 @@
   const eventCategoriesGroups = document.getElementById(
     "eventCategoriesGroups"
   );
-  const eventLoteVigente = document.getElementById("eventLoteVigente");
+  const eventLotesInfo = document.getElementById("eventLotesInfo");
+  const eventLotesList = document.getElementById("eventLotesList");
 
   const eventLocationLink = document.getElementById("eventLocationLink");
   const eventRegulamentoButton = document.getElementById(
@@ -159,7 +160,7 @@
     window.categoriasDoEvento = categoriasComPreco;
     window.loteVigenteDoEvento = loteVigente;
 
-    preencherEvento(evento, categoriasComPreco, loteVigente, organizador);
+    preencherEvento(evento, categoriasComPreco, loteVigente, organizador, listaLotes);
     configurarGaleria(banners || []);
     mostrarConteudo();
   }
@@ -204,7 +205,7 @@
     return parametros.get("slug")?.trim() || "";
   }
 
-  function preencherEvento(evento, categorias, loteVigente, organizador) {
+  function preencherEvento(evento, categorias, loteVigente, organizador, lotes) {
     const nome = evento.nome || "Evento esportivo";
     const modalidade = evento.modalidade || "Evento";
     const cidade = evento.cidade || "Cidade não informada";
@@ -230,7 +231,7 @@
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
     configurarPrecoSidebar(evento, categorias);
-    configurarCategorias(categorias, loteVigente);
+    configurarCategorias(categorias, loteVigente, lotes);
     configurarLocalizacao(evento);
     configurarRegulamento(evento);
     configurarOrganizador(evento, organizador);
@@ -250,22 +251,14 @@
     eventPrice.textContent = formatarValor(evento.valor);
   }
 
-  function configurarCategorias(categorias, loteVigente) {
+  function configurarCategorias(categorias, loteVigente, lotes) {
     if (!categorias.length) {
       eventCategories.classList.add("hidden");
       return;
     }
 
     eventCategories.classList.remove("hidden");
-
-    if (loteVigente) {
-      eventLoteVigente.textContent =
-        `Preços do ${loteVigente.nome} — válidos até ` +
-        `${formatarData(loteVigente.data_limite)}.`;
-      eventLoteVigente.classList.remove("hidden");
-    } else {
-      eventLoteVigente.classList.add("hidden");
-    }
+    configurarListaDeLotes(lotes || [], loteVigente);
 
     const grupos = new Map();
 
@@ -312,6 +305,31 @@
           </div>
         </div>
       `)
+      .join("");
+  }
+
+  function configurarListaDeLotes(lotes, loteVigente) {
+    if (!lotes.length) {
+      eventLotesInfo.classList.add("hidden");
+      return;
+    }
+
+    eventLotesInfo.classList.remove("hidden");
+
+    const ordenados = [...lotes].sort((a, b) => a.ordem - b.ordem);
+
+    eventLotesList.innerHTML = ordenados
+      .map((lote, index) => {
+        const vigente = loteVigente && lote.id === loteVigente.id;
+        const nome = lote.nome?.trim() || `Lote ${index + 1}`;
+
+        return `
+          <div class="event-lote-row${vigente ? " event-lote-row-vigente" : ""}">
+            <span>${escaparHTML(nome)}${vigente ? " · vigente" : ""}</span>
+            <span>até ${formatarData(lote.data_limite)}</span>
+          </div>
+        `;
+      })
       .join("");
   }
 
