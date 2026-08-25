@@ -79,6 +79,12 @@
       </div>
 
       ${
+        inscricao.codigo_inscricao
+          ? `<p>Código da inscrição: <strong>${escaparHTML(inscricao.codigo_inscricao)}</strong></p>`
+          : ""
+      }
+
+      ${
         inscricao.categoria
           ? `<p>Categoria: ${escaparHTML(inscricao.categoria)}</p>`
           : ""

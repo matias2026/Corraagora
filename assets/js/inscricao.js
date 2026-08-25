@@ -118,6 +118,7 @@
 
       const inscricao = {
         evento_id: evento.id,
+        codigo_inscricao: gerarCodigoInscricao(),
         nome: nomeInput.value.trim(),
         cpf: cpfInput.value.trim(),
         data_nascimento: dataNascimentoInput.value,
@@ -139,15 +140,15 @@
       if (error) throw error;
 
       mostrarMensagem(
-        "Inscrição enviada! Assim que confirmarmos o pagamento, " +
-          "você recebe a confirmação.",
+        `Inscrição enviada! Seu código é ${inscricao.codigo_inscricao}. ` +
+          "Assim que confirmarmos o pagamento, você recebe a confirmação.",
         "success"
       );
 
       form.reset();
       preencherCategorias(window.categoriasDoEvento || []);
 
-      setTimeout(fecharModal, 2600);
+      setTimeout(fecharModal, 4000);
     } catch (error) {
       console.error("Erro ao enviar inscrição:", error);
 
@@ -174,6 +175,12 @@
   function ativarCarregamento(ativo) {
     submitButton.disabled = ativo;
     submitButton.textContent = ativo ? "Enviando..." : "Enviar inscrição";
+  }
+
+  function gerarCodigoInscricao() {
+    const aleatorio = Math.random().toString(36).slice(2, 8).toUpperCase();
+    const tempo = Date.now().toString(36).slice(-4).toUpperCase();
+    return `CA-${tempo}${aleatorio}`;
   }
 
   function escaparHTML(valor) {

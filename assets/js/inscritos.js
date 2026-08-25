@@ -205,6 +205,7 @@ function renderizarInscricoes() {
 
         return `
         <tr data-linha-inscricao="${i.id}">
+            <td>${escaparHTML(i.codigo_inscricao || "-")}</td>
             <td>${escaparHTML(i.nome || "-")}</td>
             <td>${escaparHTML(i.cpf || "-")}</td>
             <td>${escaparHTML(i.email || "-")}</td>
@@ -312,6 +313,7 @@ function exportarParaExcel() {
     }
 
     const linhas = inscricoes.map(i => ({
+        "Código": i.codigo_inscricao || "",
         Nome: i.nome || "",
         CPF: i.cpf || "",
         "Data de nascimento": i.data_nascimento || "",
