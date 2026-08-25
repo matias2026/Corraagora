@@ -9,8 +9,13 @@
   const paymentInfoText = document.getElementById("paymentInfoText");
 
   const nomeInput = document.getElementById("regNome");
+  const cpfInput = document.getElementById("regCpf");
+  const dataNascimentoInput = document.getElementById("regDataNascimento");
+  const sexoInput = document.getElementById("regSexo");
   const emailInput = document.getElementById("regEmail");
   const telefoneInput = document.getElementById("regTelefone");
+  const equipeInput = document.getElementById("regEquipe");
+  const licencaCbcInput = document.getElementById("regLicencaCbc");
   const cidadeInput = document.getElementById("regCidade");
   const categoriaWrapper = document.getElementById("regCategoriaWrapper");
   const categoriaSelect = document.getElementById("regCategoria");
@@ -43,9 +48,14 @@
 
     categoriaSelect.innerHTML = categorias
       .map((categoria) => {
+        const precoBase =
+          categoria.precoAtual !== undefined
+            ? categoria.precoAtual
+            : categoria.valor;
+
         const valor =
-          categoria.valor !== null && categoria.valor !== undefined
-            ? Number(categoria.valor).toLocaleString("pt-BR", {
+          precoBase !== null && precoBase !== undefined
+            ? Number(precoBase).toLocaleString("pt-BR", {
                 style: "currency",
                 currency: "BRL"
               })
@@ -109,8 +119,13 @@
       const inscricao = {
         evento_id: evento.id,
         nome: nomeInput.value.trim(),
+        cpf: cpfInput.value.trim(),
+        data_nascimento: dataNascimentoInput.value,
+        sexo: sexoInput.value,
         email: emailInput.value.trim(),
         telefone: telefoneInput.value.trim(),
+        equipe: equipeInput.value.trim() || null,
+        licenca_cbc: licencaCbcInput.value.trim() || null,
         cidade: cidadeInput.value.trim() || null,
         categoria: categoriaSelect.value || null,
         comprovante_url: comprovanteUrl,

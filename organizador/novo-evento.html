@@ -139,6 +139,17 @@
                                 required>
                         </div>
 
+                        <div class="form-group full-width">
+                            <label for="localizacaoUrl">
+                                Link do Google Maps (opcional)
+                            </label>
+
+                            <input
+                                type="url"
+                                id="localizacaoUrl"
+                                placeholder="https://maps.google.com/...">
+                        </div>
+
                         <div class="form-group">
                             <label for="cidade">Cidade</label>
                             <input type="text" id="cidade" required>
@@ -181,6 +192,44 @@
 
                     </div>
                 </div>
+
+                <!-- ORGANIZADOR -->
+
+<div class="form-section">
+
+    <h2>Contato do organizador</h2>
+
+    <p class="section-description">
+        Mostrado na página pública do evento para os atletas.
+    </p>
+
+    <div class="form-grid">
+
+        <div class="form-group">
+            <label for="organizadorContato">
+                Telefone / WhatsApp (opcional)
+            </label>
+
+            <input
+                type="text"
+                id="organizadorContato"
+                placeholder="(84) 99999-9999">
+        </div>
+
+        <div class="form-group">
+            <label for="organizadorInstagram">
+                Instagram (opcional)
+            </label>
+
+            <input
+                type="text"
+                id="organizadorInstagram"
+                placeholder="@seuevento">
+        </div>
+
+    </div>
+
+</div>
 
                 <!-- INSCRIÇÕES -->
 
@@ -271,6 +320,31 @@
 
 </div>
 
+<!-- LOTES -->
+
+<div class="form-section">
+
+    <h2>Lotes</h2>
+
+    <p class="section-description">
+        Defina os lotes de preço (ex.: "1º Lote", "2º Lote", "Lote
+        Extra") com a data limite de cada um. O preço vigente de cada
+        categoria muda sozinho conforme a data.
+    </p>
+
+    <div id="lotesContainer"></div>
+
+    <button
+        type="button"
+        id="addLoteButton"
+        class="secondary-button">
+
+        + Adicionar lote
+
+    </button>
+
+</div>
+
 <!-- CATEGORIAS -->
 
 <div class="form-section">
@@ -279,7 +353,9 @@
 
     <p class="section-description">
 
-        Adicione as categorias disponíveis para este evento.
+        Adicione as categorias disponíveis para este evento. Cadastre
+        os lotes acima primeiro para poder definir o preço de cada
+        categoria em cada lote.
 
     </p>
 
@@ -348,6 +424,36 @@
                     <p id="regulamentoNome" class="file-name"></p>
                 </div>
 
+                <!-- GALERIA -->
+
+                <div class="form-section">
+                    <h2>Fotos do evento (galeria)</h2>
+
+                    <p class="section-description">
+                        Fotos extras mostradas em sequência na página do
+                        evento (edições anteriores, estrutura, percurso).
+                        O banner principal acima continua sendo a capa.
+                    </p>
+
+                    <label class="upload-area" for="galeria">
+                        <input
+                            type="file"
+                            id="galeria"
+                            accept="image/png,image/jpeg,image/webp"
+                            multiple>
+
+                        <span class="upload-title">
+                            Clique para selecionar uma ou mais fotos
+                        </span>
+
+                        <span class="upload-description">
+                            PNG, JPG ou WEBP
+                        </span>
+                    </label>
+
+                    <p id="galeriaNomes" class="file-name"></p>
+                </div>
+
                 <div id="formMessage" class="form-message"></div>
 
                 <div class="form-actions">
@@ -389,8 +495,8 @@
             </div>
 
             <div class="form-group">
-                <label>Valor (R$)</label>
-                <input type="number" class="categoria-valor" min="0" step="0.01">
+                <label>Percurso</label>
+                <input type="text" class="categoria-percurso" placeholder="Ex.: Pro, Sport">
             </div>
 
             <div class="form-group">
@@ -421,11 +527,43 @@
 
         </div>
 
+        <div class="categoria-precos-container"></div>
+
         <button
             type="button"
             class="removeCategoriaButton secondary-button">
 
             Remover categoria
+
+        </button>
+
+    </div>
+
+</template>
+
+<template id="loteTemplate">
+
+    <div class="lote-card">
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label>Nome do lote</label>
+                <input type="text" class="lote-nome" placeholder="Ex.: 1º Lote">
+            </div>
+
+            <div class="form-group">
+                <label>Data limite</label>
+                <input type="date" class="lote-data-limite">
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="removeLoteButton secondary-button">
+
+            Remover lote
 
         </button>
 

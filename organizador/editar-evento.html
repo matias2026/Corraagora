@@ -103,6 +103,23 @@
             gap: 14px;
         }
 
+        .categoria-precos-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 14px;
+            margin-top: 14px;
+            padding-top: 14px;
+            border-top: 1px solid #e2edf7;
+        }
+
+        .lote-card {
+            border: 1px solid #dbe5f2;
+            border-radius: 14px;
+            padding: 18px;
+            background: #f8fbff;
+            margin-bottom: 16px;
+        }
+
         .danger-button {
             border: none;
             border-radius: 9px;
@@ -348,7 +365,43 @@
                             id="dataEvento"
                             required
                         >
-                    </div>                   
+                    </div>
+
+                    <div class="form-group full">
+                        <label for="localizacaoUrl">
+                            Link do Google Maps (opcional)
+                        </label>
+
+                        <input
+                            type="url"
+                            id="localizacaoUrl"
+                            placeholder="https://maps.google.com/..."
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="organizadorContato">
+                            Telefone / WhatsApp (opcional)
+                        </label>
+
+                        <input
+                            type="text"
+                            id="organizadorContato"
+                            placeholder="(84) 99999-9999"
+                        >
+                    </div>
+
+                    <div class="form-group">
+                        <label for="organizadorInstagram">
+                            Instagram (opcional)
+                        </label>
+
+                        <input
+                            type="text"
+                            id="organizadorInstagram"
+                            placeholder="@seuevento"
+                        >
+                    </div>
 
                     <div class="form-group full">
                         <label for="descricao">
@@ -405,7 +458,42 @@
                         </div>
                     </div>
 
+                    <div class="form-group full">
+                        <label for="galeria">
+                            Adicionar fotos à galeria (opcional)
+                        </label>
+
+                        <input
+                            type="file"
+                            id="galeria"
+                            accept="image/png,image/jpeg,image/webp"
+                            multiple
+                        >
+
+                        <small class="status-help" id="galeriaAtualInfo">
+                            Nenhuma foto na galeria ainda.
+                        </small>
+                    </div>
+
                 </div>
+
+            </section>
+
+            <section class="form-section">
+
+                <div class="categoria-header">
+                    <h2>Lotes</h2>
+
+                    <button
+                        type="button"
+                        id="addLoteButton"
+                        class="secondary-button"
+                    >
+                        + Adicionar lote
+                    </button>
+                </div>
+
+                <div id="lotesContainer"></div>
 
             </section>
 
@@ -487,14 +575,12 @@
             </div>
 
             <div class="form-group">
-                <label>Valor</label>
+                <label>Percurso</label>
 
                 <input
-                    type="number"
-                    class="categoria-valor"
-                    min="0"
-                    step="0.01"
-                    required
+                    type="text"
+                    class="categoria-percurso"
+                    placeholder="Ex.: Pro, Sport"
                 >
             </div>
 
@@ -548,7 +634,38 @@
 
         </div>
 
+        <div class="categoria-precos-container"></div>
+
     </article>
+
+</template>
+
+<template id="loteTemplate">
+
+    <div class="lote-card">
+
+        <div class="categoria-grid">
+
+            <div class="form-group">
+                <label>Nome do lote</label>
+                <input type="text" class="lote-nome" placeholder="Ex.: 1º Lote">
+            </div>
+
+            <div class="form-group">
+                <label>Data limite</label>
+                <input type="date" class="lote-data-limite">
+            </div>
+
+        </div>
+
+        <button
+            type="button"
+            class="danger-button removeLoteButton"
+        >
+            Remover lote
+        </button>
+
+    </div>
 
 </template>
 

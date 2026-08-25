@@ -189,6 +189,39 @@
 
               </div>
 
+
+              <div
+                class="event-categories hidden"
+                id="eventCategories"
+              >
+                <h2>Categorias e valores</h2>
+
+                <p
+                  class="event-lote-vigente hidden"
+                  id="eventLoteVigente"
+                ></p>
+
+                <div id="eventCategoriesGroups"></div>
+              </div>
+
+
+              <div class="service-fee-notice">
+                ⚠ Este evento pode estar sujeito a uma taxa de serviço da
+                plataforma, que será informada antes da confirmação da
+                inscrição.
+              </div>
+
+
+              <a
+                class="event-location-link hidden"
+                id="eventLocationLink"
+                href="#"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                📍 Ver localização no mapa
+              </a>
+
             </div>
           </div>
 
@@ -228,6 +261,130 @@
 
           </aside>
 
+        </div>
+
+
+        <div
+          class="event-gallery hidden"
+          id="eventGallery"
+        >
+          <h2>Fotos do evento</h2>
+
+          <div class="event-gallery-viewer">
+            <button
+              type="button"
+              class="event-gallery-arrow event-gallery-prev"
+              id="eventGalleryPrev"
+              aria-label="Foto anterior"
+            >
+              ‹
+            </button>
+
+            <img
+              id="eventGalleryImage"
+              alt="Foto do evento"
+            >
+
+            <button
+              type="button"
+              class="event-gallery-arrow event-gallery-next"
+              id="eventGalleryNext"
+              aria-label="Próxima foto"
+            >
+              ›
+            </button>
+          </div>
+
+          <p
+            class="event-gallery-counter"
+            id="eventGalleryCounter"
+          ></p>
+        </div>
+
+
+        <a
+          class="btn btn-outline event-regulamento-button hidden"
+          id="eventRegulamentoButton"
+          href="#"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          📄 Ver regulamento
+        </a>
+
+
+        <div
+          class="event-organizer-info hidden"
+          id="eventOrganizerInfo"
+        >
+          <h2>Organização</h2>
+
+          <p id="eventOrganizerName">Organizador</p>
+
+          <div class="event-organizer-links">
+            <a
+              class="hidden"
+              id="eventOrganizerContact"
+              href="#"
+            ></a>
+
+            <a
+              class="hidden"
+              id="eventOrganizerInstagram"
+              href="#"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Instagram
+            </a>
+          </div>
+        </div>
+
+
+        <div class="event-lookup-section">
+          <h2>Consultar minha inscrição</h2>
+
+          <p>
+            Perdeu o prazo de pagamento do lote ou quer conferir sua
+            inscrição? Informe o CPF e o e-mail usados na inscrição.
+          </p>
+
+          <form
+            id="lookupForm"
+            class="lookup-form"
+          >
+            <input
+              type="text"
+              id="lookupCpf"
+              placeholder="CPF"
+              required
+            >
+
+            <input
+              type="email"
+              id="lookupEmail"
+              placeholder="E-mail"
+              required
+            >
+
+            <button
+              class="btn btn-outline"
+              type="submit"
+              id="lookupSubmitButton"
+            >
+              Consultar
+            </button>
+          </form>
+
+          <div
+            id="lookupMessage"
+            class="registration-form-message"
+          ></div>
+
+          <div
+            class="lookup-result hidden"
+            id="lookupResult"
+          ></div>
         </div>
 
       </div>
@@ -274,6 +431,37 @@
             </label>
 
             <label>
+              CPF
+              <input
+                type="text"
+                id="regCpf"
+                placeholder="000.000.000-00"
+                required
+              >
+            </label>
+
+            <label>
+              Data de nascimento
+              <input
+                type="date"
+                id="regDataNascimento"
+                required
+              >
+            </label>
+
+            <label>
+              Sexo
+              <select
+                id="regSexo"
+                required
+              >
+                <option value="">Selecione</option>
+                <option value="Masculino">Masculino</option>
+                <option value="Feminino">Feminino</option>
+              </select>
+            </label>
+
+            <label>
               E-mail
               <input
                 type="email"
@@ -288,6 +476,22 @@
                 type="tel"
                 id="regTelefone"
                 required
+              >
+            </label>
+
+            <label>
+              Equipe / assessoria (opcional)
+              <input
+                type="text"
+                id="regEquipe"
+              >
+            </label>
+
+            <label>
+              Licença CBC (opcional)
+              <input
+                type="text"
+                id="regLicencaCbc"
               >
             </label>
 
@@ -426,6 +630,7 @@
 <script src="assets/js/storage.js"></script>
 <script src="assets/js/evento.js"></script>
 <script src="assets/js/inscricao.js"></script>
+<script src="assets/js/consulta-inscricao.js"></script>
 
 </body>
 </html>

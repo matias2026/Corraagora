@@ -12,6 +12,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const regulamentoInput = document.getElementById("regulamento");
     const regulamentoNome = document.getElementById("regulamentoNome");
 
+    const galeriaInput = document.getElementById("galeria");
+    const galeriaNomes = document.getElementById("galeriaNomes");
+
     const formMessage = document.getElementById("formMessage");
     const saveButton = document.getElementById("saveButton");
 
@@ -145,38 +148,128 @@ document.addEventListener("DOMContentLoaded", async () => {
         regulamentoNome.textContent =
             `Arquivo selecionado: ${arquivo.name}`;
     });
+
+    galeriaInput.addEventListener("change", () => {
+        const arquivos = [...galeriaInput.files];
+
+        galeriaNomes.textContent = arquivos.length
+            ? `${arquivos.length} foto(s) selecionada(s): ${arquivos.map(a => a.name).join(", ")}`
+            : "";
+    });
+
+    // ---------------------------------------------------------------
+    // LOTES
+    // ---------------------------------------------------------------
+
+    const lotesContainer = document.getElementById("lotesContainer");
+    const addLoteButton = document.getElementById("addLoteButton");
+    const loteTemplate = document.getElementById("loteTemplate");
+
+    function adicionarLote() {
+        const clone = loteTemplate.content.cloneNode(true);
+
+        clone
+            .querySelector(".removeLoteButton")
+            .addEventListener("click", function () {
+                this.closest(".lote-card").remove();
+                sincronizarPrecosCategorias();
+            });
+
+        clone
+            .querySelector(".lote-nome")
+            .addEventListener("blur", sincronizarPrecosCategorias);
+
+        lotesContainer.appendChild(clone);
+        sincronizarPrecosCategorias();
+    }
+
+    addLoteButton.addEventListener("click", adicionarLote);
+
+    // ---------------------------------------------------------------
+    // CATEGORIAS
+    // ---------------------------------------------------------------
+
     const categoriasContainer =
-    document.getElementById("categoriasContainer");
+        document.getElementById("categoriasContainer");
 
-const addCategoriaButton =
-    document.getElementById("addCategoriaButton");
+    const addCategoriaButton =
+        document.getElementById("addCategoriaButton");
 
-const categoriaTemplate =
-    document.getElementById("categoriaTemplate");
+    const categoriaTemplate =
+        document.getElementById("categoriaTemplate");
 
-function adicionarCategoria() {
+    function adicionarCategoria() {
+        const clone =
+            categoriaTemplate.content.cloneNode(true);
 
-    const clone =
-        categoriaTemplate.content.cloneNode(true);
+        clone
+            .querySelector(".removeCategoriaButton")
+            .addEventListener("click", function () {
+                this.closest(".categoria-card").remove();
+            });
 
-    clone
-        .querySelector(".removeCategoriaButton")
-        .addEventListener("click", function () {
+        categoriasContainer.appendChild(clone);
 
-            this.closest(".categoria-card").remove();
+        renderPrecosParaCategoria(
+            categoriasContainer.lastElementChild
+        );
+    }
 
-        });
+    function renderPrecosParaCategoria(card) {
+        const loteCards = [
+            ...lotesContainer.querySelectorAll(".lote-card")
+        ];
 
-    categoriasContainer.appendChild(clone);
+        const precosContainer = card.querySelector(
+            ".categoria-precos-container"
+        );
 
-}
+        const valoresAntigos = [
+            ...precosContainer.querySelectorAll(".categoria-preco")
+        ].map(input => input.value);
 
-addCategoriaButton.addEventListener(
-    "click",
-    adicionarCategoria
-);
+        if (loteCards.length === 0) {
+            precosContainer.innerHTML =
+                '<p class="section-description">Adicione um lote acima para definir o preço.</p>';
+            return;
+        }
 
-adicionarCategoria();
+        precosContainer.innerHTML = loteCards
+            .map((loteCard, index) => {
+                const nomeLote =
+                    loteCard.querySelector(".lote-nome").value.trim() ||
+                    `Lote ${index + 1}`;
+
+                const valorAnterior = valoresAntigos[index] || "";
+
+                return `
+                    <div class="form-group">
+                        <label>Preço — ${escaparHTML(nomeLote)}</label>
+                        <input
+                            type="number"
+                            class="categoria-preco"
+                            min="0"
+                            step="0.01"
+                            value="${valorAnterior}">
+                    </div>
+                `;
+            })
+            .join("");
+    }
+
+    function sincronizarPrecosCategorias() {
+        categoriasContainer
+            .querySelectorAll(".categoria-card")
+            .forEach(renderPrecosParaCategoria);
+    }
+
+    addCategoriaButton.addEventListener(
+        "click",
+        adicionarCategoria
+    );
+
+    adicionarLote();
+    adicionarCategoria();
 
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
@@ -200,6 +293,13 @@ adicionarCategoria();
             document.getElementById("cidade").value.trim();
         const estado =
             document.getElementById("estado").value;
+        const localizacaoUrl =
+            document.getElementById("localizacaoUrl").value.trim();
+
+        const organizadorContato =
+            document.getElementById("organizadorContato").value.trim();
+        const organizadorInstagram =
+            document.getElementById("organizadorInstagram").value.trim();
 
         const valorTexto =
             document.getElementById("valor").value;
@@ -218,37 +318,46 @@ adicionarCategoria();
         const bannerFile = bannerInput.files[0] || null;
         const regulamentoFile =
             regulamentoInput.files[0] || null;
-            const categorias = [];
+        const galeriaFiles = [...galeriaInput.files];
 
-document
-    .querySelectorAll(".categoria-card")
-    .forEach(card => {
+        const lotes = [];
 
-        categorias.push({
-
-            nome: card.querySelector(".categoria-nome").value.trim(),
-
-            valor: Number(
-                card.querySelector(".categoria-valor").value || 0
-            ),
-
-            limite_inscritos: Number(
-                card.querySelector(".categoria-limite").value || 0
-            ),
-
-            idade_min: Number(
-                card.querySelector(".categoria-idade-min").value || 0
-            ),
-
-            idade_max: Number(
-                card.querySelector(".categoria-idade-max").value || 0
-            ),
-
-            sexo: card.querySelector(".categoria-sexo").value
-
+        lotesContainer.querySelectorAll(".lote-card").forEach(card => {
+            lotes.push({
+                nome: card.querySelector(".lote-nome").value.trim(),
+                data_limite: card.querySelector(".lote-data-limite").value
+            });
         });
 
-    });
+        const lotesValidos = lotes.filter(
+            lote => lote.nome && lote.data_limite
+        );
+
+        const categorias = [];
+
+        document
+            .querySelectorAll(".categoria-card")
+            .forEach(card => {
+                const precos = [
+                    ...card.querySelectorAll(".categoria-preco")
+                ].map(input => Number(input.value || 0));
+
+                categorias.push({
+                    nome: card.querySelector(".categoria-nome").value.trim(),
+                    percurso: card.querySelector(".categoria-percurso").value.trim(),
+                    limite_inscritos: Number(
+                        card.querySelector(".categoria-limite").value || 0
+                    ),
+                    idade_min: Number(
+                        card.querySelector(".categoria-idade-min").value || 0
+                    ),
+                    idade_max: Number(
+                        card.querySelector(".categoria-idade-max").value || 0
+                    ),
+                    sexo: card.querySelector(".categoria-sexo").value,
+                    precos
+                });
+            });
 
         if (
             !nome ||
@@ -286,17 +395,26 @@ document
             );
             return;
         }
-        const categoriasValidas = categorias.filter(categoria =>
-    categoria.nome !== ""
-);
 
-if (categoriasValidas.length === 0) {
-    mostrarMensagem(
-        "Adicione pelo menos uma categoria.",
-        "error"
-    );
-    return;
-}
+        if (lotesValidos.length === 0) {
+            mostrarMensagem(
+                "Adicione pelo menos um lote (nome e data limite).",
+                "error"
+            );
+            return;
+        }
+
+        const categoriasValidas = categorias.filter(categoria =>
+            categoria.nome !== ""
+        );
+
+        if (categoriasValidas.length === 0) {
+            mostrarMensagem(
+                "Adicione pelo menos uma categoria.",
+                "error"
+            );
+            return;
+        }
 
         if (!bannerFile) {
             mostrarMensagem(
@@ -328,6 +446,21 @@ if (categoriasValidas.length === 0) {
                 );
             }
 
+            const galeriaUrls = [];
+
+            if (galeriaFiles.length > 0) {
+                atualizarBotao("Enviando fotos...");
+
+                for (const arquivo of galeriaFiles) {
+                    const url = await uploadBanner(
+                        arquivo,
+                        session.user.id
+                    );
+
+                    galeriaUrls.push(url);
+                }
+            }
+
             atualizarBotao("Salvando evento...");
 
             const slugBase = gerarSlug(nome);
@@ -351,40 +484,110 @@ if (categoriasValidas.length === 0) {
                 regulamento_url: regulamentoUrl,
                 vagas,
                 inscricoes_abertas: inscricoesAbertas,
-                informacoes_pagamento: informacoesPagamento
+                informacoes_pagamento: informacoesPagamento,
+                localizacao_url: localizacaoUrl || null,
+                organizador_contato: organizadorContato || null,
+                organizador_instagram: organizadorInstagram || null
             };
 
             const { data: eventoCriado, error } =
-    await supabaseClient
-        .from("eventos")
-        .insert(novoEvento)
-        .select()
-        .single();
+                await supabaseClient
+                    .from("eventos")
+                    .insert(novoEvento)
+                    .select()
+                    .single();
 
-if (error) {
-    throw error;
-}
+            if (error) {
+                throw error;
+            }
 
-if (categoriasValidas.length > 0) {
-    const categoriasInsert = categoriasValidas.map((categoria, index) => ({
-        evento_id: eventoCriado.id,
-        nome: categoria.nome,
-        valor: categoria.valor,
-        limite_inscritos: categoria.limite_inscritos,
-        idade_min: categoria.idade_min,
-        idade_max: categoria.idade_max,
-        sexo: categoria.sexo || null,
-        ordem: index + 1
-    }));
+            const lotesInsert = lotesValidos.map((lote, index) => ({
+                evento_id: eventoCriado.id,
+                nome: lote.nome,
+                data_limite: lote.data_limite,
+                ordem: index + 1
+            }));
 
-    const { error: categoriaError } = await supabaseClient
-        .from("categorias")
-        .insert(categoriasInsert);
+            const { data: lotesCriados, error: lotesError } =
+                await supabaseClient
+                    .from("lotes")
+                    .insert(lotesInsert)
+                    .select();
 
-    if (categoriaError) {
-        throw categoriaError;
-    }
-}
+            if (lotesError) {
+                throw lotesError;
+            }
+
+            const lotesOrdenados = [...lotesCriados].sort(
+                (a, b) => a.ordem - b.ordem
+            );
+
+            const categoriasInsert = categoriasValidas.map((categoria, index) => ({
+                evento_id: eventoCriado.id,
+                nome: categoria.nome,
+                percurso: categoria.percurso || null,
+                valor: categoria.precos[0] || 0,
+                limite_inscritos: categoria.limite_inscritos,
+                idade_min: categoria.idade_min,
+                idade_max: categoria.idade_max,
+                sexo: categoria.sexo || null,
+                ordem: index + 1
+            }));
+
+            const { data: categoriasCriadas, error: categoriaError } =
+                await supabaseClient
+                    .from("categorias")
+                    .insert(categoriasInsert)
+                    .select();
+
+            if (categoriaError) {
+                throw categoriaError;
+            }
+
+            const categoriasOrdenadas = [...categoriasCriadas].sort(
+                (a, b) => a.ordem - b.ordem
+            );
+
+            const precosInsert = [];
+
+            categoriasOrdenadas.forEach((categoriaCriada, indexCategoria) => {
+                const precosDaCategoria =
+                    categoriasValidas[indexCategoria].precos;
+
+                lotesOrdenados.forEach((loteCriado, indexLote) => {
+                    precosInsert.push({
+                        categoria_id: categoriaCriada.id,
+                        lote_id: loteCriado.id,
+                        valor: precosDaCategoria[indexLote] || 0
+                    });
+                });
+            });
+
+            if (precosInsert.length > 0) {
+                const { error: precosError } = await supabaseClient
+                    .from("categoria_precos")
+                    .insert(precosInsert);
+
+                if (precosError) {
+                    throw precosError;
+                }
+            }
+
+            if (galeriaUrls.length > 0) {
+                const galeriaInsert = galeriaUrls.map((url, index) => ({
+                    evento_id: eventoCriado.id,
+                    url,
+                    ordem: index + 1
+                }));
+
+                const { error: galeriaError } = await supabaseClient
+                    .from("evento_banners")
+                    .insert(galeriaInsert);
+
+                if (galeriaError) {
+                    throw galeriaError;
+                }
+            }
 
             mostrarMensagem(
                 "Seu evento foi enviado para aprovação e ficará " +
@@ -394,6 +597,7 @@ if (categoriasValidas.length > 0) {
 
             form.reset();
             regulamentoNome.textContent = "";
+            galeriaNomes.textContent = "";
             bannerPreview.removeAttribute("src");
             bannerPreviewContainer.classList.add("hidden");
 
@@ -444,5 +648,14 @@ if (categoriasValidas.length > 0) {
             atualizarBotao("Salvar evento");
             saveButton.removeAttribute("aria-busy");
         }
+    }
+
+    function escaparHTML(valor) {
+        return String(valor)
+            .replaceAll("&", "&amp;")
+            .replaceAll("<", "&lt;")
+            .replaceAll(">", "&gt;")
+            .replaceAll('"', "&quot;")
+            .replaceAll("'", "&#039;");
     }
 });

@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  
+
   const eventLoading = document.getElementById("eventLoading");
   const eventContent = document.getElementById("eventContent");
   const eventError = document.getElementById("eventError");
@@ -17,6 +17,37 @@
   const registrationButton =
     document.getElementById("registrationButton");
   const year = document.getElementById("year");
+
+  const eventCategories = document.getElementById("eventCategories");
+  const eventCategoriesGroups = document.getElementById(
+    "eventCategoriesGroups"
+  );
+  const eventLoteVigente = document.getElementById("eventLoteVigente");
+
+  const eventLocationLink = document.getElementById("eventLocationLink");
+  const eventRegulamentoButton = document.getElementById(
+    "eventRegulamentoButton"
+  );
+
+  const eventOrganizerInfo = document.getElementById("eventOrganizerInfo");
+  const eventOrganizerName = document.getElementById("eventOrganizerName");
+  const eventOrganizerContact = document.getElementById(
+    "eventOrganizerContact"
+  );
+  const eventOrganizerInstagram = document.getElementById(
+    "eventOrganizerInstagram"
+  );
+
+  const eventGallery = document.getElementById("eventGallery");
+  const eventGalleryImage = document.getElementById("eventGalleryImage");
+  const eventGalleryCounter = document.getElementById(
+    "eventGalleryCounter"
+  );
+  const eventGalleryPrev = document.getElementById("eventGalleryPrev");
+  const eventGalleryNext = document.getElementById("eventGalleryNext");
+
+  let galeriaFotos = [];
+  let galeriaIndiceAtual = 0;
 
   async function carregarEvento() {
     atualizarAno();
@@ -46,22 +77,123 @@
       return;
     }
 
-    const { data: categorias, error: categoriasError } =
-      await supabaseClient
+    const [
+      { data: categorias, error: categoriasError },
+      { data: lotes, error: lotesError },
+      { data: banners, error: bannersError }
+    ] = await Promise.all([
+      supabaseClient
         .from("categorias")
         .select("*")
         .eq("evento_id", evento.id)
-        .order("ordem", { ascending: true });
+        .order("ordem", { ascending: true }),
+      supabaseClient
+        .from("lotes")
+        .select("*")
+        .eq("evento_id", evento.id)
+        .order("ordem", { ascending: true }),
+      supabaseClient
+        .from("evento_banners")
+        .select("*")
+        .eq("evento_id", evento.id)
+        .order("ordem", { ascending: true })
+    ]);
 
     if (categoriasError) {
       console.error("Erro ao carregar categorias:", categoriasError);
     }
 
-    window.eventoAtual = evento;
-    window.categoriasDoEvento = categorias || [];
+    if (lotesError) {
+      console.error("Erro ao carregar lotes:", lotesError);
+    }
 
-    preencherEvento(evento);
+    if (bannersError) {
+      console.error("Erro ao carregar galeria:", bannersError);
+    }
+
+    const listaCategorias = categorias || [];
+    const listaLotes = lotes || [];
+
+    let precos = [];
+
+    if (listaCategorias.length > 0 && listaLotes.length > 0) {
+      const { data: precosData, error: precosError } = await supabaseClient
+        .from("categoria_precos")
+        .select("*")
+        .in(
+          "categoria_id",
+          listaCategorias.map((categoria) => categoria.id)
+        );
+
+      if (precosError) {
+        console.error("Erro ao carregar preços por lote:", precosError);
+      } else {
+        precos = precosData || [];
+      }
+    }
+
+    const loteVigente = obterLoteVigente(listaLotes);
+
+    const categoriasComPreco = listaCategorias.map((categoria) => ({
+      ...categoria,
+      precoAtual: calcularPrecoCategoria(categoria, loteVigente, precos)
+    }));
+
+    let organizador = null;
+
+    if (evento.organizador_id) {
+      const { data: perfil, error: perfilError } = await supabaseClient
+        .from("profiles")
+        .select("full_name, email")
+        .eq("id", evento.organizador_id)
+        .maybeSingle();
+
+      if (perfilError) {
+        console.error("Erro ao carregar organizador:", perfilError);
+      } else {
+        organizador = perfil;
+      }
+    }
+
+    window.eventoAtual = evento;
+    window.categoriasDoEvento = categoriasComPreco;
+    window.loteVigenteDoEvento = loteVigente;
+
+    preencherEvento(evento, categoriasComPreco, loteVigente, organizador);
+    configurarGaleria(banners || []);
     mostrarConteudo();
+  }
+
+  function obterLoteVigente(lotes) {
+    if (!lotes.length) return null;
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const ordenados = [...lotes].sort((a, b) => a.ordem - b.ordem);
+
+    const vigente = ordenados.find((lote) => {
+      const dataLimite = new Date(`${lote.data_limite}T23:59:59`);
+      return dataLimite >= hoje;
+    });
+
+    return vigente || ordenados[ordenados.length - 1];
+  }
+
+  function calcularPrecoCategoria(categoria, loteVigente, precos) {
+    if (loteVigente) {
+      const preco = precos.find(
+        (item) =>
+          item.categoria_id === categoria.id &&
+          item.lote_id === loteVigente.id
+      );
+
+      if (preco) return Number(preco.valor);
+    }
+
+    return categoria.valor !== null && categoria.valor !== undefined
+      ? Number(categoria.valor)
+      : null;
   }
 
   function obterSlugDaURL() {
@@ -72,7 +204,7 @@
     return parametros.get("slug")?.trim() || "";
   }
 
-  function preencherEvento(evento) {
+  function preencherEvento(evento, categorias, loteVigente, organizador) {
     const nome = evento.nome || "Evento esportivo";
     const modalidade = evento.modalidade || "Evento";
     const cidade = evento.cidade || "Cidade não informada";
@@ -89,7 +221,6 @@
     }`;
 
     eventDescription.textContent = descricao;
-    eventPrice.textContent = formatarValor(evento.valor);
     eventSymbol.textContent = obterSimboloModalidade(
       modalidade
     );
@@ -98,7 +229,197 @@
 
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
+    configurarPrecoSidebar(evento, categorias);
+    configurarCategorias(categorias, loteVigente);
+    configurarLocalizacao(evento);
+    configurarRegulamento(evento);
+    configurarOrganizador(evento, organizador);
   }
+
+  function configurarPrecoSidebar(evento, categorias) {
+    const precosValidos = categorias
+      .map((categoria) => categoria.precoAtual)
+      .filter((valor) => valor !== null && valor !== undefined);
+
+    if (precosValidos.length > 0) {
+      const menorPreco = Math.min(...precosValidos);
+      eventPrice.textContent = `A partir de ${formatarValor(menorPreco)}`;
+      return;
+    }
+
+    eventPrice.textContent = formatarValor(evento.valor);
+  }
+
+  function configurarCategorias(categorias, loteVigente) {
+    if (!categorias.length) {
+      eventCategories.classList.add("hidden");
+      return;
+    }
+
+    eventCategories.classList.remove("hidden");
+
+    if (loteVigente) {
+      eventLoteVigente.textContent =
+        `Preços do ${loteVigente.nome} — válidos até ` +
+        `${formatarData(loteVigente.data_limite)}.`;
+      eventLoteVigente.classList.remove("hidden");
+    } else {
+      eventLoteVigente.classList.add("hidden");
+    }
+
+    const grupos = new Map();
+
+    categorias.forEach((categoria) => {
+      const percurso = categoria.percurso?.trim() || "Geral";
+
+      if (!grupos.has(percurso)) {
+        grupos.set(percurso, []);
+      }
+
+      grupos.get(percurso).push(categoria);
+    });
+
+    eventCategoriesGroups.innerHTML = [...grupos.entries()]
+      .map(([percurso, categoriasDoGrupo]) => `
+        <div class="event-category-group">
+          <h3>${escaparHTML(percurso)}</h3>
+
+          <div class="event-category-list">
+            ${categoriasDoGrupo
+              .map((categoria) => `
+                <div class="event-category-row">
+                  <div>
+                    <strong>${escaparHTML(categoria.nome)}</strong>
+                    ${
+                      categoria.sexo || categoria.idade_min || categoria.idade_max
+                        ? `<small>${escaparHTML(
+                            [
+                              categoria.sexo || "",
+                              categoria.idade_min || categoria.idade_max
+                                ? `${categoria.idade_min || 0}-${categoria.idade_max || "+"} anos`
+                                : ""
+                            ]
+                              .filter(Boolean)
+                              .join(" • ")
+                          )}</small>`
+                        : ""
+                    }
+                  </div>
+                  <span>${formatarValor(categoria.precoAtual)}</span>
+                </div>
+              `)
+              .join("")}
+          </div>
+        </div>
+      `)
+      .join("");
+  }
+
+  function configurarLocalizacao(evento) {
+    if (!evento.localizacao_url) {
+      eventLocationLink.classList.add("hidden");
+      return;
+    }
+
+    eventLocationLink.href = evento.localizacao_url;
+    eventLocationLink.classList.remove("hidden");
+  }
+
+  function configurarRegulamento(evento) {
+    if (!evento.regulamento_url) {
+      eventRegulamentoButton.classList.add("hidden");
+      return;
+    }
+
+    eventRegulamentoButton.href = evento.regulamento_url;
+    eventRegulamentoButton.classList.remove("hidden");
+  }
+
+  function configurarOrganizador(evento, organizador) {
+    const nome =
+      organizador?.full_name ||
+      organizador?.email ||
+      "Organizador não identificado";
+
+    const temContato = Boolean(evento.organizador_contato);
+    const temInstagram = Boolean(evento.organizador_instagram);
+
+    if (!organizador && !temContato && !temInstagram) {
+      eventOrganizerInfo.classList.add("hidden");
+      return;
+    }
+
+    eventOrganizerInfo.classList.remove("hidden");
+    eventOrganizerName.textContent = nome;
+
+    if (temContato) {
+      const apenasDigitos = evento.organizador_contato.replace(/\D/g, "");
+
+      eventOrganizerContact.href = apenasDigitos
+        ? `https://wa.me/55${apenasDigitos}`
+        : "#";
+
+      eventOrganizerContact.textContent = `📞 ${evento.organizador_contato}`;
+      eventOrganizerContact.target = "_blank";
+      eventOrganizerContact.rel = "noopener noreferrer";
+      eventOrganizerContact.classList.remove("hidden");
+    } else {
+      eventOrganizerContact.classList.add("hidden");
+    }
+
+    if (temInstagram) {
+      const handle = evento.organizador_instagram
+        .trim()
+        .replace(/^@/, "");
+
+      eventOrganizerInstagram.href = handle.startsWith("http")
+        ? handle
+        : `https://instagram.com/${handle}`;
+
+      eventOrganizerInstagram.textContent = `📷 @${handle.replace(
+        /^https?:\/\/(www\.)?instagram\.com\//,
+        ""
+      )}`;
+      eventOrganizerInstagram.classList.remove("hidden");
+    } else {
+      eventOrganizerInstagram.classList.add("hidden");
+    }
+  }
+
+  function configurarGaleria(banners) {
+    galeriaFotos = banners;
+    galeriaIndiceAtual = 0;
+
+    if (!banners.length) {
+      eventGallery.classList.add("hidden");
+      return;
+    }
+
+    eventGallery.classList.remove("hidden");
+    atualizarImagemGaleria();
+  }
+
+  function atualizarImagemGaleria() {
+    const foto = galeriaFotos[galeriaIndiceAtual];
+    if (!foto) return;
+
+    eventGalleryImage.src = foto.url;
+    eventGalleryCounter.textContent =
+      `${galeriaIndiceAtual + 1} / ${galeriaFotos.length}`;
+  }
+
+  eventGalleryPrev?.addEventListener("click", () => {
+    if (!galeriaFotos.length) return;
+    galeriaIndiceAtual =
+      (galeriaIndiceAtual - 1 + galeriaFotos.length) % galeriaFotos.length;
+    atualizarImagemGaleria();
+  });
+
+  eventGalleryNext?.addEventListener("click", () => {
+    if (!galeriaFotos.length) return;
+    galeriaIndiceAtual = (galeriaIndiceAtual + 1) % galeriaFotos.length;
+    atualizarImagemGaleria();
+  });
 
   function configurarBanner(bannerUrl) {
     if (!bannerUrl) {
@@ -212,9 +533,18 @@
   function normalizarTexto(texto) {
     return String(texto || "")
       .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
+      .replace(/\p{Diacritic}/gu, "")
       .toLowerCase()
       .trim();
+  }
+
+  function escaparHTML(valor) {
+    return String(valor)
+      .replaceAll("&", "&amp;")
+      .replaceAll("<", "&lt;")
+      .replaceAll(">", "&gt;")
+      .replaceAll('"', "&quot;")
+      .replaceAll("'", "&#039;");
   }
 
   function mostrarConteudo() {

@@ -182,6 +182,29 @@ textarea:focus{
     color:#991b1b;
 }
 
+.categoria-card,
+.lote-card{
+    border:1px solid #dbe5f2;
+    border-radius:14px;
+    padding:18px;
+    background:#f8fbff;
+    margin-bottom:16px;
+}
+
+.categoria-precos-container{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+    gap:16px;
+    margin-top:16px;
+    padding-top:16px;
+    border-top:1px solid #e2edf7;
+}
+
+.categoria-card .removeCategoriaButton,
+.lote-card .removeLoteButton{
+    margin-top:16px;
+}
+
 @media (max-width:900px){
 
     .form-grid{

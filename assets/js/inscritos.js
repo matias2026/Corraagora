@@ -181,7 +181,8 @@ function renderizarInscricoes() {
         lista = lista.filter(i =>
             (i.nome || "").toLowerCase().includes(termo) ||
             (i.email || "").toLowerCase().includes(termo) ||
-            (i.categoria || "").toLowerCase().includes(termo)
+            (i.categoria || "").toLowerCase().includes(termo) ||
+            (i.cpf || "").toLowerCase().includes(termo)
         );
     }
 
@@ -205,6 +206,7 @@ function renderizarInscricoes() {
         return `
         <tr data-linha-inscricao="${i.id}">
             <td>${escaparHTML(i.nome || "-")}</td>
+            <td>${escaparHTML(i.cpf || "-")}</td>
             <td>${escaparHTML(i.email || "-")}</td>
             <td>${escaparHTML(i.telefone || "-")}</td>
             <td>${escaparHTML(i.categoria || "-")}</td>
@@ -311,8 +313,13 @@ function exportarParaExcel() {
 
     const linhas = inscricoes.map(i => ({
         Nome: i.nome || "",
+        CPF: i.cpf || "",
+        "Data de nascimento": i.data_nascimento || "",
+        Sexo: i.sexo || "",
         "E-mail": i.email || "",
         Telefone: i.telefone || "",
+        Equipe: i.equipe || "",
+        "Licença CBC": i.licenca_cbc || "",
         Categoria: i.categoria || "",
         Cidade: i.cidade || "",
         Status: i.status || "",
