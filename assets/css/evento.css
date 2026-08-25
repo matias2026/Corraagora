@@ -39,6 +39,41 @@
 .event-page .starter-empty p{color:var(--muted);margin-bottom:20px;line-height:1.6}
 
 /* ==========================================================================
+   MODAL DE INSCRIÇÃO
+   ========================================================================== */
+
+.registration-modal-card{width:min(520px,100%);text-align:left;max-height:calc(100vh - 40px);overflow-y:auto}
+.registration-modal-card h2{margin-bottom:18px}
+
+.payment-info-box{background:#eaf5ff;border:1px solid #cfe6fb;border-radius:14px;padding:16px 18px;margin-bottom:22px}
+.payment-info-box strong{display:block;color:#0f172a;margin-bottom:6px;font-size:14px}
+.payment-info-box p{color:#334155;font-size:14px;line-height:1.6;white-space:pre-line}
+
+.registration-form{display:flex;flex-direction:column;gap:16px}
+.registration-form label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:700;color:#20252d}
+
+.registration-form input,
+.registration-form select{
+    font:inherit;
+    padding:13px 14px;
+    border:1px solid #dbe8f5;
+    border-radius:12px;
+    color:var(--ink);
+    background:#fff;
+    outline:0;
+    transition:.2s;
+}
+
+.registration-form input:focus,
+.registration-form select:focus{border-color:var(--blue-strong);box-shadow:0 0 0 3px rgba(61,149,247,.15)}
+
+.registration-form small{font-weight:500;color:var(--muted);font-size:12px}
+
+.registration-form-message{display:none;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:600;text-align:center}
+.registration-form-message.success{display:block;background:#dcfce7;color:#166534}
+.registration-form-message.error{display:block;background:#fee2e2;color:#b91c1c}
+
+/* ==========================================================================
    BREAKPOINT: TABLET (≤1080px)
    ========================================================================== */
 
@@ -71,6 +106,8 @@
     .event-page .starter-empty{padding:56px 16px}
     .event-page .starter-icon{font-size:40px}
     .event-page .starter-empty h3{font-size:20px}
+
+    .modal-card.registration-modal-card{padding:26px 22px}
 }
 
 /* ==========================================================================

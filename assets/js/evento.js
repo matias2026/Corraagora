@@ -46,6 +46,20 @@
       return;
     }
 
+    const { data: categorias, error: categoriasError } =
+      await supabaseClient
+        .from("categorias")
+        .select("*")
+        .eq("evento_id", evento.id)
+        .order("ordem", { ascending: true });
+
+    if (categoriasError) {
+      console.error("Erro ao carregar categorias:", categoriasError);
+    }
+
+    window.eventoAtual = evento;
+    window.categoriasDoEvento = categorias || [];
+
     preencherEvento(evento);
     mostrarConteudo();
   }
@@ -109,10 +123,19 @@
   }
 
   function configurarBotaoInscricao(evento) {
+    const notaEncerrada = document.getElementById(
+      "registrationClosedNote"
+    );
+
+    if (evento.inscricoes_abertas === false) {
+      registrationButton.disabled = true;
+      registrationButton.textContent = "Inscrições encerradas";
+      notaEncerrada?.classList.remove("hidden");
+      return;
+    }
+
     registrationButton.addEventListener("click", () => {
-      alert(
-        `A inscrição para "${evento.nome}" será conectada na próxima etapa.`
-      );
+      window.abrirModalInscricao?.();
     });
   }
 

@@ -220,9 +220,8 @@
                 Fazer inscrição
               </button>
 
-              <small>
-                O formulário de inscrição será conectado
-                na próxima etapa.
+              <small id="registrationClosedNote" class="hidden">
+                As inscrições para este evento estão encerradas.
               </small>
 
             </div>
@@ -231,6 +230,112 @@
 
         </div>
 
+      </div>
+
+
+      <div
+        class="modal hidden"
+        id="registrationModal"
+      >
+        <div class="modal-card registration-modal-card">
+
+          <button
+            class="modal-close"
+            type="button"
+            id="registrationModalClose"
+            aria-label="Fechar"
+          >
+            &times;
+          </button>
+
+          <span class="eyebrow">INSCRIÇÃO</span>
+          <h2 id="registrationModalTitle">Fazer inscrição</h2>
+
+          <div class="payment-info-box">
+            <strong>Como pagar</strong>
+            <p id="paymentInfoText">
+              O organizador ainda não informou os dados de
+              pagamento. Entre em contato após enviar sua inscrição.
+            </p>
+          </div>
+
+          <form
+            id="registrationForm"
+            class="registration-form"
+          >
+
+            <label>
+              Nome completo
+              <input
+                type="text"
+                id="regNome"
+                required
+              >
+            </label>
+
+            <label>
+              E-mail
+              <input
+                type="email"
+                id="regEmail"
+                required
+              >
+            </label>
+
+            <label>
+              Telefone / WhatsApp
+              <input
+                type="tel"
+                id="regTelefone"
+                required
+              >
+            </label>
+
+            <label>
+              Cidade
+              <input
+                type="text"
+                id="regCidade"
+              >
+            </label>
+
+            <label
+              id="regCategoriaWrapper"
+              class="hidden"
+            >
+              Categoria
+              <select id="regCategoria"></select>
+            </label>
+
+            <label>
+              Comprovante de pagamento
+              <input
+                type="file"
+                id="regComprovante"
+                accept="image/*,application/pdf"
+                required
+              >
+              <small>
+                Envie o print ou PDF do comprovante do PIX/transferência.
+              </small>
+            </label>
+
+            <div
+              id="registrationFormMessage"
+              class="registration-form-message"
+            ></div>
+
+            <button
+              class="btn btn-primary full"
+              type="submit"
+              id="registrationSubmitButton"
+            >
+              Enviar inscrição
+            </button>
+
+          </form>
+
+        </div>
       </div>
 
 
@@ -317,7 +422,10 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script src="assets/js/supabase.js"></script>
 <script src="assets/js/script.js"></script>
+<script src="assets/js/utils.js"></script>
+<script src="assets/js/storage.js"></script>
 <script src="assets/js/evento.js"></script>
+<script src="assets/js/inscricao.js"></script>
 
 </body>
 </html>

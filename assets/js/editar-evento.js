@@ -28,6 +28,9 @@ const dataEventoInput =
 const descricaoInput =
     document.getElementById("descricao");
 
+const informacoesPagamentoInput =
+    document.getElementById("informacoesPagamento");
+
 const statusAtual =
     document.getElementById("statusAtual");
 
@@ -339,6 +342,9 @@ function preencherFormulario(evento, categorias) {
     descricaoInput.value =
         evento.descricao || "";
 
+    informacoesPagamentoInput.value =
+        evento.informacoes_pagamento || "";
+
     const status = evento.status || "pendente";
 
     statusAtual.textContent =
@@ -441,7 +447,9 @@ const eventoAtualizado = {
     estado,
     data_evento: dataEventoInput.value,
     descricao:
-        descricaoInput.value.trim() || null
+        descricaoInput.value.trim() || null,
+    informacoes_pagamento:
+        informacoesPagamentoInput.value.trim() || null
 };
             const {
                 error: atualizarEventoError

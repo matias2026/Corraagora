@@ -206,6 +206,9 @@ adicionarCategoria();
         const vagasTexto =
             document.getElementById("vagas").value;
 
+        const informacoesPagamento =
+            document.getElementById("informacoesPagamento").value.trim();
+
         const inscricoesAbertas =
             document.getElementById("inscricoesAbertas").checked;
 
@@ -255,7 +258,8 @@ document
             !cidade ||
             !estado ||
             valorTexto === "" ||
-            vagasTexto === ""
+            vagasTexto === "" ||
+            !informacoesPagamento
         ) {
             mostrarMensagem(
                 "Preencha todos os campos obrigatórios.",
@@ -346,7 +350,8 @@ if (categoriasValidas.length === 0) {
                 horario_evento: horarioEvento || null,
                 regulamento_url: regulamentoUrl,
                 vagas,
-                inscricoes_abertas: inscricoesAbertas
+                inscricoes_abertas: inscricoesAbertas,
+                informacoes_pagamento: informacoesPagamento
             };
 
             const { data: eventoCriado, error } =

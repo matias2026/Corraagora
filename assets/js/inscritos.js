@@ -199,17 +199,90 @@ function renderizarInscricoes() {
     tabelaInscritos.classList.remove("hidden");
     semInscritos.classList.add("hidden");
 
-    corpoTabelaInscritos.innerHTML = lista.map(i => `
-        <tr>
+    corpoTabelaInscritos.innerHTML = lista.map(i => {
+        const statusAtual = (i.status || "pendente").toLowerCase();
+
+        return `
+        <tr data-linha-inscricao="${i.id}">
             <td>${escaparHTML(i.nome || "-")}</td>
             <td>${escaparHTML(i.email || "-")}</td>
             <td>${escaparHTML(i.telefone || "-")}</td>
             <td>${escaparHTML(i.categoria || "-")}</td>
             <td>${escaparHTML(i.cidade || "-")}</td>
-            <td><span class="status-pill status-${(i.status || "pendente").toLowerCase()}">${escaparHTML(i.status || "Pendente")}</span></td>
+            <td>
+                ${
+                    i.comprovante_url
+                        ? `<a href="${escaparAtributo(i.comprovante_url)}" target="_blank" rel="noopener noreferrer">Ver comprovante</a>`
+                        : "-"
+                }
+            </td>
+            <td><span class="status-pill status-${statusAtual}">${escaparHTML(i.status || "Pendente")}</span></td>
             <td>${formatarData(i.created_at)}</td>
+            <td>
+                <div class="tabela-acoes">
+                    <button
+                        type="button"
+                        class="btn-approve"
+                        data-confirmar="${i.id}"
+                        ${statusAtual === "confirmado" ? "disabled" : ""}
+                    >
+                        ✓ Confirmar
+                    </button>
+
+                    <button
+                        type="button"
+                        class="btn-reject"
+                        data-cancelar="${i.id}"
+                        ${statusAtual === "cancelado" ? "disabled" : ""}
+                    >
+                        ✕ Cancelar
+                    </button>
+                </div>
+            </td>
         </tr>
-    `).join("");
+        `;
+    }).join("");
+
+    corpoTabelaInscritos
+        .querySelectorAll("[data-confirmar]")
+        .forEach(botao =>
+            botao.addEventListener("click", () =>
+                atualizarStatusInscricao(botao, Number(botao.dataset.confirmar), "confirmado")
+            )
+        );
+
+    corpoTabelaInscritos
+        .querySelectorAll("[data-cancelar]")
+        .forEach(botao =>
+            botao.addEventListener("click", () =>
+                atualizarStatusInscricao(botao, Number(botao.dataset.cancelar), "cancelado")
+            )
+        );
+}
+
+async function atualizarStatusInscricao(botao, inscricaoId, novoStatus) {
+    const linha = document.querySelector(`[data-linha-inscricao="${inscricaoId}"]`);
+    const botoes = linha.querySelectorAll("button");
+
+    botoes.forEach(b => (b.disabled = true));
+
+    const { error } = await supabaseClient
+        .from("inscricoes")
+        .update({ status: novoStatus })
+        .eq("id", inscricaoId);
+
+    if (error) {
+        console.error("Erro ao atualizar inscrição:", error);
+        alert(error.message || "Não foi possível atualizar a inscrição.");
+        botoes.forEach(b => (b.disabled = false));
+        return;
+    }
+
+    const inscricao = inscricoes.find(i => i.id === inscricaoId);
+    if (inscricao) inscricao.status = novoStatus;
+
+    atualizarResumo();
+    renderizarInscricoes();
 }
 
 function formatarData(data) {
@@ -222,6 +295,10 @@ function escaparHTML(valor) {
         .replaceAll("&", "&amp;")
         .replaceAll("<", "&lt;")
         .replaceAll(">", "&gt;");
+}
+
+function escaparAtributo(valor) {
+    return escaparHTML(valor).replaceAll('"', "&quot;");
 }
 
 function exportarParaExcel() {
