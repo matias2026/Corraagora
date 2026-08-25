@@ -44,6 +44,8 @@
     rel="stylesheet"
     href="assets/css/orcamento.css"
   >
+
+  <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 </head>
 
 <body>
@@ -197,13 +199,20 @@
           <button
             class="btn btn-primary full"
             type="submit"
+            id="quoteSubmitButton"
           >
-            Enviar pedido pelo WhatsApp
+            Enviar pedido de orçamento
           </button>
 
-          <small>
-            Ao enviar, o WhatsApp abre em uma nova aba com sua
-            mensagem pronta para você confirmar o envio.
+          <div
+            id="quoteMessage"
+            class="quote-form-message"
+          ></div>
+
+          <small id="quoteHelp">
+            No celular, o WhatsApp abre em uma nova aba com sua
+            mensagem pronta. No computador, enviamos por e-mail
+            direto para a nossa equipe.
           </small>
 
         </form>

@@ -40,6 +40,10 @@
 
 .quote-form small{grid-column:1 / -1;color:var(--muted);font-size:12px;line-height:1.5;text-align:center}
 
+.quote-form-message{grid-column:1 / -1;display:none;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:600;text-align:center}
+.quote-form-message.success{display:block;background:#dcfce7;color:#166534}
+.quote-form-message.error{display:block;background:#fee2e2;color:#b91c1c}
+
 /* ==========================================================================
    BREAKPOINT: TABLET (≤1080px)
    ========================================================================== */
