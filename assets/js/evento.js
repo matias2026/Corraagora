@@ -240,13 +240,21 @@
   }
 
   function configurarCategorias(categorias, loteVigente, lotes) {
-    if (!categorias.length) {
+    const temCategorias = categorias.length > 0;
+    const temLotes = (lotes || []).length > 0;
+
+    if (!temCategorias && !temLotes) {
       eventCategories.classList.add("hidden");
       return;
     }
 
     eventCategories.classList.remove("hidden");
     configurarListaDeLotes(lotes || [], loteVigente);
+
+    if (!temCategorias) {
+      eventCategoriesGroups.innerHTML = "";
+      return;
+    }
 
     const grupos = new Map();
 
