@@ -82,6 +82,7 @@ const eventoId =
 let usuario = null;
 let eventoAtual = null;
 let galeriaAtualCount = 0;
+let souAdmin = false;
 
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
@@ -394,6 +395,20 @@ async function verificarUsuario() {
 
     usuario = session.user;
 
+    const { data: perfil } = await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", usuario.id)
+        .maybeSingle();
+
+    souAdmin = perfil?.role === "admin";
+
+    if (souAdmin) {
+        document.querySelectorAll("[data-voltar-eventos]").forEach(link => {
+            link.href = "../admin/eventos.html";
+        });
+    }
+
     await carregarEvento();
 }
 
@@ -402,15 +417,19 @@ async function carregarEvento() {
     salvarButton.textContent = "Carregando...";
 
     try {
+        let consulta = supabaseClient
+            .from("eventos")
+            .select("*")
+            .eq("id", Number(eventoId));
+
+        if (!souAdmin) {
+            consulta = consulta.eq("organizador_id", usuario.id);
+        }
+
         const {
             data: evento,
             error: eventoError
-        } = await supabaseClient
-            .from("eventos")
-            .select("*")
-            .eq("id", Number(eventoId))
-            .eq("organizador_id", usuario.id)
-            .single();
+        } = await consulta.single();
 
         if (eventoError) {
             throw eventoError;
@@ -685,16 +704,21 @@ form.addEventListener(
                     organizadorInstagramInput.value.trim() || null
             };
 
-            const {
-                error: atualizarEventoError
-            } = await supabaseClient
+            let atualizarConsulta = supabaseClient
                 .from("eventos")
                 .update(eventoAtualizado)
-                .eq("id", Number(eventoId))
-                .eq(
+                .eq("id", Number(eventoId));
+
+            if (!souAdmin) {
+                atualizarConsulta = atualizarConsulta.eq(
                     "organizador_id",
                     usuario.id
                 );
+            }
+
+            const {
+                error: atualizarEventoError
+            } = await atualizarConsulta;
 
             if (atualizarEventoError) {
                 throw atualizarEventoError;
@@ -825,8 +849,9 @@ form.addEventListener(
                 "Alterações salvas!";
 
             setTimeout(() => {
-                window.location.href =
-                    "eventos.html";
+                window.location.href = souAdmin
+                    ? "../admin/eventos.html"
+                    : "eventos.html";
             }, 1200);
         } catch (error) {
             console.error(

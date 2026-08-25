@@ -648,7 +648,9 @@ body{
     gap:8px;
 }
 
-.tabela-acoes button{
+.tabela-acoes button,
+.tabela-acoes a{
+    display:inline-block;
     border:none;
     border-radius:9px;
     padding:9px 14px;
@@ -656,6 +658,7 @@ body{
     font-size:13.5px;
     cursor:pointer;
     font-family:inherit;
+    text-decoration:none;
     transition:.2s;
     white-space:nowrap;
 }
