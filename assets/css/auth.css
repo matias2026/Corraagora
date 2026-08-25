@@ -48,13 +48,15 @@ body{
     line-height:1.5;
 }
 
-#loginForm{
+#loginForm,
+#registerForm{
     display:flex;
     flex-direction:column;
     gap:16px;
 }
 
-#loginForm input{
+#loginForm input,
+#registerForm input{
     width:100%;
     padding:14px 16px;
     border:1px solid #d1d5db;
@@ -64,12 +66,14 @@ body{
     transition:.2s;
 }
 
-#loginForm input:focus{
+#loginForm input:focus,
+#registerForm input:focus{
     border-color:#2563eb;
     box-shadow:0 0 0 3px rgba(37,99,235,.15);
 }
 
-#loginForm button{
+#loginForm button,
+#registerForm button{
     width:100%;
     padding:15px;
     background:#2563eb;
@@ -82,7 +86,8 @@ body{
     transition:.2s;
 }
 
-#loginForm button:hover{
+#loginForm button:hover,
+#registerForm button:hover{
     background:#1d4ed8;
 }
 
