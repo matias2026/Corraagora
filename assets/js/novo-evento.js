@@ -345,9 +345,6 @@ document.addEventListener("DOMContentLoaded", async () => {
                 categorias.push({
                     nome: card.querySelector(".categoria-nome").value.trim(),
                     percurso: card.querySelector(".categoria-percurso").value.trim(),
-                    limite_inscritos: Number(
-                        card.querySelector(".categoria-limite").value || 0
-                    ),
                     idade_min: Number(
                         card.querySelector(".categoria-idade-min").value || 0
                     ),
@@ -527,7 +524,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 nome: categoria.nome,
                 percurso: categoria.percurso || null,
                 valor: categoria.precos[0] || 0,
-                limite_inscritos: categoria.limite_inscritos,
+                limite_inscritos: null,
                 idade_min: categoria.idade_min,
                 idade_max: categoria.idade_max,
                 sexo: categoria.sexo || null,

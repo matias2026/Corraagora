@@ -181,9 +181,6 @@ function adicionarCategoria(categoria = {}, precosPorLote = []) {
     const percurso =
         fragmento.querySelector(".categoria-percurso");
 
-    const limite =
-        fragmento.querySelector(".categoria-limite");
-
     const idadeMin =
         fragmento.querySelector(".categoria-idade-min");
 
@@ -201,9 +198,6 @@ function adicionarCategoria(categoria = {}, precosPorLote = []) {
 
     percurso.value =
         categoria.percurso || "";
-
-    limite.value =
-        categoria.limite_inscritos ?? "";
 
     idadeMin.value =
         categoria.idade_min ?? "";
@@ -315,11 +309,6 @@ function obterCategoriasFormulario() {
                     .value
                     .trim();
 
-            const limite =
-                card
-                    .querySelector(".categoria-limite")
-                    .value;
-
             const idadeMin =
                 card
                     .querySelector(".categoria-idade-min")
@@ -347,8 +336,7 @@ function obterCategoriasFormulario() {
                 nome,
                 percurso: percurso || null,
                 valor: precos[0] || 0,
-                limite_inscritos:
-                    valorOuNull(limite),
+                limite_inscritos: null,
                 idade_min:
                     valorOuNull(idadeMin),
                 idade_max:
