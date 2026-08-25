@@ -65,7 +65,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                     <p><strong>Cidade:</strong> ${evento.cidade}/${evento.estado}</p>
 
-                    <p><strong>Status:</strong> ${evento.status}</p>
+                    <p>
+                        <strong>Status:</strong>
+                        <span class="status-pill status-${evento.status}">
+                            ${formatarStatus(evento.status)}
+                        </span>
+                    </p>
 
                 </div>
             `;
@@ -78,3 +83,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     }
 });
+
+function formatarStatus(status) {
+    const rotulos = {
+        pendente: "Pendente",
+        aprovado: "Aprovado",
+        rejeitado: "Rejeitado"
+    };
+
+    return rotulos[status] || status || "-";
+}

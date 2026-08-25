@@ -23,7 +23,7 @@
       const { data, error } = await supabaseClient
         .from("eventos")
         .select("*")
-        .eq("status", "publicado")
+        .eq("status", "aprovado")
         .order("data_evento", { ascending: true });
 
       if (error) throw error;

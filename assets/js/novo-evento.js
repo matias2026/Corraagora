@@ -186,8 +186,6 @@ adicionarCategoria();
         const nome = document.getElementById("nome").value.trim();
         const modalidade =
             document.getElementById("modalidade").value;
-        const status =
-            document.getElementById("status").value;
         const descricao =
             document.getElementById("descricao").value.trim();
 
@@ -252,7 +250,6 @@ document
         if (
             !nome ||
             !modalidade ||
-            !status ||
             !dataEvento ||
             !endereco ||
             !cidade ||
@@ -343,7 +340,7 @@ if (categoriasValidas.length === 0) {
                 banner_url: bannerUrl,
                 valor,
                 destaque,
-                status,
+                status: "pendente",
                 organizador_id: session.user.id,
                 endereco,
                 horario_evento: horarioEvento || null,
@@ -385,7 +382,8 @@ if (categoriasValidas.length > 0) {
 }
 
             mostrarMensagem(
-                "Evento criado com sucesso!",
+                "Seu evento foi enviado para aprovação e ficará " +
+                    "visível assim que for aprovado pelo administrador.",
                 "success"
             );
 
@@ -399,11 +397,11 @@ if (categoriasValidas.length > 0) {
                 bannerPreviewUrl = null;
             }
 
-            atualizarBotao("Evento criado!");
+            atualizarBotao("Enviado para aprovação!");
 
             setTimeout(() => {
                 window.location.href = "eventos.html";
-            }, 1200);
+            }, 2400);
         } catch (error) {
             console.error("Erro ao criar evento:", error);
 

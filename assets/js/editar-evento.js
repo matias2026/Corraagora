@@ -28,8 +28,8 @@ const dataEventoInput =
 const descricaoInput =
     document.getElementById("descricao");
 
-const statusInput =
-    document.getElementById("status");
+const statusAtual =
+    document.getElementById("statusAtual");
 
 const bannerAtual =
     document.getElementById("bannerAtual");
@@ -339,8 +339,12 @@ function preencherFormulario(evento, categorias) {
     descricaoInput.value =
         evento.descricao || "";
 
-    statusInput.value =
-        evento.status || "rascunho";
+    const status = evento.status || "pendente";
+
+    statusAtual.textContent =
+        status.charAt(0).toUpperCase() + status.slice(1);
+
+    statusAtual.className = `status-pill status-${status}`;
 
     if (evento.banner_url) {
         bannerAtual.innerHTML = `
@@ -437,8 +441,7 @@ const eventoAtualizado = {
     estado,
     data_evento: dataEventoInput.value,
     descricao:
-        descricaoInput.value.trim() || null,
-    status: statusInput.value
+        descricaoInput.value.trim() || null
 };
             const {
                 error: atualizarEventoError

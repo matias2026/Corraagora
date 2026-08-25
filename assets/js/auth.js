@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const password = document.getElementById("password").value;
 
-        const { error } = await supabaseClient.auth.signInWithPassword({
+        const { data, error } = await supabaseClient.auth.signInWithPassword({
             email,
             password
         });
@@ -22,7 +22,16 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        window.location.href = "organizador/index.html";
+        const { data: perfil } = await supabaseClient
+            .from("profiles")
+            .select("role")
+            .eq("id", data.user.id)
+            .maybeSingle();
+
+        window.location.href =
+            perfil?.role === "admin"
+                ? "admin/eventos-pendentes.html"
+                : "organizador/index.html";
 
     });
 

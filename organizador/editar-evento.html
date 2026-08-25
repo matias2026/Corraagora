@@ -157,6 +157,12 @@
             font-weight: 700;
         }
 
+        .status-help {
+            color: #64748b;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
         @media (max-width: 850px) {
             .form-grid,
             .categoria-grid {
@@ -284,26 +290,22 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="status">
+                        <label>
                             Status
                         </label>
 
-                        <select
-                            id="status"
-                            required
+                        <span
+                            id="statusAtual"
+                            class="status-pill status-pendente"
                         >
-                            <option value="rascunho">
-                                Rascunho
-                            </option>
+                            Pendente
+                        </span>
 
-                            <option value="publicado">
-                                Publicado
-                            </option>
-
-                            <option value="encerrado">
-                                Encerrado
-                            </option>
-                        </select>
+                        <small class="status-help">
+                            O status é definido pelo administrador
+                            na aprovação do evento e não pode ser
+                            alterado por aqui.
+                        </small>
                     </div>
 
                     <div class="form-group">

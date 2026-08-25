@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Eventos pendentes | CorraAgora</title>
+
+    <link
+        rel="stylesheet"
+        href="../assets/css/dashboard.css"
+    >
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../assets/js/supabase.js"></script>
+
+</head>
+
+<body>
+
+<div class="dashboard-layout hidden" id="adminLayout">
+
+    <aside class="sidebar">
+
+        <a
+            href="eventos-pendentes.html"
+            class="sidebar-brand"
+        >
+            <img
+                src="../images/logo-corraagora-trim.png"
+                alt="CorraAgora"
+            >
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a
+                href="eventos-pendentes.html"
+                class="active"
+            >
+                🛡️ Eventos pendentes
+            </a>
+
+            <button id="logoutButton" type="button">
+                🚪 Sair
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div>
+                <p class="eyebrow">PAINEL DO ADMINISTRADOR</p>
+                <h1>Eventos pendentes</h1>
+
+                <p class="dashboard-subtitle">
+                    Revise os eventos enviados pelos organizadores.
+                    Só eventos aprovados aparecem para o público.
+                </p>
+            </div>
+
+            <div class="user-info">
+                <span id="adminName">Administrador</span>
+            </div>
+
+        </header>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">AGUARDANDO REVISÃO</p>
+                    <h2 id="totalPendentesLabel">0 eventos pendentes</h2>
+                </div>
+            </div>
+
+            <div class="tabela-scroll">
+
+                <table
+                    class="tabela-inscritos"
+                    id="tabelaPendentes"
+                >
+
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Organizador</th>
+                            <th>Local</th>
+                            <th>Data</th>
+                            <th>Valor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="corpoTabelaPendentes"></tbody>
+
+                </table>
+
+                <div
+                    id="semPendentes"
+                    class="empty-state-box hidden"
+                >
+                    <h3>Nenhum evento pendente</h3>
+
+                    <p>
+                        Assim que um organizador criar um evento,
+                        ele aparece aqui para revisão.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="../assets/js/eventos-pendentes.js"></script>
+
+</body>
+</html>

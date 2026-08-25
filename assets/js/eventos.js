@@ -114,7 +114,12 @@ function renderizarEventos() {
 
                     <span>💰 Valor por categoria</span>
 
-                    <span>Status: ${evento.status}</span>
+                    <span>
+                        Status:
+                        <span class="status-pill status-${evento.status}">
+                            ${formatarStatus(evento.status)}
+                        </span>
+                    </span>
 
                 </div>
 
@@ -158,6 +163,16 @@ function formatarData(data) {
 
     return new Date(data)
         .toLocaleDateString("pt-BR");
+}
+
+function formatarStatus(status) {
+    const rotulos = {
+        pendente: "Pendente",
+        aprovado: "Aprovado",
+        rejeitado: "Rejeitado"
+    };
+
+    return rotulos[status] || status || "-";
 }
 
 searchEvento.addEventListener("input", renderizarEventos);

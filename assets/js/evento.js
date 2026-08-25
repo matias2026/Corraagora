@@ -32,7 +32,7 @@
       .from("eventos")
       .select("*")
       .eq("slug", slug)
-      .eq("status", "publicado")
+      .eq("status", "aprovado")
       .maybeSingle();
 
     if (error) {
