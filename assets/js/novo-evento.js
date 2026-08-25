@@ -198,7 +198,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const categoriaTemplate =
         document.getElementById("categoriaTemplate");
 
-    function adicionarCategoria() {
+    function adicionarCategoria(dadosPreenchidos) {
         const clone =
             categoriaTemplate.content.cloneNode(true);
 
@@ -208,12 +208,126 @@ document.addEventListener("DOMContentLoaded", async () => {
                 this.closest(".categoria-card").remove();
             });
 
+        if (dadosPreenchidos) {
+            clone.querySelector(".categoria-nome").value =
+                dadosPreenchidos.nome || "";
+            clone.querySelector(".categoria-percurso").value =
+                dadosPreenchidos.percurso || "";
+            clone.querySelector(".categoria-idade-min").value =
+                dadosPreenchidos.idade_min || "";
+            clone.querySelector(".categoria-idade-max").value =
+                dadosPreenchidos.idade_max || "";
+            clone.querySelector(".categoria-sexo").value =
+                dadosPreenchidos.sexo || "";
+        }
+
         categoriasContainer.appendChild(clone);
 
         renderPrecosParaCategoria(
             categoriasContainer.lastElementChild
         );
     }
+
+    // -----------------------------------------------------------
+    // CATEGORIAS SUGERIDAS (por modalidade)
+    // -----------------------------------------------------------
+
+    // Faixas etárias das categorias oficiais de Ciclismo Cross Country
+    // (MTB) da CBC — Confederação Brasileira de Ciclismo, tabela
+    // "Categorias Oficiais". "Iniciante" não é categoria oficial da
+    // CBC, por isso fica sem faixa de idade definida.
+    const SUGESTOES_CATEGORIAS = {
+        MTB: [
+            { nome: "Elite Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino" },
+            { nome: "Sub-30 Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino" },
+            { nome: "Sub-23 Masculino", idade_min: 19, idade_max: 22, sexo: "Masculino" },
+            { nome: "Júnior Masculino", idade_min: 17, idade_max: 18, sexo: "Masculino" },
+            { nome: "Juvenil Masculino", idade_min: 15, idade_max: 16, sexo: "Masculino" },
+            { nome: "Infantojuvenil Masculino", idade_min: 12, idade_max: 14, sexo: "Masculino" },
+            { nome: "Master A1 Masculino", idade_min: 30, idade_max: 34, sexo: "Masculino" },
+            { nome: "Master A2 Masculino", idade_min: 35, idade_max: 39, sexo: "Masculino" },
+            { nome: "Master B1 Masculino", idade_min: 40, idade_max: 44, sexo: "Masculino" },
+            { nome: "Master B2 Masculino", idade_min: 45, idade_max: 49, sexo: "Masculino" },
+            { nome: "Master C1 Masculino", idade_min: 50, idade_max: 54, sexo: "Masculino" },
+            { nome: "Master C2 Masculino", idade_min: 55, idade_max: 59, sexo: "Masculino" },
+            { nome: "Master D1 Masculino", idade_min: 60, idade_max: 64, sexo: "Masculino" },
+            { nome: "Master D2 Masculino", idade_min: 65, idade_max: null, sexo: "Masculino" },
+            { nome: "Elite Feminino", idade_min: 23, idade_max: null, sexo: "Feminino" },
+            { nome: "Sub-23 Feminino", idade_min: 19, idade_max: 22, sexo: "Feminino" },
+            { nome: "Júnior Feminino", idade_min: 17, idade_max: 18, sexo: "Feminino" },
+            { nome: "Juvenil Feminino", idade_min: 15, idade_max: 16, sexo: "Feminino" },
+            { nome: "Infantojuvenil Feminino", idade_min: 12, idade_max: 14, sexo: "Feminino" },
+            { nome: "Master A Feminino", idade_min: 30, idade_max: 39, sexo: "Feminino" },
+            { nome: "Master B Feminino", idade_min: 40, idade_max: 49, sexo: "Feminino" },
+            { nome: "Master C Feminino", idade_min: 50, idade_max: null, sexo: "Feminino" },
+            { nome: "Iniciante Masculino", idade_min: null, idade_max: null, sexo: "Masculino" },
+            { nome: "Iniciante Feminino", idade_min: null, idade_max: null, sexo: "Feminino" }
+        ]
+    };
+
+    const modalidadeSelect = document.getElementById("modalidade");
+    const categoriasSugeridas = document.getElementById("categoriasSugeridas");
+    const listaCategoriasSugeridas = document.getElementById(
+        "listaCategoriasSugeridas"
+    );
+    const addCategoriasSugeridasButton = document.getElementById(
+        "addCategoriasSugeridasButton"
+    );
+
+    function formatarFaixaSugestao(sugestao) {
+        if (!sugestao.idade_min && !sugestao.idade_max) {
+            return "Todas as idades";
+        }
+
+        return `${sugestao.idade_min || 0}–${sugestao.idade_max || "+"} anos`;
+    }
+
+    function renderCategoriasSugeridas() {
+        const sugestoes = SUGESTOES_CATEGORIAS[modalidadeSelect.value];
+
+        if (!sugestoes) {
+            categoriasSugeridas.classList.add("hidden");
+            listaCategoriasSugeridas.innerHTML = "";
+            return;
+        }
+
+        listaCategoriasSugeridas.innerHTML = sugestoes
+            .map(
+                (sugestao, index) => `
+                    <label class="checkbox-card categoria-sugerida-item">
+                        <input
+                            type="checkbox"
+                            class="categoria-sugerida-checkbox"
+                            data-index="${index}">
+                        <span>
+                            <strong>${escaparHTML(sugestao.nome)}</strong>
+                            <small>${formatarFaixaSugestao(sugestao)}</small>
+                        </span>
+                    </label>
+                `
+            )
+            .join("");
+
+        categoriasSugeridas.classList.remove("hidden");
+    }
+
+    modalidadeSelect.addEventListener("change", renderCategoriasSugeridas);
+
+    addCategoriasSugeridasButton.addEventListener("click", () => {
+        const sugestoes = SUGESTOES_CATEGORIAS[modalidadeSelect.value] || [];
+
+        const checkboxesMarcados = [
+            ...listaCategoriasSugeridas.querySelectorAll(
+                ".categoria-sugerida-checkbox:checked"
+            )
+        ];
+
+        checkboxesMarcados.forEach(checkbox => {
+            adicionarCategoria(sugestoes[Number(checkbox.dataset.index)]);
+        });
+
+        renderCategoriasSugeridas();
+    });
 
     function renderPrecosParaCategoria(card) {
         const loteCards = [
@@ -265,7 +379,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     addCategoriaButton.addEventListener(
         "click",
-        adicionarCategoria
+        () => adicionarCategoria()
     );
 
     adicionarLote();
