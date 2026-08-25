@@ -1,0 +1,83 @@
+/* ==========================================================================
+   PÁGINA DE EVENTO (evento.html)
+   ========================================================================== */
+
+.event-page{padding:48px 0 100px}
+
+.event-back-link{display:inline-flex;align-items:center;gap:6px;color:var(--muted);font-weight:600;font-size:14px;margin-bottom:28px;transition:.2s}
+.event-back-link:hover{color:var(--blue-strong)}
+
+.event-page-grid{display:grid;grid-template-columns:1.6fr .9fr;gap:48px;align-items:start}
+
+.event-page-banner{position:relative;aspect-ratio:16/9;border-radius:24px;overflow:hidden;background:linear-gradient(135deg,#eaf4ff,#f8fbff);display:flex;align-items:center;justify-content:center}
+.event-page-symbol{font-size:72px;line-height:1}
+.event-page-symbol.hidden{display:none}
+
+.event-page-info{margin-top:28px}
+
+.event-page-tags{display:flex;align-items:center;gap:14px;flex-wrap:wrap;margin-bottom:16px}
+.pill{display:inline-flex;align-items:center;min-height:30px;padding:6px 14px;border-radius:999px;background:#eaf4ff;color:#1677ff;font-size:12px;font-weight:800;letter-spacing:.03em;text-transform:uppercase}
+#eventDate{color:var(--muted);font-size:14px;font-weight:600}
+
+.event-page-info h1{font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-.02em;word-break:break-word;margin-bottom:14px}
+
+.event-page-location{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:15px;font-weight:600;margin-bottom:28px}
+
+.event-page-description{padding-top:24px;border-top:1px solid var(--line)}
+.event-page-description h2{font-size:20px;margin-bottom:10px}
+.event-page-description p{color:var(--text);line-height:1.75}
+
+.event-page-sidebar{position:sticky;top:110px}
+.event-registration-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-soft)}
+.event-price-label{color:var(--muted);font-size:13px;font-weight:600;margin:14px 0 4px}
+.event-page-price{display:block;font-family:Montserrat,Inter,sans-serif;font-size:32px;color:var(--ink);margin-bottom:22px}
+.event-registration-card small{display:block;margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5;text-align:center}
+
+.event-page .starter-empty{max-width:480px;margin:0 auto;padding:80px 20px;text-align:center}
+.event-page .starter-icon{font-size:48px;line-height:1;margin-bottom:16px}
+.event-page .starter-empty h3{font-size:24px;margin-bottom:10px}
+.event-page .starter-empty p{color:var(--muted);margin-bottom:20px;line-height:1.6}
+
+/* ==========================================================================
+   BREAKPOINT: TABLET (≤1080px)
+   ========================================================================== */
+
+@media (max-width:1080px){
+    .event-page-grid{grid-template-columns:1fr;gap:32px}
+    .event-page-sidebar{position:static}
+}
+
+/* ==========================================================================
+   BREAKPOINT: MOBILE (≤760px)
+   ========================================================================== */
+
+@media (max-width:760px){
+    .event-page{padding:28px 0 60px}
+    .event-back-link{margin-bottom:20px;font-size:13px}
+
+    .event-page-banner{border-radius:18px}
+    .event-page-symbol{font-size:56px}
+
+    .event-page-info{margin-top:22px}
+    .event-page-info h1{font-size:clamp(24px,7vw,32px);margin-bottom:10px}
+    .event-page-location{margin-bottom:22px;font-size:14px}
+
+    .event-page-description{padding-top:20px}
+    .event-page-description h2{font-size:18px}
+
+    .event-registration-card{padding:22px}
+    .event-page-price{font-size:28px}
+
+    .event-page .starter-empty{padding:56px 16px}
+    .event-page .starter-icon{font-size:40px}
+    .event-page .starter-empty h3{font-size:20px}
+}
+
+/* ==========================================================================
+   BREAKPOINT: SMALL MOBILE (≤480px)
+   ========================================================================== */
+
+@media (max-width:480px){
+    .event-page-banner{aspect-ratio:4/3}
+    .event-page-tags{gap:10px}
+}

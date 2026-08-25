@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  >
+
+  <meta
+    name="description"
+    content="Peça um orçamento para o seu evento esportivo na CorraAgora."
+  >
+
+  <meta name="theme-color" content="#8ec8ff">
+
+  <title>Orçamento | CorraAgora</title>
+
+  <link
+    rel="icon"
+    type="image/png"
+    href="images/favicon.png"
+  >
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+
+  <link
+    rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin
+  >
+
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:wght@700;800&display=swap"
+    rel="stylesheet"
+  >
+
+  <link
+    rel="stylesheet"
+    href="assets/css/style.css"
+  >
+  <link
+    rel="stylesheet"
+    href="assets/css/orcamento.css"
+  >
+</head>
+
+<body>
+
+  <header class="site-header">
+    <div class="container nav-wrap">
+
+      <a class="brand" href="index.html">
+        <img
+          src="images/logo-corraagora-trim.png"
+          alt="CorraAgora"
+        >
+      </a>
+
+      <button
+        class="menu-toggle"
+        type="button"
+        aria-label="Abrir menu"
+        aria-expanded="false"
+      >
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+
+      <nav class="main-nav">
+        <a href="index.html#eventos">Eventos</a>
+        <a href="login.html" id="organizadoresLink">Organizadores</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="index.html#contato">Contato</a>
+        <a href="orcamento.html">Orçamento</a>
+
+        <a href="login.html" class="mobile-create-event" id="loginButtonMobile">
+          ➕ Criar evento
+        </a>
+      </nav>
+
+      <div class="nav-actions">
+        <a
+          class="btn btn-outline"
+          href="login.html"
+          id="loginButton"
+        >
+          Criar evento <span>＋</span>
+        </a>
+      </div>
+
+    </div>
+  </header>
+
+
+  <main>
+
+    <section class="quote-page">
+      <div class="container quote-grid">
+
+        <div class="quote-intro">
+
+          <span class="eyebrow">FAÇA SEU EVENTO ACONTECER</span>
+
+          <h1>Peça um orçamento</h1>
+
+          <p>
+            Conte um pouco sobre o seu evento esportivo e entraremos
+            em contato para montar a melhor proposta de inscrições
+            para você.
+          </p>
+
+          <ul class="quote-benefits">
+            <li>✓ Resposta rápida por e-mail</li>
+            <li>✓ Proposta sob medida para o tamanho do evento</li>
+            <li>✓ Sem compromisso</li>
+          </ul>
+
+        </div>
+
+        <form
+          class="quote-form"
+          id="quoteForm"
+          action="mailto:erikimatias14@gmail.com"
+          method="POST"
+          enctype="text/plain"
+        >
+
+          <label>
+            Nome completo
+            <input
+              type="text"
+              name="Nome"
+              placeholder="Seu nome"
+              required
+            >
+          </label>
+
+          <label>
+            E-mail
+            <input
+              type="email"
+              name="E-mail"
+              placeholder="seu@email.com"
+              required
+            >
+          </label>
+
+          <label>
+            Telefone / WhatsApp
+            <input
+              type="tel"
+              name="Telefone"
+              placeholder="(00) 00000-0000"
+            >
+          </label>
+
+          <label>
+            Tipo de evento
+            <select name="Tipo de evento">
+              <option value="Corrida">Corrida</option>
+              <option value="MTB">MTB</option>
+              <option value="Triathlon">Triathlon</option>
+              <option value="Trail">Trail</option>
+              <option value="Off-road">Off-road</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+
+          <label>
+            Cidade prevista
+            <input
+              type="text"
+              name="Cidade"
+              placeholder="Ex: Parnamirim - RN"
+            >
+          </label>
+
+          <label>
+            Número estimado de participantes
+            <input
+              type="number"
+              name="Participantes estimados"
+              placeholder="Ex: 300"
+              min="1"
+            >
+          </label>
+
+          <label class="quote-form-full">
+            Conte mais sobre o evento
+            <textarea
+              name="Mensagem"
+              rows="4"
+              placeholder="Data prevista, público-alvo, formato de inscrição desejado..."
+            ></textarea>
+          </label>
+
+          <button
+            class="btn btn-primary full"
+            type="submit"
+          >
+            Enviar pedido de orçamento
+          </button>
+
+          <small>
+            Ao enviar, seu aplicativo de e-mail vai abrir com os
+            dados preenchidos para você confirmar o envio.
+          </small>
+
+        </form>
+
+      </div>
+    </section>
+
+  </main>
+
+
+  <footer
+    class="site-footer"
+    id="contato"
+  >
+    <div class="container footer-grid">
+
+      <div class="footer-brand">
+
+        <img
+          src="images/logo-corraagora-trim.png"
+          alt="CorraAgora"
+        >
+
+        <p>
+          Eventos que te levam mais longe.
+        </p>
+
+      </div>
+
+      <div>
+        <h3>Plataforma</h3>
+        <a href="index.html#eventos">Eventos</a>
+        <a href="index.html#sobre">Sobre</a>
+        <a href="login.html">Organizadores</a>
+        <a href="orcamento.html">Orçamento</a>
+      </div>
+
+      <div>
+        <h3>Contato</h3>
+
+        <a href="mailto:erikimatias14@gmail.com">
+          erikimatias14@gmail.com
+        </a>
+
+        <a href="#">Instagram</a>
+        <a href="#">WhatsApp</a>
+      </div>
+
+    </div>
+
+    <div class="container footer-bottom">
+      <span>
+        © <span id="year"></span> CorraAgora.
+      </span>
+
+      <span>
+        Plataforma de eventos esportivos.
+      </span>
+    </div>
+  </footer>
+
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  <script src="assets/js/supabase.js"></script>
+  <script src="assets/js/script.js"></script>
+
+</body>
+</html>
