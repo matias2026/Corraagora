@@ -282,7 +282,7 @@
     eventCategoriesGroups.innerHTML = [...grupos.entries()]
       .map(([percurso, categoriasDoGrupo]) => `
         <div class="event-category-group">
-          <h3>${escaparHTML(percurso)}</h3>
+          ${percurso === "Geral" ? "" : `<h3>${escaparHTML(percurso)}</h3>`}
 
           <div class="event-category-list">
             ${categoriasDoGrupo
