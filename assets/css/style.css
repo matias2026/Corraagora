@@ -97,7 +97,7 @@ h1 strong{display:block;color:var(--blue)}
 .site-footer{background:#08111c;color:#e9f4ff;padding:60px 0 25px}
 
 .footer-grid{display:grid;grid-template-columns:1.6fr .7fr 1fr;gap:60px}
-.footer-brand img{width:250px;background:#fff;border-radius:14px;padding:7px}
+.footer-brand img{width:230px;height:auto;object-fit:contain}
 .footer-brand p{color:#9fb0c2}
 .footer-grid h3{font-family:Inter,sans-serif;font-size:14px;color:#fff;margin-bottom:14px}
 .footer-grid a{display:block;color:#aebdca;font-size:14px;margin:9px 0}
