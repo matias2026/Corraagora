@@ -2,9 +2,9 @@ const WHATSAPP_NUMERO = "5584994419499";
 
 // Preencha com os valores da sua conta em emailjs.com:
 // Email Services > seu serviço  |  Email Templates > seu template  |  Account > General
-const EMAILJS_SERVICE_ID = "COLE_AQUI_O_SERVICE_ID";
-const EMAILJS_TEMPLATE_ID = "COLE_AQUI_O_TEMPLATE_ID";
-const EMAILJS_PUBLIC_KEY = "COLE_AQUI_A_PUBLIC_KEY";
+const EMAILJS_SERVICE_ID = "service_r5tgeeg";
+const EMAILJS_TEMPLATE_ID = "template_m3k0jh4";
+const EMAILJS_PUBLIC_KEY = "qBdjLquGDY1c09t_-";
 
 if (window.emailjs && EMAILJS_PUBLIC_KEY !== "COLE_AQUI_A_PUBLIC_KEY") {
     emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
