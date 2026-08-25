@@ -136,6 +136,12 @@ function renderizarEventos() {
             )
         );
     });
+
+    corpoTabelaEventos.querySelectorAll("[data-excluir]").forEach(botao => {
+        botao.addEventListener("click", () =>
+            excluirEvento(Number(botao.dataset.excluir))
+        );
+    });
 }
 
 function criarLinha(evento) {
@@ -177,6 +183,8 @@ function criarLinha(evento) {
                             ? `<button type="button" class="btn-reject" data-evento-id="${evento.id}" data-status-botao="rejeitado">✕ Rejeitar</button>`
                             : ""
                     }
+
+                    <button type="button" class="btn-delete" data-excluir="${evento.id}">🗑️ Excluir</button>
                 </div>
             </td>
         </tr>
@@ -199,6 +207,45 @@ async function atualizarStatus(eventoId, novoStatus) {
     if (evento) evento.status = novoStatus;
 
     renderizarEventos();
+}
+
+async function excluirEvento(eventoId) {
+    const confirmar = window.confirm(
+        "Tem certeza de que deseja excluir este evento? Essa ação não poderá ser desfeita."
+    );
+
+    if (!confirmar) {
+        return;
+    }
+
+    try {
+        const { error: categoriasError } = await supabaseClient
+            .from("categorias")
+            .delete()
+            .eq("evento_id", eventoId);
+
+        if (categoriasError) {
+            throw categoriasError;
+        }
+
+        const { error: eventoError } = await supabaseClient
+            .from("eventos")
+            .delete()
+            .eq("id", eventoId);
+
+        if (eventoError) {
+            throw eventoError;
+        }
+
+        todosOsEventos = todosOsEventos.filter(evento => evento.id !== eventoId);
+
+        renderizarEventos();
+
+        alert("Evento excluído com sucesso.");
+    } catch (error) {
+        console.error("Erro ao excluir evento:", error);
+        alert(error.message || "Não foi possível excluir o evento.");
+    }
 }
 
 function formatarData(data) {
