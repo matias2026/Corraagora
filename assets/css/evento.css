@@ -48,7 +48,11 @@
 
 .service-fee-notice{margin-top:20px;padding:14px 16px;border-radius:12px;background:#fff7ed;border:1px solid #fed7aa;color:#9a3412;font-size:13.5px;line-height:1.5}
 
-.event-location-link{display:inline-flex;align-items:center;gap:8px;margin-top:20px;font-weight:700;color:var(--blue-strong)}
+.event-location-preview{margin-top:20px}
+
+.event-location-frame{width:100%;aspect-ratio:16/9;border:1px solid var(--line);border-radius:16px;margin-bottom:12px}
+
+.event-location-link{display:inline-flex;align-items:center;gap:8px;font-weight:700;color:var(--blue-strong)}
 .event-location-link:hover{text-decoration:underline}
 
 .event-page-sidebar{position:sticky;top:110px}

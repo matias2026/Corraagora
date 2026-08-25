@@ -215,15 +215,28 @@
               </div>
 
 
-              <a
-                class="event-location-link hidden"
-                id="eventLocationLink"
-                href="#"
-                target="_blank"
-                rel="noopener noreferrer"
+              <div
+                class="event-location-preview hidden"
+                id="eventLocationPreview"
               >
-                📍 Ver localização no mapa
-              </a>
+                <iframe
+                  class="event-location-frame hidden"
+                  id="eventLocationFrame"
+                  loading="lazy"
+                  referrerpolicy="no-referrer-when-downgrade"
+                  title="Localização do evento"
+                ></iframe>
+
+                <a
+                  class="event-location-link"
+                  id="eventLocationLink"
+                  href="#"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  📍 Ver localização no mapa
+                </a>
+              </div>
 
             </div>
           </div>

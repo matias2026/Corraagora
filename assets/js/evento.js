@@ -25,6 +25,10 @@
   const eventLotesInfo = document.getElementById("eventLotesInfo");
   const eventLotesList = document.getElementById("eventLotesList");
 
+  const eventLocationPreview = document.getElementById(
+    "eventLocationPreview"
+  );
+  const eventLocationFrame = document.getElementById("eventLocationFrame");
   const eventLocationLink = document.getElementById("eventLocationLink");
   const eventRegulamentoButton = document.getElementById(
     "eventRegulamentoButton"
@@ -321,11 +325,11 @@
     eventLotesList.innerHTML = ordenados
       .map((lote, index) => {
         const vigente = loteVigente && lote.id === loteVigente.id;
-        const nome = lote.nome?.trim() || `Lote ${index + 1}`;
+        const nome = formatarNomeLote(lote.nome, index);
 
         return `
           <div class="event-lote-row${vigente ? " event-lote-row-vigente" : ""}">
-            <span>${escaparHTML(nome)}${vigente ? " · vigente" : ""}</span>
+            <span>${escaparHTML(nome)}</span>
             <span>até ${formatarData(lote.data_limite)}</span>
           </div>
         `;
@@ -333,14 +337,66 @@
       .join("");
   }
 
+  function formatarNomeLote(nome, index) {
+    const limpo = nome?.trim();
+
+    if (!limpo) return `Lote ${index + 1}`;
+
+    if (/^[\d.,]+$/.test(limpo)) {
+      const numero = Number(limpo.replace(",", "."));
+
+      if (Number.isFinite(numero)) {
+        return formatarValor(numero);
+      }
+    }
+
+    return limpo;
+  }
+
   function configurarLocalizacao(evento) {
     if (!evento.localizacao_url) {
-      eventLocationLink.classList.add("hidden");
+      eventLocationPreview.classList.add("hidden");
       return;
     }
 
     eventLocationLink.href = evento.localizacao_url;
-    eventLocationLink.classList.remove("hidden");
+    eventLocationPreview.classList.remove("hidden");
+
+    const embedUrl = obterUrlDeEmbedDoMapa(evento.localizacao_url);
+
+    if (embedUrl) {
+      eventLocationFrame.src = embedUrl;
+      eventLocationFrame.classList.remove("hidden");
+    } else {
+      eventLocationFrame.classList.add("hidden");
+    }
+  }
+
+  function obterUrlDeEmbedDoMapa(url) {
+    try {
+      const parsed = new URL(url);
+
+      if (!parsed.hostname.includes("google")) {
+        return null;
+      }
+
+      if (parsed.pathname.includes("/maps/embed")) {
+        return url;
+      }
+
+      const ehLinkDeMapa =
+        parsed.hostname.includes("maps.google") ||
+        parsed.pathname.includes("/maps");
+
+      if (ehLinkDeMapa) {
+        parsed.searchParams.set("output", "embed");
+        return parsed.toString();
+      }
+
+      return null;
+    } catch {
+      return null;
+    }
   }
 
   function configurarRegulamento(evento) {
