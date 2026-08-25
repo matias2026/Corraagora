@@ -878,7 +878,7 @@ logoutButton.addEventListener(
         await supabaseClient.auth.signOut();
 
         window.location.href =
-            "../login.html";
+            "../index.html";
     }
 );
 

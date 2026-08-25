@@ -53,7 +53,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         } catch (error) {
             console.error("Erro ao sair:", error);
         } finally {
-            window.location.replace("../login.html");
+            window.location.replace("../index.html");
         }
     });
 

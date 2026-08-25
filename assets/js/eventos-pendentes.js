@@ -36,7 +36,7 @@ async function iniciar() {
 
     logoutButton.addEventListener("click", async () => {
         await supabaseClient.auth.signOut();
-        window.location.href = "../login.html";
+        window.location.href = "../index.html";
     });
 
     await carregarPendentes();
