@@ -143,6 +143,9 @@ function adicionarLote(lote = {}) {
     const card = fragmento.querySelector(".lote-card");
 
     fragmento.querySelector(".lote-nome").value = lote.nome || "";
+    fragmento.querySelector(".lote-data-inicio").value =
+        lote.data_inicio || "";
+
     fragmento.querySelector(".lote-data-limite").value =
         lote.data_limite || "";
 
@@ -357,6 +360,7 @@ function obterLotesFormulario() {
     lotesContainer.querySelectorAll(".lote-card").forEach((card, index) => {
         lotes.push({
             nome: card.querySelector(".lote-nome").value.trim(),
+            data_inicio: card.querySelector(".lote-data-inicio").value || null,
             data_limite: card.querySelector(".lote-data-limite").value,
             ordem: index + 1
         });
@@ -758,6 +762,7 @@ form.addEventListener(
                     lotes.map(lote => ({
                         evento_id: Number(eventoId),
                         nome: lote.nome,
+                        data_inicio: lote.data_inicio,
                         data_limite: lote.data_limite,
                         ordem: lote.ordem
                     }))

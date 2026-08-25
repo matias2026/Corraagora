@@ -57,8 +57,7 @@
 
 .event-page-sidebar{position:sticky;top:110px}
 .event-registration-card{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:28px;box-shadow:var(--shadow-soft)}
-.event-price-label{color:var(--muted);font-size:13px;font-weight:600;margin:14px 0 4px}
-.event-page-price{display:block;font-family:Montserrat,Inter,sans-serif;font-size:32px;color:var(--ink);margin-bottom:22px}
+.event-registration-button{margin-top:18px}
 .event-registration-card small{display:block;margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5;text-align:center}
 
 .event-page .starter-empty{max-width:480px;margin:0 auto;padding:80px 20px;text-align:center}
@@ -175,7 +174,6 @@
     .event-page-description h2{font-size:18px}
 
     .event-registration-card{padding:22px}
-    .event-page-price{font-size:28px}
 
     .event-page .starter-empty{padding:56px 16px}
     .event-page .starter-icon{font-size:40px}
@@ -184,6 +182,7 @@
     .modal-card.registration-modal-card{padding:26px 22px}
 
     .event-category-row{flex-direction:column;align-items:flex-start;gap:4px}
+    .event-lote-row{flex-direction:column;align-items:flex-start;gap:2px}
     .event-gallery{margin-top:36px}
     .event-gallery-viewer{aspect-ratio:4/3}
     .event-gallery-arrow{width:38px;height:38px;font-size:18px}

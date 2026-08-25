@@ -13,7 +13,6 @@
   const eventLocation = document.getElementById("eventLocation");
   const eventDescription =
     document.getElementById("eventDescription");
-  const eventPrice = document.getElementById("eventPrice");
   const registrationButton =
     document.getElementById("registrationButton");
   const year = document.getElementById("year");
@@ -234,25 +233,10 @@
 
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
-    configurarPrecoSidebar(evento, categorias);
     configurarCategorias(categorias, loteVigente, lotes);
     configurarLocalizacao(evento);
     configurarRegulamento(evento);
     configurarOrganizador(evento, organizador);
-  }
-
-  function configurarPrecoSidebar(evento, categorias) {
-    const precosValidos = categorias
-      .map((categoria) => categoria.precoAtual)
-      .filter((valor) => valor !== null && valor !== undefined);
-
-    if (precosValidos.length > 0) {
-      const menorPreco = Math.min(...precosValidos);
-      eventPrice.textContent = `A partir de ${formatarValor(menorPreco)}`;
-      return;
-    }
-
-    eventPrice.textContent = formatarValor(evento.valor);
   }
 
   function configurarCategorias(categorias, loteVigente, lotes) {
@@ -327,10 +311,14 @@
         const vigente = loteVigente && lote.id === loteVigente.id;
         const nome = formatarNomeLote(lote.nome, index);
 
+        const periodo = lote.data_inicio
+          ? `${formatarData(lote.data_inicio)} até ${formatarData(lote.data_limite)}`
+          : `até ${formatarData(lote.data_limite)}`;
+
         return `
           <div class="event-lote-row${vigente ? " event-lote-row-vigente" : ""}">
             <span>${escaparHTML(nome)}</span>
-            <span>até ${formatarData(lote.data_limite)}</span>
+            <span>${periodo}</span>
           </div>
         `;
       })

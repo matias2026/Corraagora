@@ -325,6 +325,7 @@ document.addEventListener("DOMContentLoaded", async () => {
         lotesContainer.querySelectorAll(".lote-card").forEach(card => {
             lotes.push({
                 nome: card.querySelector(".lote-nome").value.trim(),
+                data_inicio: card.querySelector(".lote-data-inicio").value || null,
                 data_limite: card.querySelector(".lote-data-limite").value
             });
         });
@@ -501,6 +502,7 @@ document.addEventListener("DOMContentLoaded", async () => {
             const lotesInsert = lotesValidos.map((lote, index) => ({
                 evento_id: eventoCriado.id,
                 nome: lote.nome,
+                data_inicio: lote.data_inicio,
                 data_limite: lote.data_limite,
                 ordem: index + 1
             }));
