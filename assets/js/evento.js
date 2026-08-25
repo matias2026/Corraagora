@@ -80,7 +80,7 @@
       modalidade
     );
 
-    document.title = `${nome} | IngressoTop`;
+    document.title = `${nome} | CorraAgora`;
 
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
