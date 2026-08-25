@@ -123,16 +123,13 @@
         <form
           class="quote-form"
           id="quoteForm"
-          action="mailto:erikimatias14@gmail.com"
-          method="POST"
-          enctype="text/plain"
         >
 
           <label>
             Nome completo
             <input
               type="text"
-              name="Nome"
+              id="quoteNome"
               placeholder="Seu nome"
               required
             >
@@ -142,7 +139,7 @@
             E-mail
             <input
               type="email"
-              name="E-mail"
+              id="quoteEmail"
               placeholder="seu@email.com"
               required
             >
@@ -152,14 +149,14 @@
             Telefone / WhatsApp
             <input
               type="tel"
-              name="Telefone"
+              id="quoteTelefone"
               placeholder="(00) 00000-0000"
             >
           </label>
 
           <label>
             Tipo de evento
-            <select name="Tipo de evento">
+            <select id="quoteTipo">
               <option value="Corrida">Corrida</option>
               <option value="MTB">MTB</option>
               <option value="Triathlon">Triathlon</option>
@@ -173,7 +170,7 @@
             Cidade prevista
             <input
               type="text"
-              name="Cidade"
+              id="quoteCidade"
               placeholder="Ex: Parnamirim - RN"
             >
           </label>
@@ -182,7 +179,7 @@
             Número estimado de participantes
             <input
               type="number"
-              name="Participantes estimados"
+              id="quoteParticipantes"
               placeholder="Ex: 300"
               min="1"
             >
@@ -191,7 +188,7 @@
           <label class="quote-form-full">
             Conte mais sobre o evento
             <textarea
-              name="Mensagem"
+              id="quoteMensagem"
               rows="4"
               placeholder="Data prevista, público-alvo, formato de inscrição desejado..."
             ></textarea>
@@ -201,12 +198,12 @@
             class="btn btn-primary full"
             type="submit"
           >
-            Enviar pedido de orçamento
+            Enviar pedido pelo WhatsApp
           </button>
 
           <small>
-            Ao enviar, seu aplicativo de e-mail vai abrir com os
-            dados preenchidos para você confirmar o envio.
+            Ao enviar, o WhatsApp abre em uma nova aba com sua
+            mensagem pronta para você confirmar o envio.
           </small>
 
         </form>
@@ -252,7 +249,7 @@
         </a>
 
         <a href="#">Instagram</a>
-        <a href="#">WhatsApp</a>
+        <a href="https://wa.me/5584994419499" target="_blank" rel="noopener noreferrer">WhatsApp</a>
       </div>
 
     </div>
@@ -272,6 +269,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase.js"></script>
   <script src="assets/js/script.js"></script>
+  <script src="assets/js/orcamento.js"></script>
 
 </body>
 </html>
