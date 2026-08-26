@@ -422,7 +422,9 @@
             <p class="section-description">
                 Aqui não usamos categoria por idade — essa regra é
                 para provas federadas. O atleta escolhe direto a
-                distância que vai correr. Marque as distâncias
+                distância que vai correr. Se quiser, defina um nível
+                pra cada distância (Iniciante, Intermediário,
+                Avançado) — é opcional. Marque as distâncias
                 sugeridas abaixo ou adicione outra:
             </p>
 
@@ -431,6 +433,13 @@
                     type="text"
                     id="distanciaPersonalizada"
                     placeholder="Ex.: 15km">
+
+                <select id="distanciaPersonalizadaNivel">
+                    <option value="">Sem nível</option>
+                    <option value="Iniciante">Iniciante</option>
+                    <option value="Intermediário">Intermediário</option>
+                    <option value="Avançado">Avançado</option>
+                </select>
 
                 <button
                     type="button"

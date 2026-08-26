@@ -308,6 +308,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const distanciaPersonalizadaInput = document.getElementById(
         "distanciaPersonalizada"
     );
+    const distanciaPersonalizadaNivel = document.getElementById(
+        "distanciaPersonalizadaNivel"
+    );
     const addDistanciaPersonalizadaButton = document.getElementById(
         "addDistanciaPersonalizadaButton"
     );
@@ -354,22 +357,49 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         percursoCiclismo.classList.toggle("hidden", !ehCiclismo);
         distanciaPersonalizadaWrapper.classList.toggle("hidden", ehCiclismo);
+        listaCategoriasSugeridas.classList.toggle(
+            "categorias-sugeridas-lista--atletismo",
+            !ehCiclismo
+        );
 
         listaCategoriasSugeridas.innerHTML = sugestoes
-            .map(
-                (sugestao, index) => `
-                    <label class="checkbox-card categoria-sugerida-item">
-                        <input
-                            type="checkbox"
-                            class="categoria-sugerida-checkbox"
-                            data-index="${index}">
-                        <span>
+            .map((sugestao, index) => {
+                if (ehCiclismo) {
+                    return `
+                        <label class="checkbox-card categoria-sugerida-item">
+                            <input
+                                type="checkbox"
+                                class="categoria-sugerida-checkbox"
+                                data-index="${index}">
+                            <span>
+                                <strong>${escaparHTML(sugestao.nome)}</strong>
+                                <small>${formatarFaixaSugestao(sugestao)}</small>
+                            </span>
+                        </label>
+                    `;
+                }
+
+                return `
+                    <div class="categoria-sugerida-item-atletismo">
+                        <label class="checkbox-inline">
+                            <input
+                                type="checkbox"
+                                class="categoria-sugerida-checkbox"
+                                data-index="${index}">
                             <strong>${escaparHTML(sugestao.nome)}</strong>
-                            ${ehCiclismo ? `<small>${formatarFaixaSugestao(sugestao)}</small>` : ""}
-                        </span>
-                    </label>
-                `
-            )
+                        </label>
+
+                        <select
+                            class="categoria-sugerida-nivel"
+                            data-index="${index}">
+                            <option value="">Sem nível</option>
+                            <option value="Iniciante">Iniciante</option>
+                            <option value="Intermediário">Intermediário</option>
+                            <option value="Avançado">Avançado</option>
+                        </select>
+                    </div>
+                `;
+            })
             .join("");
 
         categoriasSugeridas.classList.remove("hidden");
@@ -391,11 +421,22 @@ document.addEventListener("DOMContentLoaded", async () => {
         checkboxesMarcados.forEach(checkbox => {
             const sugestao = sugestoes[Number(checkbox.dataset.index)];
 
-            adicionarCategoria(
-                ehCiclismo
-                    ? { ...sugestao, percurso: calcularPercurso(sugestao) }
-                    : sugestao
+            if (ehCiclismo) {
+                adicionarCategoria({
+                    ...sugestao,
+                    percurso: calcularPercurso(sugestao)
+                });
+                return;
+            }
+
+            const nivelSelect = listaCategoriasSugeridas.querySelector(
+                `.categoria-sugerida-nivel[data-index="${checkbox.dataset.index}"]`
             );
+
+            adicionarCategoria({
+                ...sugestao,
+                percurso: nivelSelect?.value || undefined
+            });
         });
 
         renderCategoriasSugeridas();
@@ -406,8 +447,13 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         if (!distancia) return;
 
-        adicionarCategoria({ nome: distancia });
+        adicionarCategoria({
+            nome: distancia,
+            percurso: distanciaPersonalizadaNivel.value || undefined
+        });
+
         distanciaPersonalizadaInput.value = "";
+        distanciaPersonalizadaNivel.value = "";
     });
 
     function renderPrecosParaCategoria(card) {

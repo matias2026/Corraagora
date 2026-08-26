@@ -206,6 +206,39 @@ textarea:focus{
     padding:12px 14px;
 }
 
+.categorias-sugeridas-lista--atletismo{
+    grid-template-columns:repeat(auto-fill,minmax(280px,1fr));
+}
+
+.categoria-sugerida-item-atletismo{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:12px;
+    background:#fff;
+    padding:12px 14px;
+    border-radius:12px;
+    border:1px solid #e5e7eb;
+}
+
+.checkbox-inline{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    cursor:pointer;
+}
+
+.checkbox-inline input{
+    width:auto;
+    margin:0;
+}
+
+.categoria-sugerida-nivel{
+    width:auto;
+    padding:8px 10px;
+    font-size:13px;
+}
+
 #percursoCiclismo .section-description,
 #distanciaPersonalizadaWrapper .section-description{
     margin-bottom:12px;
@@ -218,8 +251,10 @@ textarea:focus{
     flex-wrap:wrap;
 }
 
-.distancia-personalizada-linha input{
+.distancia-personalizada-linha input,
+.distancia-personalizada-linha select{
     max-width:200px;
+    width:auto;
 }
 
 .categoria-card,
