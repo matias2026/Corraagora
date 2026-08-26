@@ -206,6 +206,22 @@ textarea:focus{
     padding:12px 14px;
 }
 
+#percursoCiclismo .section-description,
+#distanciaPersonalizadaWrapper .section-description{
+    margin-bottom:12px;
+}
+
+.distancia-personalizada-linha{
+    display:flex;
+    gap:12px;
+    align-items:center;
+    flex-wrap:wrap;
+}
+
+.distancia-personalizada-linha input{
+    max-width:200px;
+}
+
 .categoria-card,
 .lote-card{
     border:1px solid #dbe5f2;

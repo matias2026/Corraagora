@@ -279,46 +279,38 @@ document.addEventListener("DOMContentLoaded", async () => {
         ...CATEGORIAS_NAO_OFICIAIS
     ];
 
-    // Faixas etárias oficiais da CBAt — Confederação Brasileira de
-    // Atletismo (Norma 12), usadas nas corridas de rua. Categoria
-    // "Adulto" cobre 16-34 anos; a partir de 35 entra a categoria
-    // Master, em faixas de 5 em 5 anos (M35/F35, M40/F40 etc., aqui
-    // até 70+). Trail Run usa a mesma tabela, já que não existe uma
-    // confederação própria com faixas etárias distintas para trail
-    // no Brasil.
-    //
-    // Categoria oficial -> Percurso Pro. Não oficial -> Percurso Sport.
-    const CATEGORIAS_CORRIDA = [
-        { nome: "Adulto Masculino", idade_min: 16, idade_max: 34, sexo: "Masculino", oficial: true },
-        { nome: "Master 35 Masculino", idade_min: 35, idade_max: 39, sexo: "Masculino", oficial: true },
-        { nome: "Master 40 Masculino", idade_min: 40, idade_max: 44, sexo: "Masculino", oficial: true },
-        { nome: "Master 45 Masculino", idade_min: 45, idade_max: 49, sexo: "Masculino", oficial: true },
-        { nome: "Master 50 Masculino", idade_min: 50, idade_max: 54, sexo: "Masculino", oficial: true },
-        { nome: "Master 55 Masculino", idade_min: 55, idade_max: 59, sexo: "Masculino", oficial: true },
-        { nome: "Master 60 Masculino", idade_min: 60, idade_max: 64, sexo: "Masculino", oficial: true },
-        { nome: "Master 65 Masculino", idade_min: 65, idade_max: 69, sexo: "Masculino", oficial: true },
-        { nome: "Master 70 Masculino", idade_min: 70, idade_max: null, sexo: "Masculino", oficial: true },
-        { nome: "Adulto Feminino", idade_min: 16, idade_max: 34, sexo: "Feminino", oficial: true },
-        { nome: "Master 35 Feminino", idade_min: 35, idade_max: 39, sexo: "Feminino", oficial: true },
-        { nome: "Master 40 Feminino", idade_min: 40, idade_max: 44, sexo: "Feminino", oficial: true },
-        { nome: "Master 45 Feminino", idade_min: 45, idade_max: 49, sexo: "Feminino", oficial: true },
-        { nome: "Master 50 Feminino", idade_min: 50, idade_max: 54, sexo: "Feminino", oficial: true },
-        { nome: "Master 55 Feminino", idade_min: 55, idade_max: 59, sexo: "Feminino", oficial: true },
-        { nome: "Master 60 Feminino", idade_min: 60, idade_max: 64, sexo: "Feminino", oficial: true },
-        { nome: "Master 65 Feminino", idade_min: 65, idade_max: 69, sexo: "Feminino", oficial: true },
-        { nome: "Master 70 Feminino", idade_min: 70, idade_max: null, sexo: "Feminino", oficial: true },
-        ...CATEGORIAS_NAO_OFICIAIS
+    // Atletismo (Corrida, Trail Run): aqui não usamos categoria por
+    // idade — essa segmentação (Adulto, Master etc.) é da norma da
+    // CBAt e vale para provas federadas. Nas provas deste site o
+    // atleta escolhe direto a distância que vai correr, por isso a
+    // "categoria sugerida" é a própria distância.
+    const CATEGORIAS_ATLETISMO = [
+        { nome: "5km" },
+        { nome: "10km" },
+        { nome: "21km" }
     ];
+
+    const GRUPO_CICLISMO = ["MTB", "Speed"];
 
     const SUGESTOES_CATEGORIAS = {
         MTB: CATEGORIAS_CICLISMO,
         Speed: CATEGORIAS_CICLISMO,
-        Corrida: CATEGORIAS_CORRIDA,
-        "Trail Run": CATEGORIAS_CORRIDA
+        Corrida: CATEGORIAS_ATLETISMO,
+        "Trail Run": CATEGORIAS_ATLETISMO
     };
 
     const modalidadeSelect = document.getElementById("modalidade");
     const categoriasSugeridas = document.getElementById("categoriasSugeridas");
+    const percursoCiclismo = document.getElementById("percursoCiclismo");
+    const distanciaPersonalizadaWrapper = document.getElementById(
+        "distanciaPersonalizadaWrapper"
+    );
+    const distanciaPersonalizadaInput = document.getElementById(
+        "distanciaPersonalizada"
+    );
+    const addDistanciaPersonalizadaButton = document.getElementById(
+        "addDistanciaPersonalizadaButton"
+    );
     const listaCategoriasSugeridas = document.getElementById(
         "listaCategoriasSugeridas"
     );
@@ -349,13 +341,19 @@ document.addEventListener("DOMContentLoaded", async () => {
     }
 
     function renderCategoriasSugeridas() {
-        const sugestoes = SUGESTOES_CATEGORIAS[modalidadeSelect.value];
+        const modalidade = modalidadeSelect.value;
+        const sugestoes = SUGESTOES_CATEGORIAS[modalidade];
 
         if (!sugestoes) {
             categoriasSugeridas.classList.add("hidden");
             listaCategoriasSugeridas.innerHTML = "";
             return;
         }
+
+        const ehCiclismo = GRUPO_CICLISMO.includes(modalidade);
+
+        percursoCiclismo.classList.toggle("hidden", !ehCiclismo);
+        distanciaPersonalizadaWrapper.classList.toggle("hidden", ehCiclismo);
 
         listaCategoriasSugeridas.innerHTML = sugestoes
             .map(
@@ -367,7 +365,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                             data-index="${index}">
                         <span>
                             <strong>${escaparHTML(sugestao.nome)}</strong>
-                            <small>${formatarFaixaSugestao(sugestao)}</small>
+                            ${ehCiclismo ? `<small>${formatarFaixaSugestao(sugestao)}</small>` : ""}
                         </span>
                     </label>
                 `
@@ -380,7 +378,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     modalidadeSelect.addEventListener("change", renderCategoriasSugeridas);
 
     addCategoriasSugeridasButton.addEventListener("click", () => {
-        const sugestoes = SUGESTOES_CATEGORIAS[modalidadeSelect.value] || [];
+        const modalidade = modalidadeSelect.value;
+        const sugestoes = SUGESTOES_CATEGORIAS[modalidade] || [];
+        const ehCiclismo = GRUPO_CICLISMO.includes(modalidade);
 
         const checkboxesMarcados = [
             ...listaCategoriasSugeridas.querySelectorAll(
@@ -391,13 +391,23 @@ document.addEventListener("DOMContentLoaded", async () => {
         checkboxesMarcados.forEach(checkbox => {
             const sugestao = sugestoes[Number(checkbox.dataset.index)];
 
-            adicionarCategoria({
-                ...sugestao,
-                percurso: calcularPercurso(sugestao)
-            });
+            adicionarCategoria(
+                ehCiclismo
+                    ? { ...sugestao, percurso: calcularPercurso(sugestao) }
+                    : sugestao
+            );
         });
 
         renderCategoriasSugeridas();
+    });
+
+    addDistanciaPersonalizadaButton.addEventListener("click", () => {
+        const distancia = distanciaPersonalizadaInput.value.trim();
+
+        if (!distancia) return;
+
+        adicionarCategoria({ nome: distancia });
+        distanciaPersonalizadaInput.value = "";
     });
 
     function renderPrecosParaCategoria(card) {

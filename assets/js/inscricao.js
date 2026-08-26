@@ -61,8 +61,13 @@
               })
             : "";
 
+        const percurso = categoria.percurso?.trim();
+        const rotulo = percurso
+          ? `${categoria.nome} — ${percurso}`
+          : categoria.nome;
+
         return `<option value="${escaparAtributo(categoria.nome)}">${escaparHTML(
-          categoria.nome
+          rotulo
         )}${valor ? ` — ${valor}` : ""}</option>`;
       })
       .join("");
