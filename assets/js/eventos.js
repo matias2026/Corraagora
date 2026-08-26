@@ -54,7 +54,7 @@ async function carregarInscricoes() {
 
     const { data, error } = await supabaseClient
         .from("inscricoes")
-        .select("evento_id, status")
+        .select("evento_id, status, valor_pago")
         .in("evento_id", eventos.map(evento => evento.id));
 
     if (error) {
@@ -71,9 +71,21 @@ function atualizarResumo() {
 
     totalInscritos.textContent = inscricoesDosEventos.length;
 
-    totalConfirmados.textContent = inscricoesDosEventos.filter(
+    const confirmadas = inscricoesDosEventos.filter(
         i => (i.status || "").toLowerCase() === "confirmado"
-    ).length;
+    );
+
+    totalConfirmados.textContent = confirmadas.length;
+
+    const receita = confirmadas.reduce(
+        (soma, i) => soma + Number(i.valor_pago || 0),
+        0
+    );
+
+    receitaTotal.textContent = receita.toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
 }
 
 function renderizarEventos() {

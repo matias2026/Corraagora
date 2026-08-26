@@ -66,7 +66,12 @@
           ? `${categoria.nome} — ${percurso}`
           : categoria.nome;
 
-        return `<option value="${escaparAtributo(categoria.nome)}">${escaparHTML(
+        const precoAtributo =
+          precoBase !== null && precoBase !== undefined
+            ? Number(precoBase)
+            : "";
+
+        return `<option value="${escaparAtributo(categoria.nome)}" data-preco="${precoAtributo}">${escaparHTML(
           rotulo
         )}${valor ? ` — ${valor}` : ""}</option>`;
       })
@@ -121,6 +126,9 @@
         ? await window.uploadComprovante(arquivo, evento.id)
         : null;
 
+      const precoSelecionado =
+        categoriaSelect.selectedOptions[0]?.dataset.preco;
+
       const inscricao = {
         evento_id: evento.id,
         codigo_inscricao: gerarCodigoInscricao(),
@@ -134,6 +142,7 @@
         licenca_cbc: licencaCbcInput.value.trim() || null,
         cidade: cidadeInput.value.trim() || null,
         categoria: categoriaSelect.value || null,
+        valor_pago: precoSelecionado ? Number(precoSelecionado) : null,
         comprovante_url: comprovanteUrl,
         status: "pendente"
       };

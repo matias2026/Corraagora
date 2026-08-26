@@ -340,15 +340,17 @@
   }
 
   function configurarLocalizacao(evento) {
-    if (!evento.localizacao_url) {
+    const urlSegura = obterUrlSegura(evento.localizacao_url);
+
+    if (!urlSegura) {
       eventLocationPreview.classList.add("hidden");
       return;
     }
 
-    eventLocationLink.href = evento.localizacao_url;
+    eventLocationLink.href = urlSegura;
     eventLocationPreview.classList.remove("hidden");
 
-    const embedUrl = obterUrlDeEmbedDoMapa(evento.localizacao_url);
+    const embedUrl = obterUrlDeEmbedDoMapa(urlSegura);
 
     if (embedUrl) {
       eventLocationFrame.src = embedUrl;
@@ -358,7 +360,23 @@
     }
   }
 
+  function obterUrlSegura(url) {
+    try {
+      const parsed = new URL(url);
+
+      if (parsed.protocol !== "http:" && parsed.protocol !== "https:") {
+        return null;
+      }
+
+      return parsed.toString();
+    } catch {
+      return null;
+    }
+  }
+
   function obterUrlDeEmbedDoMapa(url) {
+    if (!url) return null;
+
     try {
       const parsed = new URL(url);
 
