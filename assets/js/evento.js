@@ -256,52 +256,42 @@
       return;
     }
 
-    const grupos = new Map();
+    eventCategoriesGroups.innerHTML = `
+      <div class="event-category-list">
+        ${categorias
+          .map((categoria) => {
+            const percurso = categoria.percurso?.trim();
 
-    categorias.forEach((categoria) => {
-      const percurso = categoria.percurso?.trim() || "Geral";
+            const titulo = percurso
+              ? `${escaparHTML(categoria.nome)} — ${escaparHTML(percurso)}`
+              : escaparHTML(categoria.nome);
 
-      if (!grupos.has(percurso)) {
-        grupos.set(percurso, []);
-      }
-
-      grupos.get(percurso).push(categoria);
-    });
-
-    eventCategoriesGroups.innerHTML = [...grupos.entries()]
-      .map(([percurso, categoriasDoGrupo]) => `
-        <div class="event-category-group">
-          ${percurso === "Geral" ? "" : `<h3>${escaparHTML(percurso)}</h3>`}
-
-          <div class="event-category-list">
-            ${categoriasDoGrupo
-              .map((categoria) => `
-                <div class="event-category-row">
-                  <div>
-                    <strong>${escaparHTML(categoria.nome)}</strong>
-                    ${
-                      categoria.sexo || categoria.idade_min || categoria.idade_max
-                        ? `<small>${escaparHTML(
-                            [
-                              categoria.sexo || "",
-                              categoria.idade_min || categoria.idade_max
-                                ? `${categoria.idade_min || 0}-${categoria.idade_max || "+"} anos`
-                                : ""
-                            ]
-                              .filter(Boolean)
-                              .join(" • ")
-                          )}</small>`
-                        : ""
-                    }
-                  </div>
-                  <span>${formatarValor(categoria.precoAtual)}</span>
+            return `
+              <div class="event-category-row">
+                <div>
+                  <strong>${titulo}</strong>
+                  ${
+                    categoria.sexo || categoria.idade_min || categoria.idade_max
+                      ? `<small>${escaparHTML(
+                          [
+                            categoria.sexo || "",
+                            categoria.idade_min || categoria.idade_max
+                              ? `${categoria.idade_min || 0}-${categoria.idade_max || "+"} anos`
+                              : ""
+                          ]
+                            .filter(Boolean)
+                            .join(" • ")
+                        )}</small>`
+                      : ""
+                  }
                 </div>
-              `)
-              .join("")}
-          </div>
-        </div>
-      `)
-      .join("");
+                <span>${formatarValor(categoria.precoAtual)}</span>
+              </div>
+            `;
+          })
+          .join("")}
+      </div>
+    `;
   }
 
   function configurarListaDeLotes(lotes, loteVigente) {
