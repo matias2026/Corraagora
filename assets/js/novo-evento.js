@@ -237,13 +237,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     // -----------------------------------------------------------
 
     // Categorias não oficiais comuns em provas amadoras populares no
-    // Brasil (Iniciante, Geral, PCD), sem faixa de idade definida por
+    // Brasil (Iniciante, Open, PCD), sem faixa de idade definida por
     // nenhuma confederação — usadas em toda modalidade.
     const CATEGORIAS_NAO_OFICIAIS = [
         { nome: "Iniciante Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: false },
         { nome: "Iniciante Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: false },
-        { nome: "Geral Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: false },
-        { nome: "Geral Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: false },
+        { nome: "Open Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: false },
+        { nome: "Open Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: false },
         { nome: "PCD", idade_min: null, idade_max: null, sexo: "", oficial: false }
     ];
 
@@ -282,7 +282,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const CATEGORIAS_MTB = [
         { nome: "Elite Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: true },
         { nome: "Elite Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: true },
-        ...CATEGORIAS_CICLISMO_BASE
+        ...CATEGORIAS_CICLISMO_BASE,
+        { nome: "Turismo A", idade_min: 19, idade_max: 39, sexo: "", oficial: false },
+        { nome: "Turismo B", idade_min: 39, idade_max: null, sexo: "", oficial: false }
     ];
 
     const CATEGORIAS_ESTRADA = [
