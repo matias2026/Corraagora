@@ -250,11 +250,12 @@ document.addEventListener("DOMContentLoaded", async () => {
     // Faixas etárias das categorias oficiais de Ciclismo Estrada e
     // Ciclismo Cross Country (MTB) da CBC — Confederação Brasileira
     // de Ciclismo, tabela "Categorias Oficiais". A CBC usa a mesma
-    // tabela para as duas modalidades.
+    // tabela para as duas modalidades, com uma exceção: aqui o Elite
+    // é 19+ no Ciclismo de estrada e livre (sem restrição de idade)
+    // no MTB, em vez do "23 anos acima" oficial da CBC.
     //
     // Categoria oficial -> Percurso Pro. Não oficial -> Percurso Sport.
-    const CATEGORIAS_CICLISMO = [
-        { nome: "Elite Masculino", idade_min: 23, idade_max: null, sexo: "Masculino", oficial: true },
+    const CATEGORIAS_CICLISMO_BASE = [
         { nome: "Sub-30 Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino", oficial: true },
         { nome: "Sub-23 Masculino", idade_min: 19, idade_max: 22, sexo: "Masculino", oficial: true },
         { nome: "Júnior Masculino", idade_min: 17, idade_max: 18, sexo: "Masculino", oficial: true },
@@ -268,7 +269,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         { nome: "Master C2 Masculino", idade_min: 55, idade_max: 59, sexo: "Masculino", oficial: true },
         { nome: "Master D1 Masculino", idade_min: 60, idade_max: 64, sexo: "Masculino", oficial: true },
         { nome: "Master D2 Masculino", idade_min: 65, idade_max: null, sexo: "Masculino", oficial: true },
-        { nome: "Elite Feminino", idade_min: 23, idade_max: null, sexo: "Feminino", oficial: true },
         { nome: "Sub-23 Feminino", idade_min: 19, idade_max: 22, sexo: "Feminino", oficial: true },
         { nome: "Júnior Feminino", idade_min: 17, idade_max: 18, sexo: "Feminino", oficial: true },
         { nome: "Juvenil Feminino", idade_min: 15, idade_max: 16, sexo: "Feminino", oficial: true },
@@ -277,6 +277,18 @@ document.addEventListener("DOMContentLoaded", async () => {
         { nome: "Master B Feminino", idade_min: 40, idade_max: 49, sexo: "Feminino", oficial: true },
         { nome: "Master C Feminino", idade_min: 50, idade_max: null, sexo: "Feminino", oficial: true },
         ...CATEGORIAS_NAO_OFICIAIS
+    ];
+
+    const CATEGORIAS_MTB = [
+        { nome: "Elite Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: true },
+        { nome: "Elite Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: true },
+        ...CATEGORIAS_CICLISMO_BASE
+    ];
+
+    const CATEGORIAS_ESTRADA = [
+        { nome: "Elite Masculino", idade_min: 19, idade_max: null, sexo: "Masculino", oficial: true },
+        { nome: "Elite Feminino", idade_min: 19, idade_max: null, sexo: "Feminino", oficial: true },
+        ...CATEGORIAS_CICLISMO_BASE
     ];
 
     // Atletismo (Corrida, Trail Run): aqui não usamos categoria por
@@ -293,8 +305,8 @@ document.addEventListener("DOMContentLoaded", async () => {
     const GRUPO_CICLISMO = ["MTB", "Speed"];
 
     const SUGESTOES_CATEGORIAS = {
-        MTB: CATEGORIAS_CICLISMO,
-        Speed: CATEGORIAS_CICLISMO,
+        MTB: CATEGORIAS_MTB,
+        Speed: CATEGORIAS_ESTRADA,
         Corrida: CATEGORIAS_ATLETISMO,
         "Trail Run": CATEGORIAS_ATLETISMO
     };
