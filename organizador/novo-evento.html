@@ -374,10 +374,40 @@
     <div id="categoriasSugeridas" class="categorias-sugeridas hidden">
 
         <p class="section-description">
-            Categorias comuns para essa modalidade. Marque as que
-            quiser usar — elas entram prontas na lista abaixo, só
-            falta definir o preço em cada lote.
+            Categorias comuns para essa modalidade. As oficiais (CBC)
+            entram no Percurso Pro e as demais no Percurso Sport —
+            automaticamente. Marque as que quiser usar; elas entram
+            prontas na lista abaixo, só falta definir o preço em cada
+            lote.
         </p>
+
+        <div class="form-grid">
+
+            <div class="form-group">
+                <label for="distanciaPro">
+                    Distância do Percurso Pro (km)
+                </label>
+                <input
+                    type="number"
+                    id="distanciaPro"
+                    min="0"
+                    step="0.1"
+                    placeholder="Ex.: 60">
+            </div>
+
+            <div class="form-group">
+                <label for="distanciaSport">
+                    Distância do Percurso Sport (km)
+                </label>
+                <input
+                    type="number"
+                    id="distanciaSport"
+                    min="0"
+                    step="0.1"
+                    placeholder="Ex.: 30">
+            </div>
+
+        </div>
 
         <div
             id="listaCategoriasSugeridas"

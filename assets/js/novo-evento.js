@@ -238,34 +238,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     // Faixas etárias das categorias oficiais de Ciclismo Cross Country
     // (MTB) da CBC — Confederação Brasileira de Ciclismo, tabela
-    // "Categorias Oficiais". "Iniciante" não é categoria oficial da
-    // CBC, por isso fica sem faixa de idade definida.
+    // "Categorias Oficiais". As não oficiais (Iniciante, Geral, PCD)
+    // são as mais comuns em provas amadoras populares de MTB no
+    // Brasil e não têm faixa de idade definida pela CBC.
+    //
+    // Categoria oficial -> Percurso Pro. Não oficial -> Percurso Sport.
     const SUGESTOES_CATEGORIAS = {
         MTB: [
-            { nome: "Elite Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino" },
-            { nome: "Sub-30 Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino" },
-            { nome: "Sub-23 Masculino", idade_min: 19, idade_max: 22, sexo: "Masculino" },
-            { nome: "Júnior Masculino", idade_min: 17, idade_max: 18, sexo: "Masculino" },
-            { nome: "Juvenil Masculino", idade_min: 15, idade_max: 16, sexo: "Masculino" },
-            { nome: "Infantojuvenil Masculino", idade_min: 12, idade_max: 14, sexo: "Masculino" },
-            { nome: "Master A1 Masculino", idade_min: 30, idade_max: 34, sexo: "Masculino" },
-            { nome: "Master A2 Masculino", idade_min: 35, idade_max: 39, sexo: "Masculino" },
-            { nome: "Master B1 Masculino", idade_min: 40, idade_max: 44, sexo: "Masculino" },
-            { nome: "Master B2 Masculino", idade_min: 45, idade_max: 49, sexo: "Masculino" },
-            { nome: "Master C1 Masculino", idade_min: 50, idade_max: 54, sexo: "Masculino" },
-            { nome: "Master C2 Masculino", idade_min: 55, idade_max: 59, sexo: "Masculino" },
-            { nome: "Master D1 Masculino", idade_min: 60, idade_max: 64, sexo: "Masculino" },
-            { nome: "Master D2 Masculino", idade_min: 65, idade_max: null, sexo: "Masculino" },
-            { nome: "Elite Feminino", idade_min: 23, idade_max: null, sexo: "Feminino" },
-            { nome: "Sub-23 Feminino", idade_min: 19, idade_max: 22, sexo: "Feminino" },
-            { nome: "Júnior Feminino", idade_min: 17, idade_max: 18, sexo: "Feminino" },
-            { nome: "Juvenil Feminino", idade_min: 15, idade_max: 16, sexo: "Feminino" },
-            { nome: "Infantojuvenil Feminino", idade_min: 12, idade_max: 14, sexo: "Feminino" },
-            { nome: "Master A Feminino", idade_min: 30, idade_max: 39, sexo: "Feminino" },
-            { nome: "Master B Feminino", idade_min: 40, idade_max: 49, sexo: "Feminino" },
-            { nome: "Master C Feminino", idade_min: 50, idade_max: null, sexo: "Feminino" },
-            { nome: "Iniciante Masculino", idade_min: null, idade_max: null, sexo: "Masculino" },
-            { nome: "Iniciante Feminino", idade_min: null, idade_max: null, sexo: "Feminino" }
+            { nome: "Elite Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino", oficial: true },
+            { nome: "Sub-30 Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino", oficial: true },
+            { nome: "Sub-23 Masculino", idade_min: 19, idade_max: 22, sexo: "Masculino", oficial: true },
+            { nome: "Júnior Masculino", idade_min: 17, idade_max: 18, sexo: "Masculino", oficial: true },
+            { nome: "Juvenil Masculino", idade_min: 15, idade_max: 16, sexo: "Masculino", oficial: true },
+            { nome: "Infantojuvenil Masculino", idade_min: 12, idade_max: 14, sexo: "Masculino", oficial: true },
+            { nome: "Master A1 Masculino", idade_min: 30, idade_max: 34, sexo: "Masculino", oficial: true },
+            { nome: "Master A2 Masculino", idade_min: 35, idade_max: 39, sexo: "Masculino", oficial: true },
+            { nome: "Master B1 Masculino", idade_min: 40, idade_max: 44, sexo: "Masculino", oficial: true },
+            { nome: "Master B2 Masculino", idade_min: 45, idade_max: 49, sexo: "Masculino", oficial: true },
+            { nome: "Master C1 Masculino", idade_min: 50, idade_max: 54, sexo: "Masculino", oficial: true },
+            { nome: "Master C2 Masculino", idade_min: 55, idade_max: 59, sexo: "Masculino", oficial: true },
+            { nome: "Master D1 Masculino", idade_min: 60, idade_max: 64, sexo: "Masculino", oficial: true },
+            { nome: "Master D2 Masculino", idade_min: 65, idade_max: null, sexo: "Masculino", oficial: true },
+            { nome: "Elite Feminino", idade_min: 23, idade_max: null, sexo: "Feminino", oficial: true },
+            { nome: "Sub-23 Feminino", idade_min: 19, idade_max: 22, sexo: "Feminino", oficial: true },
+            { nome: "Júnior Feminino", idade_min: 17, idade_max: 18, sexo: "Feminino", oficial: true },
+            { nome: "Juvenil Feminino", idade_min: 15, idade_max: 16, sexo: "Feminino", oficial: true },
+            { nome: "Infantojuvenil Feminino", idade_min: 12, idade_max: 14, sexo: "Feminino", oficial: true },
+            { nome: "Master A Feminino", idade_min: 30, idade_max: 39, sexo: "Feminino", oficial: true },
+            { nome: "Master B Feminino", idade_min: 40, idade_max: 49, sexo: "Feminino", oficial: true },
+            { nome: "Master C Feminino", idade_min: 50, idade_max: null, sexo: "Feminino", oficial: true },
+            { nome: "Iniciante Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: false },
+            { nome: "Iniciante Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: false },
+            { nome: "Geral Masculino", idade_min: null, idade_max: null, sexo: "Masculino", oficial: false },
+            { nome: "Geral Feminino", idade_min: null, idade_max: null, sexo: "Feminino", oficial: false },
+            { nome: "PCD", idade_min: null, idade_max: null, sexo: "", oficial: false }
         ]
     };
 
@@ -279,11 +285,25 @@ document.addEventListener("DOMContentLoaded", async () => {
     );
 
     function formatarFaixaSugestao(sugestao) {
+        const percurso = sugestao.oficial ? "Percurso Pro" : "Percurso Sport";
+
         if (!sugestao.idade_min && !sugestao.idade_max) {
-            return "Todas as idades";
+            return `${percurso} · Todas as idades`;
         }
 
-        return `${sugestao.idade_min || 0}–${sugestao.idade_max || "+"} anos`;
+        return `${percurso} · ${sugestao.idade_min || 0}–${sugestao.idade_max || "+"} anos`;
+    }
+
+    function calcularPercurso(sugestao) {
+        const nomePercurso = sugestao.oficial ? "Pro" : "Sport";
+
+        const distancia = document.getElementById(
+            sugestao.oficial ? "distanciaPro" : "distanciaSport"
+        ).value;
+
+        return distancia
+            ? `${nomePercurso} (${distancia} km)`
+            : nomePercurso;
     }
 
     function renderCategoriasSugeridas() {
@@ -327,7 +347,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         ];
 
         checkboxesMarcados.forEach(checkbox => {
-            adicionarCategoria(sugestoes[Number(checkbox.dataset.index)]);
+            const sugestao = sugestoes[Number(checkbox.dataset.index)];
+
+            adicionarCategoria({
+                ...sugestao,
+                percurso: calcularPercurso(sugestao)
+            });
         });
 
         renderCategoriasSugeridas();
