@@ -290,6 +290,12 @@ async function atualizarStatusInscricao(botao, inscricaoId, novoStatus) {
 
 function formatarData(data) {
     if (!data) return "-";
+
+    if (/^\d{4}-\d{2}-\d{2}$/.test(data)) {
+        const [ano, mes, dia] = data.split("-").map(Number);
+        return new Date(ano, mes - 1, dia).toLocaleDateString("pt-BR");
+    }
+
     return new Date(data).toLocaleDateString("pt-BR");
 }
 
