@@ -149,9 +149,16 @@ function adicionarLote(lote = {}) {
     fragmento.querySelector(".lote-data-limite").value =
         lote.data_limite || "";
 
+    fragmento.querySelector(".lote-valor").value =
+        lote.valor ?? "";
+
     fragmento
         .querySelector(".lote-nome")
         .addEventListener("blur", sincronizarPrecosCategorias);
+
+    fragmento
+        .querySelector(".lote-valor")
+        .addEventListener("input", sincronizarPrecosCategorias);
 
     fragmento
         .querySelector(".removeLoteButton")
@@ -172,7 +179,7 @@ addLoteButton.addEventListener("click", () => {
 // CATEGORIAS
 // ---------------------------------------------------------------
 
-function adicionarCategoria(categoria = {}, precosPorLote = []) {
+function adicionarCategoria(categoria = {}) {
     const fragmento =
         categoriaTemplate.content.cloneNode(true);
 
@@ -220,31 +227,25 @@ function adicionarCategoria(categoria = {}, precosPorLote = []) {
 
     categoriasContainer.appendChild(fragmento);
 
-    const cardAdicionado = categoriasContainer.lastElementChild;
-
-    cardAdicionado.dataset.precosIniciais =
-        JSON.stringify(precosPorLote);
-
-    renderPrecosParaCategoria(cardAdicionado);
+    renderPrecosParaCategoria(categoriasContainer.lastElementChild);
 
     atualizarTitulosCategorias();
+}
+
+function formatarMoeda(valor) {
+    return Number(valor || 0).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
 }
 
 function renderPrecosParaCategoria(card) {
     const loteCards = [...lotesContainer.querySelectorAll(".lote-card")];
     const precosContainer = card.querySelector(".categoria-precos-container");
 
-    const precosIniciais = card.dataset.precosIniciais
-        ? JSON.parse(card.dataset.precosIniciais)
-        : [];
-
-    const valoresAtuais = [
-        ...precosContainer.querySelectorAll(".categoria-preco")
-    ].map(input => input.value);
-
     if (loteCards.length === 0) {
         precosContainer.innerHTML =
-            '<p class="status-help">Adicione um lote acima para definir o preço.</p>';
+            '<p class="status-help">Adicione um lote acima e defina o valor — ele vale para esta e para todas as outras categorias.</p>';
         return;
     }
 
@@ -254,20 +255,12 @@ function renderPrecosParaCategoria(card) {
                 loteCard.querySelector(".lote-nome").value.trim() ||
                 `Lote ${index + 1}`;
 
-            const valor =
-                valoresAtuais[index] !== undefined && valoresAtuais[index] !== ""
-                    ? valoresAtuais[index]
-                    : precosIniciais[index] ?? "";
+            const valorLote = loteCard.querySelector(".lote-valor").value;
 
             return `
                 <div class="form-group">
                     <label>Preço — ${escaparHTML(nomeLote)}</label>
-                    <input
-                        type="number"
-                        class="categoria-preco"
-                        min="0"
-                        step="0.01"
-                        value="${valor}">
+                    <strong>${formatarMoeda(valorLote)}</strong>
                 </div>
             `;
         })
@@ -328,10 +321,6 @@ function obterCategoriasFormulario() {
                     .querySelector(".categoria-sexo")
                     .value;
 
-            const precos = [
-                ...card.querySelectorAll(".categoria-preco")
-            ].map(input => Number(input.value || 0));
-
             if (!nome) {
                 return;
             }
@@ -339,15 +328,13 @@ function obterCategoriasFormulario() {
             categorias.push({
                 nome,
                 percurso: percurso || null,
-                valor: precos[0] || 0,
                 limite_inscritos: null,
                 idade_min:
                     valorOuNull(idadeMin),
                 idade_max:
                     valorOuNull(idadeMax),
                 sexo: sexo || null,
-                ordem: index + 1,
-                precos
+                ordem: index + 1
             });
         });
 
@@ -362,6 +349,7 @@ function obterLotesFormulario() {
             nome: card.querySelector(".lote-nome").value.trim(),
             data_inicio: card.querySelector(".lote-data-inicio").value || null,
             data_limite: card.querySelector(".lote-data-limite").value,
+            valor: Number(card.querySelector(".lote-valor").value || 0),
             ordem: index + 1
         });
     });
@@ -585,7 +573,14 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
 
     lotesContainer.innerHTML = "";
 
-    lotes.forEach(lote => adicionarLote(lote));
+    lotes.forEach(lote => {
+        const precoDoLote = precos.find(item => item.lote_id === lote.id);
+
+        adicionarLote({
+            ...lote,
+            valor: precoDoLote ? precoDoLote.valor : ""
+        });
+    });
 
     if (lotes.length === 0) {
         adicionarLote();
@@ -594,17 +589,7 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
     categoriasContainer.innerHTML = "";
 
     categorias.forEach(categoria => {
-        const precosDaCategoria = lotes.map(lote => {
-            const preco = precos.find(
-                item =>
-                    item.categoria_id === categoria.id &&
-                    item.lote_id === lote.id
-            );
-
-            return preco ? preco.valor : "";
-        });
-
-        adicionarCategoria(categoria, precosDaCategoria);
+        adicionarCategoria(categoria);
     });
 
     if (categorias.length === 0) {
@@ -781,7 +766,7 @@ form.addEventListener(
                 evento_id: Number(eventoId),
                 nome: categoria.nome,
                 percurso: categoria.percurso,
-                valor: categoria.valor,
+                valor: lotes[0]?.valor || 0,
                 limite_inscritos: categoria.limite_inscritos,
                 idade_min: categoria.idade_min,
                 idade_max: categoria.idade_max,
@@ -807,14 +792,12 @@ form.addEventListener(
 
             const precosInsert = [];
 
-            categoriasOrdenadas.forEach((categoriaCriada, indexCategoria) => {
-                const precosDaCategoria = categorias[indexCategoria].precos;
-
+            categoriasOrdenadas.forEach(categoriaCriada => {
                 lotesOrdenados.forEach((loteCriado, indexLote) => {
                     precosInsert.push({
                         categoria_id: categoriaCriada.id,
                         lote_id: loteCriado.id,
-                        valor: precosDaCategoria[indexLote] || 0
+                        valor: lotes[indexLote]?.valor || 0
                     });
                 });
             });

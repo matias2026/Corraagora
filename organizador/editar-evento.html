@@ -504,6 +504,12 @@
                     </button>
                 </div>
 
+                <p class="status-help">
+                    O valor de cada lote vale para todas as categorias.
+                    Quando a data de um lote vence, o valor do próximo
+                    entra em vigor sozinho.
+                </p>
+
                 <div id="lotesContainer"></div>
 
             </section>
@@ -661,6 +667,11 @@
             <div class="form-group">
                 <label>Data limite</label>
                 <input type="date" class="lote-data-limite">
+            </div>
+
+            <div class="form-group">
+                <label>Valor (todas as categorias)</label>
+                <input type="number" class="lote-valor" min="0" step="0.01" placeholder="0,00">
             </div>
 
         </div>

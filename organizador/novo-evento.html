@@ -338,8 +338,10 @@
 
     <p class="section-description">
         Defina os lotes de preço (ex.: "1º Lote", "2º Lote", "Lote
-        Extra") com a data limite de cada um. O preço vigente de cada
-        categoria muda sozinho conforme a data.
+        Extra") com a data limite e o valor de cada um. O valor do
+        lote vale para todas as categorias — não precisa definir
+        preço categoria por categoria. Quando a data de um lote
+        vence, o valor do próximo lote entra em vigor sozinho.
     </p>
 
     <div id="lotesContainer"></div>
@@ -363,9 +365,9 @@
 
     <p class="section-description">
 
-        Adicione as categorias disponíveis para este evento. Cadastre
-        os lotes acima primeiro para poder definir o preço de cada
-        categoria em cada lote.
+        Adicione as categorias disponíveis para este evento. O preço
+        de cada uma é o valor definido no lote acima — não precisa
+        repetir o preço aqui.
 
     </p>
 
@@ -590,6 +592,11 @@
             <div class="form-group">
                 <label>Data limite</label>
                 <input type="date" class="lote-data-limite">
+            </div>
+
+            <div class="form-group">
+                <label>Valor (todas as categorias)</label>
+                <input type="number" class="lote-valor" min="0" step="0.01" placeholder="0,00">
             </div>
 
         </div>
