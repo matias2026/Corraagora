@@ -50,5 +50,9 @@ window.uploadRegulamento = async function (file, userId) {
         throw error;
     }
 
-    return nomeArquivo;
+    const { data } = supabaseClient.storage
+        .from("eventos-regulamentos")
+        .getPublicUrl(nomeArquivo);
+
+    return data.publicUrl;
 };

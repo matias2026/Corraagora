@@ -9,6 +9,7 @@ const statusFiltro = document.getElementById("statusFiltro");
 
 let eventos = [];
 let usuario = null;
+let inscricoesDosEventos = [];
 
 async function verificarUsuario() {
     const {
@@ -40,17 +41,39 @@ async function carregarEventos() {
 
     eventos = data || [];
 
+    await carregarInscricoes();
+
     atualizarResumo();
     renderizarEventos();
+}
+
+async function carregarInscricoes() {
+    inscricoesDosEventos = [];
+
+    if (eventos.length === 0) return;
+
+    const { data, error } = await supabaseClient
+        .from("inscricoes")
+        .select("evento_id, status")
+        .in("evento_id", eventos.map(evento => evento.id));
+
+    if (error) {
+        console.error("Erro ao carregar inscritos:", error);
+        return;
+    }
+
+    inscricoesDosEventos = data || [];
 }
 
 function atualizarResumo() {
 
     totalEventos.textContent = eventos.length;
 
-    totalInscritos.textContent = "0";
-    totalConfirmados.textContent = "0";
-    receitaTotal.textContent = "R$ 0,00";
+    totalInscritos.textContent = inscricoesDosEventos.length;
+
+    totalConfirmados.textContent = inscricoesDosEventos.filter(
+        i => (i.status || "").toLowerCase() === "confirmado"
+    ).length;
 }
 
 function renderizarEventos() {
