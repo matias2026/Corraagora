@@ -254,7 +254,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     //
     // Categoria oficial -> Percurso Pro. Não oficial -> Percurso Sport.
     const CATEGORIAS_CICLISMO = [
-        { nome: "Elite Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino", oficial: true },
+        { nome: "Elite Masculino", idade_min: 23, idade_max: null, sexo: "Masculino", oficial: true },
         { nome: "Sub-30 Masculino", idade_min: 23, idade_max: 29, sexo: "Masculino", oficial: true },
         { nome: "Sub-23 Masculino", idade_min: 19, idade_max: 22, sexo: "Masculino", oficial: true },
         { nome: "Júnior Masculino", idade_min: 17, idade_max: 18, sexo: "Masculino", oficial: true },
