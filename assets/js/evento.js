@@ -29,6 +29,9 @@
   );
   const eventLocationFrame = document.getElementById("eventLocationFrame");
   const eventLocationLink = document.getElementById("eventLocationLink");
+  const eventLocationShortLinkHint = document.getElementById(
+    "eventLocationShortLinkHint"
+  );
   const eventRegulamentoButton = document.getElementById(
     "eventRegulamentoButton"
   );
@@ -355,8 +358,12 @@
     if (embedUrl) {
       eventLocationFrame.src = embedUrl;
       eventLocationFrame.classList.remove("hidden");
+      eventLocationShortLinkHint.classList.add("hidden");
     } else {
       eventLocationFrame.classList.add("hidden");
+
+      const ehLinkCurto = urlSegura.includes("goo.gl");
+      eventLocationShortLinkHint.classList.toggle("hidden", !ehLinkCurto);
     }
   }
 
@@ -514,7 +521,7 @@
       url("${bannerUrl}")
     `;
 
-    eventBanner.style.backgroundSize = "cover";
+    eventBanner.style.backgroundSize = "contain";
     eventBanner.style.backgroundPosition = "center";
     eventBanner.style.backgroundRepeat = "no-repeat";
 
