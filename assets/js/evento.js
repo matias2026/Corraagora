@@ -361,9 +361,7 @@
       eventLocationShortLinkHint.classList.add("hidden");
     } else {
       eventLocationFrame.classList.add("hidden");
-
-      const ehLinkCurto = urlSegura.includes("goo.gl");
-      eventLocationShortLinkHint.classList.toggle("hidden", !ehLinkCurto);
+      eventLocationShortLinkHint.classList.remove("hidden");
     }
   }
 
@@ -393,15 +391,6 @@
 
       if (parsed.pathname.includes("/maps/embed")) {
         return url;
-      }
-
-      const ehLinkDeMapa =
-        parsed.hostname.includes("maps.google") ||
-        parsed.pathname.includes("/maps");
-
-      if (ehLinkDeMapa) {
-        parsed.searchParams.set("output", "embed");
-        return parsed.toString();
       }
 
       return null;

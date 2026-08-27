@@ -55,6 +55,18 @@ const bannerAtual =
 const regulamentoAtual =
     document.getElementById("regulamentoAtual");
 
+const bannerNovoInput =
+    document.getElementById("bannerNovo");
+
+const removerBannerButton =
+    document.getElementById("removerBannerButton");
+
+const regulamentoNovoInput =
+    document.getElementById("regulamentoNovo");
+
+const removerRegulamentoButton =
+    document.getElementById("removerRegulamentoButton");
+
 const galeriaInput =
     document.getElementById("galeria");
 
@@ -92,6 +104,8 @@ let usuario = null;
 let eventoAtual = null;
 let galeriaAtualCount = 0;
 let souAdmin = false;
+let bannerRemovido = false;
+let regulamentoRemovido = false;
 
 function mostrarMensagem(texto, tipo) {
     mensagem.textContent = texto;
@@ -548,35 +562,13 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
 
     statusAtual.className = `status-pill status-${status}`;
 
-    if (evento.banner_url) {
-        bannerAtual.innerHTML = `
-            <a
-                href="${evento.banner_url}"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Abrir banner atual
-            </a>
-        `;
-    } else {
-        bannerAtual.textContent =
-            "Nenhum banner cadastrado.";
-    }
+    bannerRemovido = false;
+    regulamentoRemovido = false;
+    bannerNovoInput.value = "";
+    regulamentoNovoInput.value = "";
 
-    if (evento.regulamento_url) {
-        regulamentoAtual.innerHTML = `
-            <a
-                href="${evento.regulamento_url}"
-                target="_blank"
-                rel="noopener noreferrer"
-            >
-                Abrir regulamento atual
-            </a>
-        `;
-    } else {
-        regulamentoAtual.textContent =
-            "Nenhum regulamento cadastrado.";
-    }
+    atualizarBannerAtualTexto();
+    atualizarRegulamentoAtualTexto();
 
     lotesContainer.innerHTML = "";
 
@@ -603,6 +595,94 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
         adicionarCategoria();
     }
 }
+
+// ---------------------------------------------------------------
+// BANNER E REGULAMENTO (trocar ou remover)
+// ---------------------------------------------------------------
+
+function atualizarBannerAtualTexto() {
+    if (bannerNovoInput.files[0]) {
+        bannerAtual.textContent =
+            `Novo arquivo selecionado: ${bannerNovoInput.files[0].name}`;
+        return;
+    }
+
+    if (bannerRemovido) {
+        bannerAtual.textContent =
+            "Banner será removido ao salvar.";
+        return;
+    }
+
+    if (eventoAtual?.banner_url) {
+        bannerAtual.innerHTML = `
+            <a
+                href="${eventoAtual.banner_url}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Abrir banner atual
+            </a>
+        `;
+        return;
+    }
+
+    bannerAtual.textContent = "Nenhum banner cadastrado.";
+}
+
+function atualizarRegulamentoAtualTexto() {
+    if (regulamentoNovoInput.files[0]) {
+        regulamentoAtual.textContent =
+            `Novo arquivo selecionado: ${regulamentoNovoInput.files[0].name}`;
+        return;
+    }
+
+    if (regulamentoRemovido) {
+        regulamentoAtual.textContent =
+            "Regulamento será removido ao salvar.";
+        return;
+    }
+
+    if (eventoAtual?.regulamento_url) {
+        regulamentoAtual.innerHTML = `
+            <a
+                href="${eventoAtual.regulamento_url}"
+                target="_blank"
+                rel="noopener noreferrer"
+            >
+                Abrir regulamento atual
+            </a>
+        `;
+        return;
+    }
+
+    regulamentoAtual.textContent = "Nenhum regulamento cadastrado.";
+}
+
+bannerNovoInput.addEventListener("change", () => {
+    if (bannerNovoInput.files[0]) {
+        bannerRemovido = false;
+    }
+    atualizarBannerAtualTexto();
+});
+
+removerBannerButton.addEventListener("click", () => {
+    bannerRemovido = true;
+    bannerNovoInput.value = "";
+    atualizarBannerAtualTexto();
+});
+
+regulamentoNovoInput.addEventListener("change", () => {
+    if (regulamentoNovoInput.files[0]) {
+        regulamentoRemovido = false;
+    }
+    atualizarRegulamentoAtualTexto();
+});
+
+removerRegulamentoButton.addEventListener("click", () => {
+    regulamentoRemovido = true;
+    regulamentoNovoInput.value = "";
+    atualizarRegulamentoAtualTexto();
+});
 
 // ---------------------------------------------------------------
 // CUPONS DE DESCONTO
@@ -857,6 +937,32 @@ form.addEventListener(
                 organizador_instagram:
                     organizadorInstagramInput.value.trim() || null
             };
+
+            const bannerNovoFile = bannerNovoInput.files[0] || null;
+
+            if (bannerNovoFile) {
+                salvarButton.textContent = "Enviando banner...";
+                eventoAtualizado.banner_url = await uploadBanner(
+                    bannerNovoFile,
+                    usuario.id
+                );
+                salvarButton.textContent = "Salvando...";
+            } else if (bannerRemovido) {
+                eventoAtualizado.banner_url = null;
+            }
+
+            const regulamentoNovoFile = regulamentoNovoInput.files[0] || null;
+
+            if (regulamentoNovoFile) {
+                salvarButton.textContent = "Enviando regulamento...";
+                eventoAtualizado.regulamento_url = await uploadRegulamento(
+                    regulamentoNovoFile,
+                    usuario.id
+                );
+                salvarButton.textContent = "Salvando...";
+            } else if (regulamentoRemovido) {
+                eventoAtualizado.regulamento_url = null;
+            }
 
             let atualizarConsulta = supabaseClient
                 .from("eventos")
