@@ -8,6 +8,7 @@ body{
     font-family:Arial,Helvetica,sans-serif;
     background:#f4f7fb;
     color:#1f2937;
+    overflow-x:hidden;
 }
 
 .dashboard-layout{
@@ -107,6 +108,8 @@ body{
 .dashboard-header h1{
     font-size:36px;
     font-weight:700;
+    overflow-wrap:break-word;
+    word-break:break-word;
 }
 
 .dashboard-subtitle{
