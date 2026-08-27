@@ -108,16 +108,6 @@ function limparMensagem() {
     mensagem.className = "message";
 }
 
-function criarSlug(texto) {
-    return texto
-        .normalize("NFD")
-        .replace(/\p{Diacritic}/gu, "")
-        .toLowerCase()
-        .trim()
-        .replace(/[^a-z0-9]+/g, "-")
-        .replace(/^-+|-+$/g, "");
-}
-
 function valorOuNull(valor) {
     if (
         valor === "" ||
@@ -848,7 +838,6 @@ form.addEventListener(
 
             const eventoAtualizado = {
                 nome,
-                slug: criarSlug(nome),
                 modalidade,
                 cidade,
                 estado,
