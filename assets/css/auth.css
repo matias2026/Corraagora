@@ -49,14 +49,18 @@ body{
 }
 
 #loginForm,
-#registerForm{
+#registerForm,
+#loginAtletaForm,
+#cadastroAtletaForm{
     display:flex;
     flex-direction:column;
     gap:16px;
 }
 
 #loginForm input,
-#registerForm input{
+#registerForm input,
+#loginAtletaForm input,
+#cadastroAtletaForm input{
     width:100%;
     padding:14px 16px;
     border:1px solid #d1d5db;
@@ -67,13 +71,17 @@ body{
 }
 
 #loginForm input:focus,
-#registerForm input:focus{
+#registerForm input:focus,
+#loginAtletaForm input:focus,
+#cadastroAtletaForm input:focus{
     border-color:#2563eb;
     box-shadow:0 0 0 3px rgba(37,99,235,.15);
 }
 
 #loginForm button,
-#registerForm button{
+#registerForm button,
+#loginAtletaForm button,
+#cadastroAtletaForm button{
     width:100%;
     padding:15px;
     background:#2563eb;
@@ -87,8 +95,38 @@ body{
 }
 
 #loginForm button:hover,
-#registerForm button:hover{
+#registerForm button:hover,
+#loginAtletaForm button:hover,
+#cadastroAtletaForm button:hover{
     background:#1d4ed8;
+}
+
+.auth-tabs{
+    display:flex;
+    gap:8px;
+    margin-bottom:22px;
+    background:#f1f5f9;
+    padding:4px;
+    border-radius:10px;
+}
+
+.auth-tab{
+    flex:1;
+    padding:10px;
+    border:none;
+    background:transparent;
+    border-radius:8px;
+    font-size:14px;
+    font-weight:700;
+    color:#64748b;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.auth-tab.active{
+    background:#fff;
+    color:#2563eb;
+    box-shadow:0 2px 6px rgba(15,23,42,.08);
 }
 
 .login-card a{

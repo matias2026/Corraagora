@@ -27,13 +27,91 @@
   const cupomFeedback = document.getElementById("regCupomFeedback");
   const comprovanteInput = document.getElementById("regComprovante");
 
-  window.abrirModalInscricao = function abrirModalInscricao() {
+  const regContaLogada = document.getElementById("regContaLogada");
+  const regContaDeslogada = document.getElementById("regContaDeslogada");
+  const radiosParaQuem = document.querySelectorAll(
+    'input[name="regParaQuem"]'
+  );
+
+  let sessaoAtual = null;
+  let dadosProprios = null;
+
+  radiosParaQuem.forEach((radio) => {
+    radio.addEventListener("change", () => {
+      if (radio.value === "mim" && radio.checked) {
+        preencherDadosProprios();
+      } else if (radio.value === "amigo" && radio.checked) {
+        limparDadosPessoais();
+      }
+    });
+  });
+
+  function preencherDadosProprios() {
+    if (!dadosProprios) return;
+
+    nomeInput.value = dadosProprios.nome || "";
+    cpfInput.value = dadosProprios.cpf || "";
+    dataNascimentoInput.value = dadosProprios.data_nascimento || "";
+    sexoInput.value = dadosProprios.sexo || "";
+    emailInput.value = dadosProprios.email || "";
+    telefoneInput.value = dadosProprios.telefone || "";
+    equipeInput.value = dadosProprios.equipe || "";
+    licencaCbcInput.value = dadosProprios.licenca_cbc || "";
+    cidadeInput.value = dadosProprios.cidade || "";
+  }
+
+  function limparDadosPessoais() {
+    nomeInput.value = "";
+    cpfInput.value = "";
+    dataNascimentoInput.value = "";
+    sexoInput.value = "";
+    emailInput.value = "";
+    telefoneInput.value = "";
+    equipeInput.value = "";
+    licencaCbcInput.value = "";
+    cidadeInput.value = "";
+  }
+
+  window.abrirModalInscricao = async function abrirModalInscricao() {
     const evento = window.eventoAtual;
     if (!evento || !modal) return;
 
     limparMensagem();
     form.reset();
     limparFeedbackCupom();
+
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    sessaoAtual = session;
+    dadosProprios = null;
+
+    if (session) {
+      regContaLogada.classList.remove("hidden");
+      regContaDeslogada.classList.add("hidden");
+
+      document.querySelector(
+        'input[name="regParaQuem"][value="mim"]'
+      ).checked = true;
+
+      const { data: ultimaInscricao } = await supabaseClient
+        .from("inscricoes")
+        .select(
+          "nome, cpf, data_nascimento, sexo, email, telefone, equipe, licenca_cbc, cidade"
+        )
+        .eq("usuario_id", session.user.id)
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle();
+
+      dadosProprios = ultimaInscricao || {
+        email: session.user.email,
+        nome: session.user.user_metadata?.full_name || ""
+      };
+
+      preencherDadosProprios();
+    } else {
+      regContaLogada.classList.add("hidden");
+      regContaDeslogada.classList.remove("hidden");
+    }
 
     const nomeEBanco = evento.informacoes_pagamento?.trim();
     const chavePix = evento.chave_pix?.trim();
@@ -231,7 +309,8 @@
         valor_pago: valorPago,
         cupom_codigo: cupomAplicado?.codigo || null,
         comprovante_url: comprovanteUrl,
-        status: "pendente"
+        status: "pendente",
+        usuario_id: sessaoAtual?.user?.id || null
       };
 
       const { error } = await supabaseClient

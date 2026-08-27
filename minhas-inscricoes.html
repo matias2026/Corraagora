@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minhas inscrições | CorraAgora</title>
+
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/minhas-inscricoes.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase.js"></script>
+    <script src="assets/js/utils.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container conta-header-inner">
+        <a href="index.html" class="conta-logo-link">
+            <img src="images/logo-corraagora-compacta.png" alt="CorraAgora">
+        </a>
+
+        <nav class="conta-nav">
+            <a href="index.html">Ver eventos</a>
+            <button type="button" id="logoutButton" class="link-button">Sair</button>
+        </nav>
+    </div>
+</header>
+
+<main class="container minhas-inscricoes-page">
+
+    <h1>Minhas inscrições</h1>
+    <p class="subtitle">Todas as inscrições feitas com esta conta — suas ou de amigos que você cadastrou.</p>
+
+    <div id="listaInscricoes" class="lista-inscricoes"></div>
+
+    <div id="semInscricoes" class="starter-empty hidden">
+        <div class="starter-icon">🏁</div>
+        <h3>Nenhuma inscrição ainda</h3>
+        <p>Quando você se inscrever em um evento (pra você ou pra um amigo), ela aparece aqui.</p>
+        <a href="index.html" class="btn btn-primary">Ver eventos</a>
+    </div>
+
+</main>
+
+<script src="assets/js/minhas-inscricoes.js"></script>
+
+</body>
+</html>

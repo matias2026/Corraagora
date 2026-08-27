@@ -81,7 +81,15 @@
    ========================================================================== */
 
 .registration-modal-card{width:min(520px,100%);text-align:left}
-.registration-modal-card h2{margin-bottom:18px}
+.registration-modal-card h2{margin-bottom:14px}
+
+.reg-conta-box{background:#eaf5ff;border:1px solid #cfe6fb;border-radius:12px;padding:14px 16px;margin-bottom:18px}
+.reg-conta-box>span{display:block;font-weight:700;font-size:13.5px;color:#0f172a;margin-bottom:10px}
+.reg-conta-opcoes{display:flex;gap:20px;flex-wrap:wrap}
+.reg-conta-opcoes label{display:flex;align-items:center;gap:6px;font-weight:600;font-size:13.5px;color:#334155;cursor:pointer}
+
+.reg-conta-hint{font-size:12.5px;color:var(--muted);margin-bottom:18px}
+.reg-conta-hint a{color:var(--blue-strong);font-weight:700}
 
 .payment-info-box{background:#eaf5ff;border:1px solid #cfe6fb;border-radius:14px;padding:16px 18px;margin-bottom:22px}
 .payment-info-box strong{display:block;color:#0f172a;margin-bottom:6px;font-size:14px}

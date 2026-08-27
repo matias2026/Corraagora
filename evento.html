@@ -73,7 +73,7 @@
         <a href="index.html#eventos">Eventos</a>
         <a href="login.html" id="organizadoresLink">Organizadores</a>
         <a href="index.html#sobre">Sobre</a>
-        <a href="index.html#contato">Contato</a>
+        <a href="minha-conta.html">Minha conta</a>
         <a href="orcamento.html">Orçamento</a>
 
         <a href="login.html" class="mobile-create-event" id="loginButtonMobile">
@@ -430,6 +430,26 @@
 
           <span class="eyebrow">INSCRIÇÃO</span>
           <h2 id="registrationModalTitle">Fazer inscrição</h2>
+
+          <div id="regContaLogada" class="reg-conta-box hidden">
+            <span>Para quem é essa inscrição?</span>
+
+            <div class="reg-conta-opcoes">
+              <label>
+                <input type="radio" name="regParaQuem" value="mim" checked>
+                Para mim
+              </label>
+
+              <label>
+                <input type="radio" name="regParaQuem" value="amigo">
+                Para um amigo
+              </label>
+            </div>
+          </div>
+
+          <p id="regContaDeslogada" class="reg-conta-hint">
+            Já tem conta? <a href="minha-conta.html" target="_blank" rel="noopener noreferrer">Entre aqui</a> pra seus dados preencherem sozinhos da próxima vez.
+          </p>
 
           <form
             id="registrationForm"

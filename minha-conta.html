@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Minha conta | CorraAgora</title>
+
+    <link rel="stylesheet" href="assets/css/auth.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase.js"></script>
+</head>
+
+<body>
+
+<div class="login-container">
+
+    <div class="login-card">
+
+        <img src="images/logo-corraagora-compacta.png" class="logo" alt="CorraAgora">
+
+        <h1>Minha conta</h1>
+
+        <p>Entre ou crie uma conta para guardar seus dados e ver suas inscrições. Não é obrigatório — você continua podendo se inscrever sem conta.</p>
+
+        <div class="auth-tabs">
+            <button type="button" id="tabEntrar" class="auth-tab active">Entrar</button>
+            <button type="button" id="tabCriarConta" class="auth-tab">Criar conta</button>
+        </div>
+
+        <form id="loginAtletaForm">
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="E-mail"
+                required
+            >
+
+            <input
+                type="password"
+                id="loginSenha"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">
+                Entrar
+            </button>
+
+        </form>
+
+        <a href="#" id="forgotPasswordLink">
+            Esqueci minha senha
+        </a>
+
+        <form id="forgotPasswordForm" class="hidden">
+
+            <p class="forgot-text">
+                Informe seu e-mail para receber o link de redefinição de senha.
+            </p>
+
+            <input
+                type="email"
+                id="forgotEmail"
+                placeholder="Seu e-mail de cadastro"
+                required
+            >
+
+            <button type="submit">
+                Enviar link de redefinição
+            </button>
+
+            <a href="#" id="cancelForgotPassword">
+                Voltar para o login
+            </a>
+
+        </form>
+
+        <form id="cadastroAtletaForm" class="hidden">
+
+            <input
+                type="text"
+                id="cadastroNome"
+                placeholder="Nome completo"
+                required
+            >
+
+            <input
+                type="email"
+                id="cadastroEmail"
+                placeholder="E-mail"
+                required
+            >
+
+            <input
+                type="password"
+                id="cadastroSenha"
+                placeholder="Senha"
+                required
+            >
+
+            <button type="submit">
+                Criar conta
+            </button>
+
+        </form>
+
+        <p id="authMessage" class="forgot-message hidden"></p>
+
+    </div>
+
+</div>
+
+<script src="assets/js/auth-atleta.js"></script>
+
+</body>
+</html>

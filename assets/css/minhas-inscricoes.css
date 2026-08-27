@@ -1,0 +1,32 @@
+.conta-header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.conta-logo-link img{height:36px;display:block}
+.conta-nav{display:flex;align-items:center;gap:20px}
+.conta-nav a{color:var(--text);font-weight:600;text-decoration:none;font-size:14px}
+.conta-nav a:hover{color:var(--blue-strong)}
+
+.link-button{border:0;background:transparent;color:var(--blue-strong);font-weight:700;font:inherit;cursor:pointer;padding:0}
+.link-button:hover{text-decoration:underline}
+
+.minhas-inscricoes-page{padding:48px 0 100px}
+.minhas-inscricoes-page h1{font-size:clamp(28px,4vw,38px);margin-bottom:8px}
+.minhas-inscricoes-page .subtitle{color:var(--muted);margin-bottom:32px}
+
+.lista-inscricoes{display:flex;flex-direction:column;gap:16px}
+
+.inscricao-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow-soft);display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:16px}
+.inscricao-card-info h3{font-size:16px;margin-bottom:4px}
+.inscricao-card-info p{color:var(--muted);font-size:13.5px;margin-bottom:2px}
+.inscricao-card-info a{color:var(--blue-strong);font-weight:600;font-size:13.5px}
+
+.inscricao-card-valor{text-align:right;white-space:nowrap}
+.inscricao-card-valor strong{display:block;margin-top:8px;font-size:18px;color:var(--ink)}
+
+.status-pill{display:inline-block;padding:5px 12px;border-radius:999px;font-size:12.5px;font-weight:700;text-transform:capitalize}
+.status-pendente{background:#fef3c7;color:#92400e}
+.status-confirmado{background:#dcfce7;color:#166534}
+.status-cancelado{background:#fee2e2;color:#b91c1c}
+
+@media (max-width:600px){
+    .inscricao-card{flex-direction:column;align-items:flex-start}
+    .inscricao-card-valor{text-align:left}
+}
