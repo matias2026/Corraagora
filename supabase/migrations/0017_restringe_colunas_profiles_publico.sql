@@ -23,3 +23,7 @@
 -- ============================================================================
 
 revoke select (email, role) on public.profiles from anon;
+
+-- O PostgREST guarda um cache do schema/permissões e só reflete essa
+-- mudança de GRANT/REVOKE depois de recarregar. Isso força o reload.
+notify pgrst, 'reload schema';
