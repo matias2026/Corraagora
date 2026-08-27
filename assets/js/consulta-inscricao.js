@@ -129,12 +129,14 @@
                   ? `
                     <div class="payment-pix-box">
                       <span>Chave PIX</span>
-                      <div class="payment-pix-linha">
-                        <code id="lookupPixKey">${escaparHTML(chavePix)}</code>
-                        <button type="button" id="lookupPixCopyButton">
-                          Copiar
-                        </button>
-                      </div>
+                      <code id="lookupPixKey">${escaparHTML(chavePix)}</code>
+                      <button
+                        type="button"
+                        id="lookupPixCopyButton"
+                        class="btn btn-primary full payment-link-button"
+                      >
+                        📋 Pagar com PIX
+                      </button>
                     </div>
                   `
                   : ""
@@ -144,12 +146,12 @@
                 linkPagamento
                   ? `
                     <a
-                      class="btn btn-primary payment-link-button"
+                      class="btn btn-primary full payment-link-button"
                       href="${escaparAtributo(linkPagamento)}"
                       target="_blank"
                       rel="noopener noreferrer"
                     >
-                      💳 Pagar com PIX ou cartão
+                      💳 Pagar com cartão
                     </a>
                   `
                   : ""
