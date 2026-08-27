@@ -431,36 +431,6 @@
           <span class="eyebrow">INSCRIÇÃO</span>
           <h2 id="registrationModalTitle">Fazer inscrição</h2>
 
-          <div class="payment-info-box">
-            <strong>Como pagar</strong>
-            <p id="paymentInfoText">
-              O organizador ainda não informou os dados de
-              pagamento. Entre em contato após enviar sua inscrição.
-            </p>
-
-            <div id="paymentPixBox" class="payment-pix-box hidden">
-              <span>Chave PIX</span>
-              <code id="paymentPixKey"></code>
-
-              <button
-                type="button"
-                id="paymentPixCopyButton"
-                class="btn btn-primary full payment-link-button"
-              >
-                📋 Pagar com PIX
-              </button>
-            </div>
-
-            <a
-              id="paymentLinkButton"
-              class="btn btn-primary full payment-link-button hidden"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              💳 Pagar com cartão
-            </a>
-          </div>
-
           <form
             id="registrationForm"
             class="registration-form"
@@ -567,6 +537,36 @@
               >
               <small id="regCupomFeedback"></small>
             </label>
+
+            <div class="payment-info-box">
+              <strong>Como pagar</strong>
+              <p id="paymentInfoText">
+                O organizador ainda não informou os dados de
+                pagamento. Entre em contato após enviar sua inscrição.
+              </p>
+
+              <div id="paymentPixBox" class="payment-pix-box hidden">
+                <span>Chave PIX</span>
+                <code id="paymentPixKey"></code>
+
+                <button
+                  type="button"
+                  id="paymentPixCopyButton"
+                  class="btn btn-primary full payment-link-button"
+                >
+                  📋 Pagar com PIX
+                </button>
+              </div>
+
+              <a
+                id="paymentLinkButton"
+                class="btn btn-primary full payment-link-button hidden"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                💳 Pagar com cartão
+              </a>
+            </div>
 
             <label>
               Comprovante de pagamento (opcional)
