@@ -129,6 +129,23 @@ body{
     box-shadow:0 2px 6px rgba(15,23,42,.08);
 }
 
+.btn-secundario{
+    width:100%;
+    padding:15px;
+    background:transparent;
+    color:#2563eb;
+    border:1px solid #d1d5db;
+    border-radius:10px;
+    font-size:15px;
+    font-weight:600;
+    cursor:pointer;
+    transition:.2s;
+}
+
+.btn-secundario:hover{
+    background:#f5f7fb;
+}
+
 .login-card a{
     display:block;
     text-align:center;

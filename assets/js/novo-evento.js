@@ -38,9 +38,17 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const { data: perfil } = await supabaseClient
             .from("profiles")
-            .select("role")
+            .select("role, status_organizador")
             .eq("id", session.user.id)
             .maybeSingle();
+
+        if (
+            perfil?.role === "organizador" &&
+            perfil?.status_organizador !== "aprovado"
+        ) {
+            window.location.replace("../aguardando-aprovacao.html");
+            return;
+        }
 
         if (perfil?.role !== "organizador" && perfil?.role !== "admin") {
             window.location.replace("../minhas-inscricoes.html");

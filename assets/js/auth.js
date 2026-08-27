@@ -131,7 +131,11 @@ if (registerForm) {
 
         }
 
-        alert("Conta criada com sucesso!");
+        alert(
+            "Conta criada! Seu cadastro de organizador vai passar por " +
+            "uma revisão antes de liberar o painel — você recebe " +
+            "acesso assim que for aprovado."
+        );
 
         window.location.href = "login.html";
 

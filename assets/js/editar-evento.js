@@ -402,11 +402,16 @@ async function verificarUsuario() {
 
     const { data: perfil } = await supabaseClient
         .from("profiles")
-        .select("role")
+        .select("role, status_organizador")
         .eq("id", usuario.id)
         .maybeSingle();
 
     souAdmin = perfil?.role === "admin";
+
+    if (perfil?.role === "organizador" && perfil?.status_organizador !== "aprovado") {
+        window.location.href = "../aguardando-aprovacao.html";
+        return;
+    }
 
     if (perfil?.role !== "organizador" && !souAdmin) {
         window.location.href = "../minhas-inscricoes.html";

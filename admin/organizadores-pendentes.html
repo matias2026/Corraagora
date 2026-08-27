@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Todos os eventos | CorraAgora</title>
+    <title>Organizadores pendentes | CorraAgora</title>
 
     <link
         rel="stylesheet"
@@ -47,14 +47,14 @@
                 🛡️ Eventos pendentes
             </a>
 
-            <a
-                href="eventos.html"
-                class="active"
-            >
+            <a href="eventos.html">
                 📋 Todos os eventos
             </a>
 
-            <a href="organizadores-pendentes.html">
+            <a
+                href="organizadores-pendentes.html"
+                class="active"
+            >
                 🧑‍💼 Organizadores pendentes
             </a>
 
@@ -80,11 +80,12 @@
 
             <div>
                 <p class="eyebrow">PAINEL DO ADMINISTRADOR</p>
-                <h1>Todos os eventos</h1>
+                <h1>Organizadores pendentes</h1>
 
                 <p class="dashboard-subtitle">
-                    Veja e edite qualquer evento cadastrado na
-                    plataforma, independente do status.
+                    Aprove ou rejeite quem se cadastrou pra ser
+                    organizador. Só quem for aprovado consegue acessar
+                    o painel e criar eventos.
                 </p>
             </div>
 
@@ -98,58 +99,40 @@
 
             <div class="section-header">
                 <div>
-                    <p class="eyebrow">EVENTOS</p>
-                    <h2 id="totalEventosLabel">0 eventos</h2>
+                    <p class="eyebrow">AGUARDANDO REVISÃO</p>
+                    <h2 id="totalPendentesLabel">0 pedidos pendentes</h2>
                 </div>
-            </div>
-
-            <div class="events-toolbar">
-
-                <input
-                    type="text"
-                    id="buscarEvento"
-                    placeholder="🔍 Buscar por nome, organizador ou cidade..."
-                >
-
-                <select id="statusFiltro">
-                    <option value="">Todos os status</option>
-                    <option value="pendente">Pendente</option>
-                    <option value="aprovado">Aprovado</option>
-                    <option value="rejeitado">Rejeitado</option>
-                </select>
-
             </div>
 
             <div class="tabela-scroll">
 
                 <table
                     class="tabela-inscritos"
-                    id="tabelaEventos"
+                    id="tabelaPendentes"
                 >
 
                     <thead>
                         <tr>
-                            <th>Evento</th>
-                            <th>Organizador</th>
-                            <th>Local</th>
-                            <th>Data</th>
-                            <th>Status</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Cadastrado em</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
 
-                    <tbody id="corpoTabelaEventos"></tbody>
+                    <tbody id="corpoTabelaPendentes"></tbody>
 
                 </table>
 
                 <div
-                    id="semEventos"
+                    id="semPendentes"
                     class="empty-state-box hidden"
                 >
-                    <h3>Nenhum evento encontrado</h3>
+                    <h3>Nenhum organizador pendente</h3>
 
                     <p>
-                        Ajuste a busca ou o filtro de status.
+                        Assim que alguém se cadastrar pra ser
+                        organizador, o pedido aparece aqui.
                     </p>
                 </div>
 
@@ -162,7 +145,7 @@
 </div>
 
 <script src="../assets/js/sidebar-toggle.js"></script>
-<script src="../assets/js/admin-eventos.js"></script>
+<script src="../assets/js/organizadores-pendentes.js"></script>
 
 </body>
 </html>
