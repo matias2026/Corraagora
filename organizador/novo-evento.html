@@ -43,6 +43,10 @@
                 Inscritos
             </a>
 
+            <a href="receitas.html">
+                Receitas
+            </a>
+
             <a href="../index.html">
                 Voltar ao site
             </a>
@@ -274,18 +278,53 @@
 
         <div class="form-group full-width">
             <label for="informacoesPagamento">
-                Dados de pagamento (chave PIX, banco, etc.)
+                Nome e banco do PIX (opcional)
             </label>
 
             <textarea
                 id="informacoesPagamento"
-                rows="3"
-                placeholder="Ex.: PIX (celular): (84) 99999-9999 - João Organizador. Envie o comprovante ao se inscrever."
-                required></textarea>
+                rows="2"
+                placeholder="Ex.: João Organizador - Banco Nubank"></textarea>
 
             <small class="section-description">
-                Mostrado ao atleta na hora de fazer a inscrição, antes
-                de ele enviar o comprovante de pagamento.
+                Só o nome de quem recebe e o banco — a chave em si vai
+                no campo abaixo.
+            </small>
+        </div>
+
+        <div class="form-group">
+            <label for="chavePix">
+                Chave PIX (opcional)
+            </label>
+
+            <input
+                type="text"
+                id="chavePix"
+                placeholder="Ex.: (84) 99999-9999, e-mail ou chave aleatória">
+
+            <small class="section-description">
+                O atleta vê essa chave com um botão pra copiar direto
+                na hora de pagar.
+            </small>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="linkPagamento">
+                Link de pagamento — PIX/Cartão (opcional)
+            </label>
+
+            <input
+                type="url"
+                id="linkPagamento"
+                placeholder="https://mpago.la/... ou link da sua operadora">
+
+            <small class="section-description">
+                Cole aqui o link de cobrança gerado na sua conta do
+                Mercado Pago, PagSeguro, InfinitePay etc. O atleta vê
+                um botão para pagar direto com PIX ou cartão pela
+                própria operadora — o CorraAgora não processa
+                pagamento nenhum, só mostra o link. Se deixar em
+                branco, continua valendo só o PIX manual acima.
             </small>
         </div>
 

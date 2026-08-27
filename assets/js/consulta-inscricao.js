@@ -70,6 +70,16 @@
 
     const status = (inscricao.status || "pendente").toLowerCase();
 
+    const nomeEBanco = evento.informacoes_pagamento?.trim();
+    const chavePix = evento.chave_pix?.trim();
+    const linkPagamento = evento.link_pagamento?.trim();
+
+    const textoPagamento =
+      nomeEBanco ||
+      (chavePix || linkPagamento
+        ? "Confira os dados de pagamento abaixo."
+        : "Entre em contato com o organizador para obter os dados de pagamento.");
+
     resultBox.innerHTML = `
       <div class="lookup-result-header">
         <strong>${escaparHTML(inscricao.nome)}</strong>
@@ -112,15 +122,60 @@
           ? `
             <div class="payment-info-box">
               <strong>Como pagar (segunda via)</strong>
-              <p>${escaparHTML(
-                evento.informacoes_pagamento?.trim() ||
-                  "Entre em contato com o organizador para obter os dados de pagamento."
-              )}</p>
+              <p>${escaparHTML(textoPagamento)}</p>
+
+              ${
+                chavePix
+                  ? `
+                    <div class="payment-pix-box">
+                      <span>Chave PIX</span>
+                      <div class="payment-pix-linha">
+                        <code id="lookupPixKey">${escaparHTML(chavePix)}</code>
+                        <button type="button" id="lookupPixCopyButton">
+                          Copiar
+                        </button>
+                      </div>
+                    </div>
+                  `
+                  : ""
+              }
+
+              ${
+                linkPagamento
+                  ? `
+                    <a
+                      class="btn btn-primary payment-link-button"
+                      href="${escaparAtributo(linkPagamento)}"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                    >
+                      💳 Pagar com PIX ou cartão
+                    </a>
+                  `
+                  : ""
+              }
             </div>
           `
           : ""
       }
     `;
+
+    resultBox.querySelector("#lookupPixCopyButton")?.addEventListener(
+      "click",
+      (event) => {
+        const botao = event.currentTarget;
+        const chave = resultBox.querySelector("#lookupPixKey")?.textContent;
+        if (!chave) return;
+
+        navigator.clipboard.writeText(chave).then(() => {
+          const textoOriginal = botao.textContent;
+          botao.textContent = "Copiado!";
+          setTimeout(() => {
+            botao.textContent = textoOriginal;
+          }, 1500);
+        });
+      }
+    );
 
     resultBox.classList.remove("hidden");
   }

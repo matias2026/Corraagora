@@ -561,8 +561,14 @@ document.addEventListener("DOMContentLoaded", async () => {
         const vagasTexto =
             document.getElementById("vagas").value;
 
+        const chavePix =
+            document.getElementById("chavePix").value.trim();
+
         const informacoesPagamento =
             document.getElementById("informacoesPagamento").value.trim();
+
+        const linkPagamento =
+            document.getElementById("linkPagamento").value.trim();
 
         const inscricoesAbertas =
             document.getElementById("inscricoesAbertas").checked;
@@ -616,11 +622,19 @@ document.addEventListener("DOMContentLoaded", async () => {
             !cidade ||
             !estado ||
             valorTexto === "" ||
-            vagasTexto === "" ||
-            !informacoesPagamento
+            vagasTexto === ""
         ) {
             mostrarMensagem(
                 "Preencha todos os campos obrigatórios.",
+                "error"
+            );
+            return;
+        }
+
+        if (!chavePix && !informacoesPagamento && !linkPagamento) {
+            mostrarMensagem(
+                "Informe pelo menos uma forma de pagamento: chave PIX, " +
+                    "instruções de pagamento ou link de pagamento.",
                 "error"
             );
             return;
@@ -733,7 +747,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 regulamento_url: regulamentoUrl,
                 vagas,
                 inscricoes_abertas: inscricoesAbertas,
-                informacoes_pagamento: informacoesPagamento,
+                informacoes_pagamento: informacoesPagamento || null,
+                chave_pix: chavePix || null,
+                link_pagamento: linkPagamento || null,
                 localizacao_url: localizacaoUrl || null,
                 organizador_contato: organizadorContato || null,
                 organizador_instagram: organizadorInstagram || null

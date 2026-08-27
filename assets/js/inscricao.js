@@ -7,6 +7,10 @@
   const submitButton = document.getElementById("registrationSubmitButton");
   const formMessage = document.getElementById("registrationFormMessage");
   const paymentInfoText = document.getElementById("paymentInfoText");
+  const paymentPixBox = document.getElementById("paymentPixBox");
+  const paymentPixKey = document.getElementById("paymentPixKey");
+  const paymentPixCopyButton = document.getElementById("paymentPixCopyButton");
+  const paymentLinkButton = document.getElementById("paymentLinkButton");
 
   const nomeInput = document.getElementById("regNome");
   const cpfInput = document.getElementById("regCpf");
@@ -31,9 +35,32 @@
     form.reset();
     limparFeedbackCupom();
 
-    paymentInfoText.textContent =
-      evento.informacoes_pagamento?.trim() ||
-      "O organizador ainda não informou os dados de pagamento. Entre em contato após enviar sua inscrição.";
+    const nomeEBanco = evento.informacoes_pagamento?.trim();
+    const chavePix = evento.chave_pix?.trim();
+    const linkPagamento = evento.link_pagamento?.trim();
+
+    if (nomeEBanco) {
+      paymentInfoText.textContent = nomeEBanco;
+    } else if (chavePix || linkPagamento) {
+      paymentInfoText.textContent = "Confira os dados de pagamento abaixo.";
+    } else {
+      paymentInfoText.textContent =
+        "O organizador ainda não informou os dados de pagamento. Entre em contato após enviar sua inscrição.";
+    }
+
+    if (chavePix) {
+      paymentPixKey.textContent = chavePix;
+      paymentPixBox.classList.remove("hidden");
+    } else {
+      paymentPixBox.classList.add("hidden");
+    }
+
+    if (linkPagamento) {
+      paymentLinkButton.href = linkPagamento;
+      paymentLinkButton.classList.remove("hidden");
+    } else {
+      paymentLinkButton.classList.add("hidden");
+    }
 
     preencherCategorias(window.categoriasDoEvento || []);
 
@@ -88,6 +115,19 @@
     modal.classList.add("hidden");
     document.body.classList.remove("menu-open");
   }
+
+  paymentPixCopyButton?.addEventListener("click", () => {
+    const chave = paymentPixKey.textContent;
+    if (!chave) return;
+
+    navigator.clipboard.writeText(chave).then(() => {
+      const textoOriginal = paymentPixCopyButton.textContent;
+      paymentPixCopyButton.textContent = "Copiado!";
+      setTimeout(() => {
+        paymentPixCopyButton.textContent = textoOriginal;
+      }, 1500);
+    });
+  });
 
   closeButton?.addEventListener("click", fecharModal);
 

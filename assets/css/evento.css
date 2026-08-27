@@ -76,6 +76,15 @@
 .payment-info-box strong{display:block;color:#0f172a;margin-bottom:6px;font-size:14px}
 .payment-info-box p{color:#334155;font-size:14px;line-height:1.6;white-space:pre-line}
 
+.payment-pix-box{margin-top:12px;padding-top:12px;border-top:1px dashed #cfe6fb}
+.payment-pix-box>span{display:block;font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#64748b;margin-bottom:6px}
+.payment-pix-linha{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.payment-pix-linha code{background:#fff;border:1px solid #cfe6fb;border-radius:8px;padding:8px 10px;font-weight:700;font-size:13.5px;word-break:break-all}
+.payment-pix-linha button{border:1px solid #2563eb;background:#fff;color:#2563eb;font-weight:700;border-radius:8px;padding:7px 14px;cursor:pointer;font-size:13px;white-space:nowrap}
+.payment-pix-linha button:hover{background:#eff6ff}
+
+.payment-link-button{display:inline-block;margin-top:14px;text-decoration:none;text-align:center}
+
 .registration-form{display:flex;flex-direction:column;gap:16px}
 .registration-form label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:700;color:#20252d}
 

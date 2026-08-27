@@ -31,6 +31,12 @@ const descricaoInput =
 const informacoesPagamentoInput =
     document.getElementById("informacoesPagamento");
 
+const chavePixInput =
+    document.getElementById("chavePix");
+
+const linkPagamentoInput =
+    document.getElementById("linkPagamento");
+
 const localizacaoUrlInput =
     document.getElementById("localizacaoUrl");
 
@@ -524,6 +530,12 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
     informacoesPagamentoInput.value =
         evento.informacoes_pagamento || "";
 
+    chavePixInput.value =
+        evento.chave_pix || "";
+
+    linkPagamentoInput.value =
+        evento.link_pagamento || "";
+
     localizacaoUrlInput.value =
         evento.localizacao_url || "";
 
@@ -845,6 +857,10 @@ form.addEventListener(
                     descricaoInput.value.trim() || null,
                 informacoes_pagamento:
                     informacoesPagamentoInput.value.trim() || null,
+                chave_pix:
+                    chavePixInput.value.trim() || null,
+                link_pagamento:
+                    linkPagamentoInput.value.trim() || null,
                 localizacao_url:
                     localizacaoUrlInput.value.trim() || null,
                 organizador_contato:

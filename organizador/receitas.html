@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
+
+    <title>Receitas | CorraAgora</title>
+
+    <link rel="stylesheet"
+          href="../assets/css/dashboard.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <script src="../assets/js/supabase.js"></script>
+
+</head>
+
+<body>
+
+<div class="dashboard-layout">
+
+    <aside class="sidebar">
+
+        <a href="index.html"
+           class="sidebar-brand">
+
+            <img src="../images/logo-corraagora-compacta.png"
+                 alt="CorraAgora">
+
+        </a>
+
+        <nav class="sidebar-nav">
+
+            <a href="index.html">
+                🏠 Dashboard
+            </a>
+
+            <a href="eventos.html">
+                🏁 Meus eventos
+            </a>
+
+            <a href="novo-evento.html">
+                ➕ Novo evento
+            </a>
+
+            <a href="inscritos.html">
+                👥 Inscritos
+            </a>
+
+            <a href="receitas.html"
+               class="active">
+                💰 Receitas
+            </a>
+
+            <a href="../index.html">
+                🔙 Voltar ao site
+            </a>
+
+            <a href="../admin/eventos-pendentes.html" id="adminPanelLink" class="hidden">
+                🛡️ Painel do Administrador
+            </a>
+
+            <button id="logoutButton">
+                🚪 Sair
+            </button>
+
+        </nav>
+
+    </aside>
+
+    <main class="dashboard-main">
+
+        <header class="dashboard-header">
+
+            <div>
+
+                <p class="eyebrow">
+                    ORGANIZAÇÃO
+                </p>
+
+                <h1>
+                    Controle de Receitas
+                </h1>
+
+                <p class="dashboard-subtitle">
+                    Acompanhe o que já está confirmado, o que ainda
+                    está pendente e quanto foi dado de desconto em
+                    cupons, evento por evento.
+                </p>
+
+            </div>
+
+        </header>
+
+        <section class="summary-grid">
+
+            <article class="summary-card">
+                <div class="summary-icon">✅</div>
+                <span>Receita confirmada</span>
+                <strong id="totalConfirmado">R$ 0,00</strong>
+            </article>
+
+            <article class="summary-card">
+                <div class="summary-icon">⏳</div>
+                <span>Receita pendente</span>
+                <strong id="totalPendente">R$ 0,00</strong>
+            </article>
+
+            <article class="summary-card">
+                <div class="summary-icon">🏷️</div>
+                <span>Descontos dados (cupons)</span>
+                <strong id="totalDesconto">R$ 0,00</strong>
+            </article>
+
+        </section>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">POR EVENTO</p>
+                    <h2>Receita de cada evento</h2>
+                </div>
+            </div>
+
+            <div class="tabela-scroll">
+
+                <table class="tabela-inscritos" id="tabelaReceitas">
+
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Confirmados</th>
+                            <th>Receita confirmada</th>
+                            <th>Pendentes</th>
+                            <th>Receita pendente</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="corpoTabelaReceitas"></tbody>
+
+                </table>
+
+                <div id="semEventosReceita" class="empty-state-box hidden">
+                    <h3>Nenhum evento cadastrado</h3>
+                    <p>
+                        Assim que você criar um evento e receber
+                        inscrições, a receita aparece aqui.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+        <section class="dashboard-section">
+
+            <div class="section-header">
+                <div>
+                    <p class="eyebrow">CUPONS</p>
+                    <h2>Cupons usados</h2>
+                </div>
+            </div>
+
+            <div class="tabela-scroll">
+
+                <table class="tabela-inscritos" id="tabelaCupons">
+
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Cupom</th>
+                            <th>Desconto</th>
+                            <th>Vezes usado</th>
+                            <th>Total descontado</th>
+                        </tr>
+                    </thead>
+
+                    <tbody id="corpoTabelaCupons"></tbody>
+
+                </table>
+
+                <div id="semCupons" class="empty-state-box hidden">
+                    <h3>Nenhum cupom usado ainda</h3>
+                    <p>
+                        Quando um atleta se inscrever usando um cupom
+                        ativo, ele aparece aqui.
+                    </p>
+                </div>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+<script src="../assets/js/admin-link.js"></script>
+<script src="../assets/js/receitas.js"></script>
+
+</body>
+
+</html>

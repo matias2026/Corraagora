@@ -331,6 +331,10 @@
                 👥 Inscritos
             </a>
 
+            <a href="receitas.html">
+                💰 Receitas
+            </a>
+
             <a href="../index.html">
                 🔙 Voltar ao site
             </a>
@@ -528,14 +532,53 @@
 
                     <div class="form-group full">
                         <label for="informacoesPagamento">
-                            Dados de pagamento (chave PIX, banco, etc.)
+                            Nome e banco do PIX (opcional)
                         </label>
 
                         <textarea
                             id="informacoesPagamento"
-                            placeholder="Ex.: PIX (celular): (84) 99999-9999 - João Organizador."
-                            required
+                            placeholder="Ex.: João Organizador - Banco Nubank"
                         ></textarea>
+
+                        <small class="status-help">
+                            Só o nome de quem recebe e o banco — a
+                            chave em si vai no campo abaixo.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="chavePix">
+                            Chave PIX (opcional)
+                        </label>
+
+                        <input
+                            type="text"
+                            id="chavePix"
+                            placeholder="Ex.: (84) 99999-9999, e-mail ou chave aleatória"
+                        >
+
+                        <small class="status-help">
+                            O atleta vê essa chave com um botão pra
+                            copiar direto na hora de pagar.
+                        </small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="linkPagamento">
+                            Link de pagamento — PIX/Cartão (opcional)
+                        </label>
+
+                        <input
+                            type="url"
+                            id="linkPagamento"
+                            placeholder="https://mpago.la/... ou link da sua operadora"
+                        >
+
+                        <small class="status-help">
+                            Link de cobrança da sua conta no Mercado
+                            Pago, PagSeguro etc. O CorraAgora não
+                            processa pagamento, só mostra o link.
+                        </small>
                     </div>
 
                 </div>

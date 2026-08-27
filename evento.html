@@ -419,6 +419,25 @@
               O organizador ainda não informou os dados de
               pagamento. Entre em contato após enviar sua inscrição.
             </p>
+
+            <div id="paymentPixBox" class="payment-pix-box hidden">
+              <span>Chave PIX</span>
+              <div class="payment-pix-linha">
+                <code id="paymentPixKey"></code>
+                <button type="button" id="paymentPixCopyButton">
+                  Copiar
+                </button>
+              </div>
+            </div>
+
+            <a
+              id="paymentLinkButton"
+              class="btn btn-primary payment-link-button hidden"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              💳 Pagar com PIX ou cartão
+            </a>
           </div>
 
           <form
