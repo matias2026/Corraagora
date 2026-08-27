@@ -306,7 +306,11 @@
         eventCategoriesGroups.scrollHeight >
         eventCategoriesGroups.clientHeight + 1;
 
+      console.log("[debug] scrollHeight", eventCategoriesGroups.scrollHeight, "clientHeight", eventCategoriesGroups.clientHeight, "temRolagem", temRolagem, "hintExists", !!eventCategoriesScrollHint);
+
       eventCategoriesScrollHint?.classList.toggle("hidden", !temRolagem);
+
+      console.log("[debug] hidden after toggle", eventCategoriesScrollHint?.classList.contains("hidden"));
     });
   }
 
