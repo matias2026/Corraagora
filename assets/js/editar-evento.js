@@ -73,6 +73,9 @@ const addLoteButton =
 const loteTemplate =
     document.getElementById("loteTemplate");
 
+const cuponsContainer =
+    document.getElementById("cuponsContainer");
+
 const parametros =
     new URLSearchParams(window.location.search);
 
@@ -477,6 +480,8 @@ async function carregarEvento() {
             precos,
             (banners || []).length
         );
+
+        await carregarCupons();
     } catch (error) {
         console.error(
             "Erro ao carregar evento:",
@@ -594,6 +599,161 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
 
     if (categorias.length === 0) {
         adicionarCategoria();
+    }
+}
+
+// ---------------------------------------------------------------
+// CUPONS DE DESCONTO
+// ---------------------------------------------------------------
+
+const PERCENTUAIS_CUPOM = [10, 15, 20, 25, 30, 100];
+
+let cuponsPorPercentual = {};
+
+function gerarCodigoCupom(nomeEvento, percentual) {
+    const base = (nomeEvento || "evento")
+        .normalize("NFD")
+        .replace(/\p{Diacritic}/gu, "")
+        .toLowerCase()
+        .replace(/[^a-z0-9]/g, "");
+
+    return `${base}${percentual}`;
+}
+
+async function carregarCupons() {
+    const { data, error } = await supabaseClient
+        .from("cupons")
+        .select("*")
+        .eq("evento_id", Number(eventoId));
+
+    if (error) {
+        console.error("Erro ao carregar cupons:", error);
+        return;
+    }
+
+    cuponsPorPercentual = {};
+
+    (data || []).forEach(cupom => {
+        cuponsPorPercentual[cupom.percentual] = cupom;
+    });
+
+    renderizarCupons();
+}
+
+function renderizarCupons() {
+    cuponsContainer.innerHTML = PERCENTUAIS_CUPOM.map(percentual => {
+        const cupom = cuponsPorPercentual[percentual];
+        const ativo = cupom?.ativo || false;
+        const codigo = cupom?.codigo || gerarCodigoCupom(eventoAtual?.nome, percentual);
+
+        const titulo = percentual === 100
+            ? "100% — inscrição gratuita"
+            : `${percentual}% de desconto`;
+
+        return `
+            <div class="cupom-linha">
+                <div class="cupom-info">
+                    <strong>${escaparHTML(titulo)}</strong>
+                    ${
+                        ativo
+                            ? `<small>Código: <code>${escaparHTML(codigo)}</code></small>`
+                            : `<small>Desativado</small>`
+                    }
+                </div>
+
+                <div class="cupom-acoes">
+                    ${
+                        ativo
+                            ? `
+                                <div class="cupom-codigo">
+                                    <input type="text" value="${escaparHTML(codigo)}" readonly>
+                                    <button
+                                        type="button"
+                                        class="secondary-button botao-copiar-cupom"
+                                        data-codigo="${escaparHTML(codigo)}"
+                                    >
+                                        Copiar
+                                    </button>
+                                </div>
+                            `
+                            : ""
+                    }
+
+                    <label class="toggle-switch">
+                        <input
+                            type="checkbox"
+                            class="toggle-cupom"
+                            data-percentual="${percentual}"
+                            ${ativo ? "checked" : ""}
+                        >
+                        <span class="toggle-slider"></span>
+                    </label>
+                </div>
+            </div>
+        `;
+    }).join("");
+
+    cuponsContainer.querySelectorAll(".toggle-cupom").forEach(toggle => {
+        toggle.addEventListener("change", () =>
+            alternarCupom(Number(toggle.dataset.percentual), toggle)
+        );
+    });
+
+    cuponsContainer.querySelectorAll(".botao-copiar-cupom").forEach(botao => {
+        botao.addEventListener("click", () => {
+            navigator.clipboard.writeText(botao.dataset.codigo).then(() => {
+                const textoOriginal = botao.textContent;
+                botao.textContent = "Copiado!";
+                setTimeout(() => {
+                    botao.textContent = textoOriginal;
+                }, 1500);
+            });
+        });
+    });
+}
+
+async function alternarCupom(percentual, toggleEl) {
+    const cupomExistente = cuponsPorPercentual[percentual];
+    const novoAtivo = toggleEl.checked;
+
+    toggleEl.disabled = true;
+
+    try {
+        if (cupomExistente) {
+            const { data, error } = await supabaseClient
+                .from("cupons")
+                .update({ ativo: novoAtivo })
+                .eq("id", cupomExistente.id)
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            cuponsPorPercentual[percentual] = data;
+        } else {
+            const codigo = gerarCodigoCupom(eventoAtual?.nome, percentual);
+
+            const { data, error } = await supabaseClient
+                .from("cupons")
+                .insert({
+                    evento_id: Number(eventoId),
+                    percentual,
+                    codigo,
+                    ativo: true
+                })
+                .select()
+                .single();
+
+            if (error) throw error;
+
+            cuponsPorPercentual[percentual] = data;
+        }
+    } catch (error) {
+        console.error("Erro ao atualizar cupom:", error);
+        alert(error.message || "Não foi possível atualizar o cupom.");
+    } finally {
+        toggleEl.disabled = false;
+        renderizarCupons();
     }
 }
 

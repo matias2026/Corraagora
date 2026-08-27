@@ -211,6 +211,8 @@ function renderizarInscricoes() {
             <td>${escaparHTML(i.email || "-")}</td>
             <td>${escaparHTML(i.telefone || "-")}</td>
             <td>${escaparHTML(i.categoria || "-")}</td>
+            <td>${escaparHTML(i.cupom_codigo || "-")}</td>
+            <td>${i.valor_pago !== null && i.valor_pago !== undefined ? formatarMoeda(i.valor_pago) : "-"}</td>
             <td>${escaparHTML(i.cidade || "-")}</td>
             <td>
                 ${
@@ -299,6 +301,13 @@ function formatarData(data) {
     return new Date(data).toLocaleDateString("pt-BR");
 }
 
+function formatarMoeda(valor) {
+    return Number(valor).toLocaleString("pt-BR", {
+        style: "currency",
+        currency: "BRL"
+    });
+}
+
 function escaparHTML(valor) {
     return String(valor)
         .replaceAll("&", "&amp;")
@@ -329,6 +338,8 @@ function exportarParaExcel() {
         Equipe: i.equipe || "",
         "Licença CBC": i.licenca_cbc || "",
         Categoria: i.categoria || "",
+        Cupom: i.cupom_codigo || "",
+        "Valor pago": i.valor_pago ?? "",
         Cidade: i.cidade || "",
         Status: i.status || "",
         "Inscrito em": formatarData(i.created_at)

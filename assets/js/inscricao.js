@@ -19,6 +19,8 @@
   const cidadeInput = document.getElementById("regCidade");
   const categoriaWrapper = document.getElementById("regCategoriaWrapper");
   const categoriaSelect = document.getElementById("regCategoria");
+  const cupomInput = document.getElementById("regCupom");
+  const cupomFeedback = document.getElementById("regCupomFeedback");
   const comprovanteInput = document.getElementById("regComprovante");
 
   window.abrirModalInscricao = function abrirModalInscricao() {
@@ -27,6 +29,7 @@
 
     limparMensagem();
     form.reset();
+    limparFeedbackCupom();
 
     paymentInfoText.textContent =
       evento.informacoes_pagamento?.trim() ||
@@ -119,6 +122,42 @@
       return;
     }
 
+    const codigoCupomDigitado = cupomInput.value.trim();
+    let cupomAplicado = null;
+
+    if (codigoCupomDigitado) {
+      const { data: cupomEncontrado, error: erroCupom } = await supabaseClient
+        .from("cupons")
+        .select("codigo, percentual")
+        .eq("evento_id", evento.id)
+        .eq("codigo", codigoCupomDigitado.toLowerCase())
+        .eq("ativo", true)
+        .maybeSingle();
+
+      if (erroCupom) {
+        console.error("Erro ao consultar cupom:", erroCupom);
+        mostrarMensagem(
+          "Não foi possível verificar o cupom agora. Tente novamente.",
+          "error"
+        );
+        return;
+      }
+
+      if (!cupomEncontrado) {
+        mostrarFeedbackCupom("Cupom inválido ou não está mais ativo.", "error");
+        return;
+      }
+
+      cupomAplicado = cupomEncontrado;
+
+      mostrarFeedbackCupom(
+        cupomAplicado.percentual === 100
+          ? "Cupom aplicado! Inscrição gratuita."
+          : `Cupom aplicado! ${cupomAplicado.percentual}% de desconto.`,
+        "success"
+      );
+    }
+
     ativarCarregamento(true);
 
     try {
@@ -128,6 +167,13 @@
 
       const precoSelecionado =
         categoriaSelect.selectedOptions[0]?.dataset.preco;
+
+      const valorBase = precoSelecionado ? Number(precoSelecionado) : null;
+
+      const valorPago =
+        valorBase !== null && cupomAplicado
+          ? Math.round(valorBase * (1 - cupomAplicado.percentual / 100) * 100) / 100
+          : valorBase;
 
       const inscricao = {
         evento_id: evento.id,
@@ -142,7 +188,8 @@
         licenca_cbc: licencaCbcInput.value.trim() || null,
         cidade: cidadeInput.value.trim() || null,
         categoria: categoriaSelect.value || null,
-        valor_pago: precoSelecionado ? Number(precoSelecionado) : null,
+        valor_pago: valorPago,
+        cupom_codigo: cupomAplicado?.codigo || null,
         comprovante_url: comprovanteUrl,
         status: "pendente"
       };
@@ -161,6 +208,7 @@
 
       form.reset();
       preencherCategorias(window.categoriasDoEvento || []);
+      limparFeedbackCupom();
 
       setTimeout(fecharModal, 4000);
     } catch (error) {
@@ -184,6 +232,16 @@
   function limparMensagem() {
     formMessage.textContent = "";
     formMessage.className = "registration-form-message";
+  }
+
+  function mostrarFeedbackCupom(texto, tipo) {
+    cupomFeedback.textContent = texto;
+    cupomFeedback.style.color = tipo === "error" ? "#b91c1c" : "#166534";
+  }
+
+  function limparFeedbackCupom() {
+    cupomFeedback.textContent = "";
+    cupomFeedback.style.color = "";
   }
 
   function ativarCarregamento(ativo) {

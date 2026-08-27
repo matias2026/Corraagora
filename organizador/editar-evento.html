@@ -180,6 +180,102 @@
             line-height: 1.5;
         }
 
+        .cupons-lista {
+            display: grid;
+            gap: 12px;
+        }
+
+        .cupom-linha {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+            border: 1px solid #dbe5f2;
+            border-radius: 14px;
+            padding: 16px 18px;
+            background: #f8fbff;
+        }
+
+        .cupom-info strong {
+            display: block;
+            font-size: 15px;
+        }
+
+        .cupom-info small {
+            color: #64748b;
+        }
+
+        .cupom-info code {
+            font-weight: 700;
+            color: #2563eb;
+        }
+
+        .cupom-acoes {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .cupom-codigo {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .cupom-codigo input {
+            font-family: monospace;
+            font-weight: 700;
+            background: #fff;
+            border: 1px solid #d8e0ee;
+            border-radius: 8px;
+            padding: 8px 10px;
+            width: 220px;
+        }
+
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 46px;
+            height: 26px;
+            flex-shrink: 0;
+        }
+
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .toggle-slider {
+            position: absolute;
+            cursor: pointer;
+            inset: 0;
+            background: #cbd5e1;
+            border-radius: 999px;
+            transition: .2s;
+        }
+
+        .toggle-slider::before {
+            content: "";
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            left: 3px;
+            top: 3px;
+            background: #fff;
+            border-radius: 50%;
+            transition: .2s;
+        }
+
+        .toggle-switch input:checked + .toggle-slider {
+            background: #2563eb;
+        }
+
+        .toggle-switch input:checked + .toggle-slider::before {
+            transform: translateX(20px);
+        }
+
         @media (max-width: 850px) {
             .form-grid,
             .categoria-grid {
@@ -188,6 +284,11 @@
 
             .form-group.full {
                 grid-column: auto;
+            }
+
+            .cupom-linha {
+                flex-direction: column;
+                align-items: flex-start;
             }
         }
     </style>
@@ -534,6 +635,26 @@
                     id="categoriasContainer"
                     class="categorias-lista"
                 ></div>
+
+            </section>
+
+            <section class="form-section">
+
+                <div class="categoria-header">
+                    <h2>Cupons de desconto</h2>
+                </div>
+
+                <p class="status-help">
+                    Ative os cupons que quiser oferecer neste evento.
+                    Cada um libera um código pronto pra você
+                    compartilhar com quem quiser — só você, como
+                    organizador, pode ativar ou desativar. O cupom de
+                    100% deixa a inscrição gratuita para quem usar.
+                    Isso não depende de "Salvar alterações": a
+                    mudança já vale assim que você ativa ou desativa.
+                </p>
+
+                <div id="cuponsContainer" class="cupons-lista"></div>
 
             </section>
 
