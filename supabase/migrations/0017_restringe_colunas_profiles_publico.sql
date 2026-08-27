@@ -22,7 +22,16 @@
 -- Rode no SQL Editor do projeto ymaybqujglfajllruqub.
 -- ============================================================================
 
+-- Revoga tanto de "anon" quanto de "public" (todo papel do Postgres é
+-- automaticamente membro de "public" — se o GRANT original foi feito
+-- pra "public" em vez de "anon" especificamente, só revogar de "anon"
+-- não tira o acesso, porque o privilégio de "public" continua valendo).
 revoke select (email, role) on public.profiles from anon;
+revoke select (email, role) on public.profiles from public;
+
+-- Garante que quem está logado (dono do perfil ou admin, via RLS)
+-- continua enxergando essas colunas normalmente.
+grant select (email, role) on public.profiles to authenticated;
 
 -- O PostgREST guarda um cache do schema/permissões e só reflete essa
 -- mudança de GRANT/REVOKE depois de recarregar. Isso força o reload.
