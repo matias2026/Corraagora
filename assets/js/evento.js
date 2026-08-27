@@ -6,6 +6,7 @@
   const eventError = document.getElementById("eventError");
 
   const eventBanner = document.getElementById("eventBanner");
+  const eventBannerImg = document.getElementById("eventBannerImg");
   const eventSymbol = document.getElementById("eventSymbol");
   const eventType = document.getElementById("eventType");
   const eventDate = document.getElementById("eventDate");
@@ -379,6 +380,22 @@
     }
   }
 
+  function extrairCoordenadasDoLink(url) {
+    const viewport = url.match(/@(-?\d+\.\d+),(-?\d+\.\d+)/);
+
+    if (viewport) {
+      return { lat: viewport[1], lng: viewport[2] };
+    }
+
+    const pino = url.match(/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/);
+
+    if (pino) {
+      return { lat: pino[1], lng: pino[2] };
+    }
+
+    return null;
+  }
+
   function obterUrlDeEmbedDoMapa(url) {
     if (!url) return null;
 
@@ -391,6 +408,12 @@
 
       if (parsed.pathname.includes("/maps/embed")) {
         return url;
+      }
+
+      const coordenadas = extrairCoordenadasDoLink(url);
+
+      if (coordenadas) {
+        return `https://maps.google.com/maps?q=${coordenadas.lat},${coordenadas.lng}&z=15&output=embed`;
       }
 
       return null;
@@ -497,23 +520,14 @@
 
   function configurarBanner(bannerUrl) {
     if (!bannerUrl) {
-      eventBanner.style.backgroundImage = "";
+      eventBannerImg.classList.add("hidden");
+      eventBannerImg.src = "";
       eventSymbol.classList.remove("hidden");
       return;
     }
 
-    eventBanner.style.backgroundImage = `
-      linear-gradient(
-        rgba(5, 18, 34, 0.18),
-        rgba(5, 18, 34, 0.42)
-      ),
-      url("${bannerUrl}")
-    `;
-
-    eventBanner.style.backgroundSize = "contain";
-    eventBanner.style.backgroundPosition = "center";
-    eventBanner.style.backgroundRepeat = "no-repeat";
-
+    eventBannerImg.src = bannerUrl;
+    eventBannerImg.classList.remove("hidden");
     eventSymbol.classList.add("hidden");
   }
 
