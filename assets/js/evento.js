@@ -154,7 +154,7 @@
 
     if (evento.organizador_id) {
       const { data: perfil, error: perfilError } = await supabaseClient
-        .from("profiles")
+        .from("organizadores_publicos")
         .select("full_name")
         .eq("id", evento.organizador_id)
         .maybeSingle();
