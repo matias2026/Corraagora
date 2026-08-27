@@ -52,6 +52,26 @@ document.addEventListener("DOMContentLoaded", async () => {
         document.getElementById("nextEvent").textContent =
             eventos[0].nome;
 
+        const eventoIds = eventos.map(evento => evento.id);
+
+        const { data: inscricoes, error: inscricoesError } =
+            await supabaseClient
+                .from("inscricoes")
+                .select("status")
+                .in("evento_id", eventoIds);
+
+        if (inscricoesError) {
+            console.error(inscricoesError);
+        } else {
+            document.getElementById("totalRegistrations").textContent =
+                inscricoes.length;
+
+            document.getElementById("confirmedRegistrations").textContent =
+                inscricoes.filter(
+                    inscricao => inscricao.status === "confirmado"
+                ).length;
+        }
+
         lista.innerHTML = "";
 
         eventos.forEach(evento => {
@@ -59,11 +79,11 @@ document.addEventListener("DOMContentLoaded", async () => {
             lista.innerHTML += `
                 <div class="evento-card">
 
-                    <h3>${evento.nome}</h3>
+                    <h3>${escaparHTML(evento.nome)}</h3>
 
-                    <p><strong>Data:</strong> ${evento.data_evento}</p>
+                    <p><strong>Data:</strong> ${formatarData(evento.data_evento)}</p>
 
-                    <p><strong>Cidade:</strong> ${evento.cidade}/${evento.estado}</p>
+                    <p><strong>Cidade:</strong> ${escaparHTML(evento.cidade)}/${escaparHTML(evento.estado)}</p>
 
                     <p>
                         <strong>Status:</strong>
@@ -92,4 +112,13 @@ function formatarStatus(status) {
     };
 
     return rotulos[status] || status || "-";
+}
+
+function escaparHTML(valor) {
+    return String(valor ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
 }
