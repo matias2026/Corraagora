@@ -217,7 +217,7 @@ function renderizarInscricoes() {
             <td>
                 ${
                     i.comprovante_url
-                        ? `<a href="${escaparAtributo(i.comprovante_url)}" target="_blank" rel="noopener noreferrer">Ver comprovante</a>`
+                        ? `<button type="button" class="link-button" data-ver-comprovante="${i.id}">Ver comprovante</button>`
                         : "-"
                 }
             </td>
@@ -263,6 +263,41 @@ function renderizarInscricoes() {
                 atualizarStatusInscricao(botao, Number(botao.dataset.cancelar), "cancelado")
             )
         );
+
+    corpoTabelaInscritos
+        .querySelectorAll("[data-ver-comprovante]")
+        .forEach(botao =>
+            botao.addEventListener("click", () =>
+                abrirComprovante(botao, Number(botao.dataset.verComprovante))
+            )
+        );
+}
+
+async function abrirComprovante(botao, inscricaoId) {
+    const inscricao = inscricoes.find(i => i.id === inscricaoId);
+    if (!inscricao?.comprovante_url) return;
+
+    const textoOriginal = botao.textContent;
+    botao.textContent = "Abrindo...";
+    botao.disabled = true;
+
+    const caminho = inscricao.comprovante_url.includes("inscricoes-comprovantes/")
+        ? inscricao.comprovante_url.split("inscricoes-comprovantes/")[1]
+        : inscricao.comprovante_url;
+
+    const { data, error } = await supabaseClient.storage
+        .from("inscricoes-comprovantes")
+        .createSignedUrl(caminho, 300);
+
+    botao.textContent = textoOriginal;
+    botao.disabled = false;
+
+    if (error || !data?.signedUrl) {
+        alert("Não foi possível abrir o comprovante.");
+        return;
+    }
+
+    window.open(data.signedUrl, "_blank", "noopener,noreferrer");
 }
 
 async function atualizarStatusInscricao(botao, inscricaoId, novoStatus) {

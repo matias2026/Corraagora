@@ -111,9 +111,7 @@
 
       ${
         inscricao.comprovante_url
-          ? `<p><a href="${escaparAtributo(
-              inscricao.comprovante_url
-            )}" target="_blank" rel="noopener noreferrer">Ver comprovante enviado</a></p>`
+          ? "<p>Comprovante enviado — o organizador já pode conferir.</p>"
           : "<p>Nenhum comprovante enviado ainda.</p>"
       }
 

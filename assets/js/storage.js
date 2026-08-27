@@ -30,11 +30,7 @@ window.uploadComprovante = async function (file, eventoId) {
         throw error;
     }
 
-    const { data } = supabaseClient.storage
-        .from("inscricoes-comprovantes")
-        .getPublicUrl(nomeArquivo);
-
-    return data.publicUrl;
+    return nomeArquivo;
 };
 
 

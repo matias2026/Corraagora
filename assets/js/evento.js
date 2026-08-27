@@ -155,7 +155,7 @@
     if (evento.organizador_id) {
       const { data: perfil, error: perfilError } = await supabaseClient
         .from("profiles")
-        .select("full_name, email")
+        .select("full_name")
         .eq("id", evento.organizador_id)
         .maybeSingle();
 
@@ -447,7 +447,6 @@
   function configurarOrganizador(evento, organizador) {
     const nome =
       organizador?.full_name ||
-      organizador?.email ||
       "Organizador não identificado";
 
     const temContato = Boolean(evento.organizador_contato);

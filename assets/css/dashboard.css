@@ -685,3 +685,19 @@ body{
     opacity:.6;
     cursor:default;
 }
+
+.link-button{
+    border:0;
+    background:transparent;
+    color:#2563eb;
+    font-weight:700;
+    font:inherit;
+    cursor:pointer;
+    padding:0;
+    text-decoration:underline;
+}
+
+.link-button:disabled{
+    opacity:.6;
+    cursor:default;
+}
