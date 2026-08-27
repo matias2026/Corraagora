@@ -301,11 +301,13 @@
       </div>
     `;
 
-    const temRolagem =
-      eventCategoriesGroups.scrollHeight >
-      eventCategoriesGroups.clientHeight + 1;
+    requestAnimationFrame(() => {
+      const temRolagem =
+        eventCategoriesGroups.scrollHeight >
+        eventCategoriesGroups.clientHeight + 1;
 
-    eventCategoriesScrollHint?.classList.toggle("hidden", !temRolagem);
+      eventCategoriesScrollHint?.classList.toggle("hidden", !temRolagem);
+    });
   }
 
   function configurarListaDeLotes(lotes, loteVigente) {
