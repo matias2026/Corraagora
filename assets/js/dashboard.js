@@ -10,6 +10,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        const { data: perfil } = await supabaseClient
+            .from("profiles")
+            .select("role")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+        if (perfil?.role !== "organizador" && perfil?.role !== "admin") {
+            window.location.href = "../minhas-inscricoes.html";
+            return;
+        }
+
         document.getElementById("organizerName").textContent =
             session.user.email;
 

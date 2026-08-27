@@ -21,6 +21,17 @@ async function verificarUsuario() {
         return;
     }
 
+    const { data: perfil } = await supabaseClient
+        .from("profiles")
+        .select("role")
+        .eq("id", session.user.id)
+        .maybeSingle();
+
+    if (perfil?.role !== "organizador" && perfil?.role !== "admin") {
+        window.location.href = "../minhas-inscricoes.html";
+        return;
+    }
+
     usuario = session.user;
 
     carregarEventos();

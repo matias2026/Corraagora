@@ -408,6 +408,11 @@ async function verificarUsuario() {
 
     souAdmin = perfil?.role === "admin";
 
+    if (perfil?.role !== "organizador" && !souAdmin) {
+        window.location.href = "../minhas-inscricoes.html";
+        return;
+    }
+
     if (souAdmin) {
         document.querySelectorAll("[data-voltar-eventos]").forEach(link => {
             link.href = "../admin/eventos.html";

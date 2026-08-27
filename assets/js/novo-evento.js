@@ -36,6 +36,17 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        const { data: perfil } = await supabaseClient
+            .from("profiles")
+            .select("role")
+            .eq("id", session.user.id)
+            .maybeSingle();
+
+        if (perfil?.role !== "organizador" && perfil?.role !== "admin") {
+            window.location.replace("../minhas-inscricoes.html");
+            return;
+        }
+
         organizerName.textContent =
             session.user.user_metadata?.nome ||
             session.user.email ||
