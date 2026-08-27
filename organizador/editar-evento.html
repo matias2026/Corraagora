@@ -214,13 +214,16 @@
         .cupom-acoes {
             display: flex;
             align-items: center;
+            flex-wrap: wrap;
             gap: 14px;
+            max-width: 100%;
         }
 
         .cupom-codigo {
             display: flex;
             align-items: center;
             gap: 8px;
+            min-width: 0;
         }
 
         .cupom-codigo input {
@@ -231,6 +234,8 @@
             border-radius: 8px;
             padding: 8px 10px;
             width: 220px;
+            max-width: 100%;
+            min-width: 0;
         }
 
         .toggle-switch {
@@ -289,6 +294,21 @@
             .cupom-linha {
                 flex-direction: column;
                 align-items: flex-start;
+            }
+
+            .cupom-acoes {
+                width: 100%;
+            }
+
+            .cupom-codigo {
+                flex: 1;
+                min-width: 0;
+            }
+
+            .cupom-codigo input {
+                flex: 1;
+                min-width: 0;
+                width: auto;
             }
         }
     </style>

@@ -22,6 +22,9 @@
   const eventCategoriesGroups = document.getElementById(
     "eventCategoriesGroups"
   );
+  const eventCategoriesScrollHint = document.getElementById(
+    "eventCategoriesScrollHint"
+  );
   const eventLotesInfo = document.getElementById("eventLotesInfo");
   const eventLotesList = document.getElementById("eventLotesList");
 
@@ -257,6 +260,7 @@
 
     if (!temCategorias) {
       eventCategoriesGroups.innerHTML = "";
+      eventCategoriesScrollHint?.classList.add("hidden");
       return;
     }
 
@@ -296,6 +300,12 @@
           .join("")}
       </div>
     `;
+
+    const temRolagem =
+      eventCategoriesGroups.scrollHeight >
+      eventCategoriesGroups.clientHeight + 1;
+
+    eventCategoriesScrollHint?.classList.toggle("hidden", !temRolagem);
   }
 
   function configurarListaDeLotes(lotes, loteVigente) {
