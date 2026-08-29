@@ -96,7 +96,7 @@
     if (!dadosProprios) return;
 
     nomeInput.value = dadosProprios.nome || "";
-    cpfInput.value = dadosProprios.cpf || "";
+    cpfInput.value = window.formatarCPF(dadosProprios.cpf || "");
     dataNascimentoInput.value = dadosProprios.data_nascimento
       ? window.converterDataISOparaBR(dadosProprios.data_nascimento)
       : "";

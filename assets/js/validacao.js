@@ -71,19 +71,23 @@
         return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(valor || "").trim());
     }
 
+    function formatarCPF(valor) {
+        let v = String(valor || "").replace(/\D/g, "").slice(0, 11);
+
+        if (v.length > 9) {
+            v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
+        } else if (v.length > 6) {
+            v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
+        } else if (v.length > 3) {
+            v = v.replace(/(\d{3})(\d{1,3})/, "$1.$2");
+        }
+
+        return v;
+    }
+
     function aplicarMascaraCPF(input) {
         input.addEventListener("input", () => {
-            let v = input.value.replace(/\D/g, "").slice(0, 11);
-
-            if (v.length > 9) {
-                v = v.replace(/(\d{3})(\d{3})(\d{3})(\d{1,2})/, "$1.$2.$3-$4");
-            } else if (v.length > 6) {
-                v = v.replace(/(\d{3})(\d{3})(\d{1,3})/, "$1.$2.$3");
-            } else if (v.length > 3) {
-                v = v.replace(/(\d{3})(\d{1,3})/, "$1.$2");
-            }
-
-            input.value = v;
+            input.value = formatarCPF(input.value);
         });
     }
 
@@ -112,17 +116,21 @@
         return resto === Number(cpf[10]);
     }
 
+    function formatarDataDigitada(valor) {
+        let v = String(valor || "").replace(/\D/g, "").slice(0, 8);
+
+        if (v.length > 4) {
+            v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
+        } else if (v.length > 2) {
+            v = v.replace(/(\d{2})(\d{1,2})/, "$1/$2");
+        }
+
+        return v;
+    }
+
     function aplicarMascaraData(input) {
         input.addEventListener("input", () => {
-            let v = input.value.replace(/\D/g, "").slice(0, 8);
-
-            if (v.length > 4) {
-                v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
-            } else if (v.length > 2) {
-                v = v.replace(/(\d{2})(\d{1,2})/, "$1/$2");
-            }
-
-            input.value = v;
+            input.value = formatarDataDigitada(input.value);
         });
     }
 
@@ -299,6 +307,7 @@
     }
 
     window.validarEmail = validarEmail;
+    window.formatarCPF = formatarCPF;
     window.aplicarMascaraCPF = aplicarMascaraCPF;
     window.validarCPF = validarCPF;
     window.mostrarErroCampo = mostrarErroCampo;
