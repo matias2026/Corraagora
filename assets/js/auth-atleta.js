@@ -41,11 +41,36 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    const loginEmailInput = document.getElementById("loginEmail");
+    const loginSenhaInput = document.getElementById("loginSenha");
+
+    window.ativarRevalidacaoAoDigitar?.(loginEmailInput, (input) =>
+        window.validarCampoEmail(input)
+    );
+
+    window.ativarRevalidacaoAoDigitar?.(loginSenhaInput, (input) =>
+        window.validarCampoObrigatorio(input, "Digite sua senha.")
+    );
+
     loginForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const email = document.getElementById("loginEmail").value.trim();
-        const senha = document.getElementById("loginSenha").value;
+        const emailValido = window.validarCampoEmail(loginEmailInput);
+        const senhaValida = window.validarCampoObrigatorio(
+            loginSenhaInput,
+            "Digite sua senha."
+        );
+
+        if (!emailValido || !senhaValida) {
+            window.mostrarToast(
+                "Confira os campos destacados antes de continuar.",
+                "erro"
+            );
+            return;
+        }
+
+        const email = loginEmailInput.value.trim();
+        const senha = loginSenhaInput.value;
 
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email,
@@ -69,12 +94,61 @@ document.addEventListener("DOMContentLoaded", () => {
         redirecionarPorPapel(perfil?.role);
     });
 
+    const cadastroNomeInput = document.getElementById("cadastroNome");
+    const cadastroEmailInput = document.getElementById("cadastroEmail");
+    const cadastroSenhaInput = document.getElementById("cadastroSenha");
+
+    window.ativarRevalidacaoAoDigitar?.(cadastroNomeInput, (input) =>
+        window.validarCampoObrigatorio(input, "Digite seu nome completo.")
+    );
+
+    window.ativarRevalidacaoAoDigitar?.(cadastroEmailInput, (input) =>
+        window.validarCampoEmail(input)
+    );
+
+    window.ativarRevalidacaoAoDigitar?.(cadastroSenhaInput, (input) => {
+        if (input.value.trim().length < 6) {
+            window.mostrarErroCampo(
+                input,
+                "A senha precisa ter pelo menos 6 caracteres."
+            );
+            return false;
+        }
+        window.limparErroCampo(input);
+        return true;
+    });
+
     cadastroForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const nome = document.getElementById("cadastroNome").value.trim();
-        const email = document.getElementById("cadastroEmail").value.trim();
-        const senha = document.getElementById("cadastroSenha").value;
+        const nomeValido = window.validarCampoObrigatorio(
+            cadastroNomeInput,
+            "Digite seu nome completo."
+        );
+        const emailValido = window.validarCampoEmail(cadastroEmailInput);
+
+        let senhaValida = true;
+        if (cadastroSenhaInput.value.trim().length < 6) {
+            window.mostrarErroCampo(
+                cadastroSenhaInput,
+                "A senha precisa ter pelo menos 6 caracteres."
+            );
+            senhaValida = false;
+        } else {
+            window.limparErroCampo(cadastroSenhaInput);
+        }
+
+        if (!nomeValido || !emailValido || !senhaValida) {
+            window.mostrarToast(
+                "Confira os campos destacados antes de continuar.",
+                "erro"
+            );
+            return;
+        }
+
+        const nome = cadastroNomeInput.value.trim();
+        const email = cadastroEmailInput.value.trim();
+        const senha = cadastroSenhaInput.value;
 
         const { error } = await supabaseClient.auth.signUp({
             email,
@@ -115,10 +189,20 @@ document.addEventListener("DOMContentLoaded", () => {
         authMessage.classList.add("hidden");
     });
 
+    const forgotEmailInput = document.getElementById("forgotEmail");
+
+    window.ativarRevalidacaoAoDigitar?.(forgotEmailInput, (input) =>
+        window.validarCampoEmail(input)
+    );
+
     forgotForm.addEventListener("submit", async (e) => {
         e.preventDefault();
 
-        const email = document.getElementById("forgotEmail").value.trim();
+        if (!window.validarCampoEmail(forgotEmailInput)) {
+            return;
+        }
+
+        const email = forgotEmailInput.value.trim();
         const botao = forgotForm.querySelector("button[type='submit']");
 
         botao.disabled = true;

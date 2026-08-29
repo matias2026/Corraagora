@@ -8,6 +8,15 @@
   const message = document.getElementById("lookupMessage");
   const resultBox = document.getElementById("lookupResult");
 
+  window.aplicarMascaraCPF?.(cpfInput);
+
+  window.ativarRevalidacaoAoDigitar?.(cpfInput, (input) =>
+    window.validarCampoObrigatorio(input, "Digite o CPF usado na inscrição.")
+  );
+  window.ativarRevalidacaoAoDigitar?.(emailInput, (input) =>
+    window.validarCampoEmail(input)
+  );
+
   form?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
@@ -15,6 +24,20 @@
 
     const evento = window.eventoAtual;
     if (!evento) return;
+
+    const cpfValido = window.validarCampoObrigatorio(
+      cpfInput,
+      "Digite o CPF usado na inscrição."
+    );
+    const emailValido = window.validarCampoEmail(emailInput);
+
+    if (!cpfValido || !emailValido) {
+      window.mostrarToast?.(
+        "Confira o CPF e o e-mail antes de consultar.",
+        "erro"
+      );
+      return;
+    }
 
     ativarCarregamento(true);
 
@@ -183,6 +206,11 @@
   function mostrarMensagem(texto, tipo) {
     message.textContent = texto;
     message.className = `registration-form-message ${tipo}`;
+
+    window.mostrarToast?.(
+      texto,
+      tipo === "success" ? "sucesso" : "erro"
+    );
   }
 
   function limparResultado() {

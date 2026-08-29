@@ -33,6 +33,27 @@
     'input[name="regParaQuem"]'
   );
 
+  window.aplicarMascaraCPF?.(cpfInput);
+
+  window.ativarRevalidacaoAoDigitar?.(nomeInput, (input) =>
+    window.validarCampoObrigatorio(input, "Digite o nome completo.")
+  );
+  window.ativarRevalidacaoAoDigitar?.(cpfInput, (input) =>
+    window.validarCampoCPF(input)
+  );
+  window.ativarRevalidacaoAoDigitar?.(dataNascimentoInput, (input) =>
+    window.validarCampoObrigatorio(input, "Informe a data de nascimento.")
+  );
+  window.ativarRevalidacaoAoDigitar?.(sexoInput, (input) =>
+    window.validarCampoObrigatorio(input, "Selecione o sexo.")
+  );
+  window.ativarRevalidacaoAoDigitar?.(emailInput, (input) =>
+    window.validarCampoEmail(input)
+  );
+  window.ativarRevalidacaoAoDigitar?.(telefoneInput, (input) =>
+    window.validarCampoObrigatorio(input, "Digite um telefone para contato.")
+  );
+
   let sessaoAtual = null;
   let dadosProprios = null;
 
@@ -229,6 +250,44 @@
     const evento = window.eventoAtual;
     if (!evento) return;
 
+    const nomeValido = window.validarCampoObrigatorio(
+      nomeInput,
+      "Digite o nome completo."
+    );
+    const cpfValido = window.validarCampoCPF(cpfInput);
+    const dataNascimentoValida = window.validarCampoObrigatorio(
+      dataNascimentoInput,
+      "Informe a data de nascimento."
+    );
+    const sexoValido = window.validarCampoObrigatorio(
+      sexoInput,
+      "Selecione o sexo."
+    );
+    const emailValido = window.validarCampoEmail(emailInput);
+    const telefoneValido = window.validarCampoObrigatorio(
+      telefoneInput,
+      "Digite um telefone para contato."
+    );
+    const categoriaValida =
+      categoriaWrapper.classList.contains("hidden") ||
+      window.validarCampoObrigatorio(categoriaSelect, "Escolha uma categoria.");
+
+    if (
+      !nomeValido ||
+      !cpfValido ||
+      !dataNascimentoValida ||
+      !sexoValido ||
+      !emailValido ||
+      !telefoneValido ||
+      !categoriaValida
+    ) {
+      window.mostrarToast?.(
+        "Confira os campos destacados antes de enviar.",
+        "erro"
+      );
+      return;
+    }
+
     const arquivo = comprovanteInput.files[0];
     const limiteArquivo = 10 * 1024 * 1024;
 
@@ -346,6 +405,11 @@
   function mostrarMensagem(texto, tipo) {
     formMessage.textContent = texto;
     formMessage.className = `registration-form-message ${tipo}`;
+
+    window.mostrarToast?.(
+      texto,
+      tipo === "success" ? "sucesso" : "erro"
+    );
   }
 
   function limparMensagem() {

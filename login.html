@@ -27,7 +27,7 @@
 
         <p>Faça login para acessar o painel do organizador.</p>
 
-        <form id="loginForm">
+        <form id="loginForm" novalidate>
 
             <input
                 type="email"
@@ -53,7 +53,7 @@
             Esqueci minha senha
         </a>
 
-        <form id="forgotPasswordForm" class="hidden">
+        <form id="forgotPasswordForm" class="hidden" novalidate>
 
             <p class="forgot-text">
                 Informe seu e-mail para receber o link de redefinição de senha.
@@ -86,6 +86,7 @@
 
 </div>
 
+<script src="assets/js/validacao.js"></script>
 <script src="assets/js/auth.js"></script>
 
 </body>

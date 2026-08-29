@@ -4,13 +4,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     if (!form) return;
 
+    const emailInput = document.getElementById("email");
+    const passwordInput = document.getElementById("password");
+
+    window.ativarRevalidacaoAoDigitar?.(emailInput, (input) =>
+        window.validarCampoEmail(input)
+    );
+
+    window.ativarRevalidacaoAoDigitar?.(passwordInput, (input) =>
+        window.validarCampoObrigatorio(input, "Digite sua senha.")
+    );
+
     form.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 
-        const email = document.getElementById("email").value.trim();
+        const emailValido = window.validarCampoEmail(emailInput);
+        const senhaValida = window.validarCampoObrigatorio(
+            passwordInput,
+            "Digite sua senha."
+        );
 
-        const password = document.getElementById("password").value;
+        if (!emailValido || !senhaValida) {
+            window.mostrarToast(
+                "Confira os campos destacados antes de continuar.",
+                "erro"
+            );
+            return;
+        }
+
+        const email = emailInput.value.trim();
+        const password = passwordInput.value;
 
         const { data, error } = await supabaseClient.auth.signInWithPassword({
             email,
@@ -18,7 +42,10 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         if (error) {
-            alert(error.message);
+            window.mostrarToast(
+                "Não foi possível entrar. Confira o e-mail e a senha.",
+                "erro"
+            );
             return;
         }
 
@@ -39,8 +66,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const forgotForm = document.getElementById("forgotPasswordForm");
     const cancelForgot = document.getElementById("cancelForgotPassword");
     const forgotMessage = document.getElementById("forgotMessage");
+    const forgotEmailInput = document.getElementById("forgotEmail");
 
     if (forgotLink && forgotForm) {
+
+        window.ativarRevalidacaoAoDigitar?.(forgotEmailInput, (input) =>
+            window.validarCampoEmail(input)
+        );
 
         forgotLink.addEventListener("click", (e) => {
             e.preventDefault();
@@ -61,7 +93,11 @@ document.addEventListener("DOMContentLoaded", () => {
         forgotForm.addEventListener("submit", async (e) => {
             e.preventDefault();
 
-            const email = document.getElementById("forgotEmail").value.trim();
+            if (!window.validarCampoEmail(forgotEmailInput)) {
+                return;
+            }
+
+            const email = forgotEmailInput.value.trim();
             const submitButton = forgotForm.querySelector("button[type='submit']");
 
             submitButton.disabled = true;
@@ -95,15 +131,63 @@ const registerForm = document.getElementById("registerForm");
 
 if (registerForm) {
 
+    const nameInput = document.getElementById("name");
+    const registerEmailInput = document.getElementById("email");
+    const registerPasswordInput = document.getElementById("password");
+
+    window.ativarRevalidacaoAoDigitar?.(nameInput, (input) =>
+        window.validarCampoObrigatorio(input, "Digite seu nome completo.")
+    );
+
+    window.ativarRevalidacaoAoDigitar?.(registerEmailInput, (input) =>
+        window.validarCampoEmail(input)
+    );
+
+    window.ativarRevalidacaoAoDigitar?.(registerPasswordInput, (input) => {
+        if (input.value.trim().length < 6) {
+            window.mostrarErroCampo(
+                input,
+                "A senha precisa ter pelo menos 6 caracteres."
+            );
+            return false;
+        }
+        window.limparErroCampo(input);
+        return true;
+    });
+
     registerForm.addEventListener("submit", async (e) => {
 
         e.preventDefault();
 
-        const name = document.getElementById("name").value.trim();
+        const nomeValido = window.validarCampoObrigatorio(
+            nameInput,
+            "Digite seu nome completo."
+        );
 
-        const email = document.getElementById("email").value.trim();
+        const emailValido = window.validarCampoEmail(registerEmailInput);
 
-        const password = document.getElementById("password").value;
+        let senhaValida = true;
+        if (registerPasswordInput.value.trim().length < 6) {
+            window.mostrarErroCampo(
+                registerPasswordInput,
+                "A senha precisa ter pelo menos 6 caracteres."
+            );
+            senhaValida = false;
+        } else {
+            window.limparErroCampo(registerPasswordInput);
+        }
+
+        if (!nomeValido || !emailValido || !senhaValida) {
+            window.mostrarToast(
+                "Confira os campos destacados antes de continuar.",
+                "erro"
+            );
+            return;
+        }
+
+        const name = nameInput.value.trim();
+        const email = registerEmailInput.value.trim();
+        const password = registerPasswordInput.value;
 
         const { error } = await supabaseClient.auth.signUp({
 
@@ -125,19 +209,25 @@ if (registerForm) {
 
         if (error) {
 
-            alert(error.message);
+            window.mostrarToast(
+                error.message || "Não foi possível criar a conta.",
+                "erro"
+            );
 
             return;
 
         }
 
-        alert(
+        window.mostrarToast(
             "Conta criada! Seu cadastro de organizador vai passar por " +
-            "uma revisão antes de liberar o painel — você recebe " +
-            "acesso assim que for aprovado."
+            "uma revisão antes de liberar o painel.",
+            "sucesso",
+            5000
         );
 
-        window.location.href = "login.html";
+        setTimeout(() => {
+            window.location.href = "login.html";
+        }, 1500);
 
     });
 

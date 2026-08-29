@@ -32,7 +32,7 @@
             <button type="button" id="tabCriarConta" class="auth-tab">Criar conta</button>
         </div>
 
-        <form id="loginAtletaForm">
+        <form id="loginAtletaForm" novalidate>
 
             <input
                 type="email"
@@ -58,7 +58,7 @@
             Esqueci minha senha
         </a>
 
-        <form id="forgotPasswordForm" class="hidden">
+        <form id="forgotPasswordForm" class="hidden" novalidate>
 
             <p class="forgot-text">
                 Informe seu e-mail para receber o link de redefinição de senha.
@@ -81,7 +81,7 @@
 
         </form>
 
-        <form id="cadastroAtletaForm" class="hidden">
+        <form id="cadastroAtletaForm" class="hidden" novalidate>
 
             <input
                 type="text"
@@ -116,6 +116,7 @@
 
 </div>
 
+<script src="assets/js/validacao.js"></script>
 <script src="assets/js/auth-atleta.js"></script>
 
 </body>

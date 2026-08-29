@@ -18,15 +18,49 @@ const quoteForm = document.getElementById("quoteForm");
 const quoteSubmitButton = document.getElementById("quoteSubmitButton");
 const quoteMessage = document.getElementById("quoteMessage");
 
+const quoteNomeInput = document.getElementById("quoteNome");
+const quoteEmailInput = document.getElementById("quoteEmail");
+const quoteTelefoneInput = document.getElementById("quoteTelefone");
+
+window.ativarRevalidacaoAoDigitar?.(quoteNomeInput, (input) =>
+    window.validarCampoObrigatorio(input, "Digite seu nome completo.")
+);
+
+window.ativarRevalidacaoAoDigitar?.(quoteEmailInput, (input) =>
+    window.validarCampoEmail(input)
+);
+
+window.ativarRevalidacaoAoDigitar?.(quoteTelefoneInput, (input) =>
+    window.validarCampoObrigatorio(input, "Digite um telefone para contato.")
+);
+
 quoteForm?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
     limparMensagem();
 
+    const nomeValido = window.validarCampoObrigatorio(
+        quoteNomeInput,
+        "Digite seu nome completo."
+    );
+    const emailValido = window.validarCampoEmail(quoteEmailInput);
+    const telefoneValido = window.validarCampoObrigatorio(
+        quoteTelefoneInput,
+        "Digite um telefone para contato."
+    );
+
+    if (!nomeValido || !emailValido || !telefoneValido) {
+        window.mostrarToast(
+            "Preencha todos os campos obrigatórios antes de enviar.",
+            "erro"
+        );
+        return;
+    }
+
     const dados = {
-        nome: document.getElementById("quoteNome").value.trim(),
-        email: document.getElementById("quoteEmail").value.trim(),
-        telefone: document.getElementById("quoteTelefone").value.trim(),
+        nome: quoteNomeInput.value.trim(),
+        email: quoteEmailInput.value.trim(),
+        telefone: quoteTelefoneInput.value.trim(),
         tipo: document.getElementById("quoteTipo").value,
         cidade: document.getElementById("quoteCidade").value.trim(),
         participantes: document.getElementById("quoteParticipantes").value.trim(),
@@ -62,6 +96,13 @@ function enviarPeloWhatsapp(dados) {
         "_blank",
         "noopener,noreferrer"
     );
+
+    window.mostrarToast?.(
+        "Abrindo o WhatsApp com sua mensagem pronta!",
+        "sucesso"
+    );
+
+    quoteForm.reset();
 }
 
 async function enviarPorEmail(dados) {
@@ -118,6 +159,11 @@ function formatarTelefoneExibicao() {
 function mostrarMensagem(texto, tipo) {
     quoteMessage.textContent = texto;
     quoteMessage.className = `quote-form-message ${tipo}`;
+
+    window.mostrarToast?.(
+        texto,
+        tipo === "success" ? "sucesso" : "erro"
+    );
 }
 
 function limparMensagem() {
