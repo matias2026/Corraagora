@@ -104,7 +104,15 @@ h1 strong{display:block;color:var(--blue)}
 .footer-grid a{display:block;color:#aebdca;font-size:14px;margin:9px 0}
 .footer-grid a:hover{color:var(--blue)}
 
-.footer-bottom{display:flex;justify-content:space-between;gap:20px;border-top:1px solid #1e2b38;margin-top:45px;padding-top:22px;color:#8194a6;font-size:13px}
+.footer-bottom{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:14px 20px;border-top:1px solid #1e2b38;margin-top:45px;padding-top:22px;color:#8194a6;font-size:13px}
+
+.footer-legal{display:flex;gap:18px;flex-wrap:wrap}
+.footer-legal a{color:#aebdca;font-size:13px;margin:0}
+.footer-legal a:hover{color:var(--blue)}
+
+.link-disabled{opacity:.55;cursor:not-allowed}
+.link-disabled:hover{color:inherit!important}
+.badge-soon{display:inline-block;margin-left:6px;padding:2px 8px;border-radius:999px;background:#1e2b38;color:#aebdca;font-size:10px;font-weight:700;letter-spacing:.03em;text-transform:uppercase;vertical-align:middle}
 
 /* ==========================================================================
    MODAL

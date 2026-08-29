@@ -8,6 +8,7 @@
   const searchInput = document.getElementById("searchInput");
   const cityFilter = document.getElementById("cityFilter");
   const typeFilter = document.getElementById("typeFilter");
+  const dateFilter = document.getElementById("dateFilter");
   const searchButton = document.getElementById("searchButton");
   const showAllButton = document.getElementById("showAllButton");
 
@@ -179,7 +180,7 @@
   `;
   }
 
-  function aplicarFiltros() {
+  function aplicarFiltros(comRolagem = true) {
     const pesquisa = normalizarTexto(searchInput?.value || "");
     const cidadeSelecionada = normalizarTexto(
       cityFilter?.value || ""
@@ -188,6 +189,8 @@
     const modalidadeSelecionada = normalizarTexto(
       typeFilter?.value || ""
     );
+
+    const filtroData = dateFilter?.value || "";
 
     const eventosFiltrados = todosOsEventos.filter((evento) => {
       const nome = normalizarTexto(evento.nome || "");
@@ -217,26 +220,78 @@
         !modalidadeSelecionada ||
         modalidade === modalidadeSelecionada;
 
+      const correspondeData = avaliarFiltroData(
+        evento.data_evento,
+        filtroData
+      );
+
       return (
         correspondePesquisa &&
         correspondeCidade &&
-        correspondeModalidade
+        correspondeModalidade &&
+        correspondeData
       );
     });
 
     renderizarEventos(eventosFiltrados);
 
-    document
-      .getElementById("eventos")
-      ?.scrollIntoView({ behavior: "smooth" });
+    if (comRolagem) {
+      document
+        .getElementById("eventos")
+        ?.scrollIntoView({ behavior: "smooth" });
+    }
   }
 
   function mostrarTodosOsEventos() {
     if (searchInput) searchInput.value = "";
     if (cityFilter) cityFilter.value = "";
     if (typeFilter) typeFilter.value = "";
+    if (dateFilter) dateFilter.value = "";
 
     renderizarEventos(todosOsEventos);
+  }
+
+  function avaliarFiltroData(dataEvento, filtro) {
+    if (!filtro) return true;
+    if (!dataEvento) return false;
+
+    const partes = String(dataEvento)
+      .slice(0, 10)
+      .split("-")
+      .map(Number);
+
+    if (
+      partes.length !== 3 ||
+      partes.some((parte) => !Number.isInteger(parte))
+    ) {
+      return false;
+    }
+
+    const [ano, mes, dia] = partes;
+    const data = new Date(ano, mes - 1, dia);
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    const diffDias = Math.round(
+      (data.getTime() - hoje.getTime()) / 86400000
+    );
+
+    switch (filtro) {
+      case "proximos-7-dias":
+        return diffDias >= 0 && diffDias <= 7;
+      case "proximos-30-dias":
+        return diffDias >= 0 && diffDias <= 30;
+      case "este-mes":
+        return (
+          data.getFullYear() === hoje.getFullYear() &&
+          data.getMonth() === hoje.getMonth()
+        );
+      case "futuros":
+        return diffDias >= 0;
+      default:
+        return true;
+    }
   }
 
   function preencherFiltroDeCidades() {
@@ -454,8 +509,11 @@
     }
   });
 
+  searchInput?.addEventListener("input", () => aplicarFiltros(false));
+
   cityFilter?.addEventListener("change", aplicarFiltros);
   typeFilter?.addEventListener("change", aplicarFiltros);
+  dateFilter?.addEventListener("change", aplicarFiltros);
 
   document.addEventListener(
     "DOMContentLoaded",

@@ -15,7 +15,34 @@
 
   <meta name="theme-color" content="#8ec8ff">
 
+  <meta
+    name="keywords"
+    content="eventos esportivos, corrida, corridas de rua, mtb, mountain bike, triathlon, trail run, ciclismo, inscrição online, CorraAgora"
+  >
+
   <title>CorraAgora | Eventos esportivos</title>
+
+  <!-- Open Graph / redes sociais (WhatsApp, Facebook, LinkedIn) -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="CorraAgora">
+  <meta property="og:title" content="CorraAgora | Eventos esportivos">
+  <meta
+    property="og:description"
+    content="Encontre e inscreva-se em corridas, MTB, triathlon e outros eventos esportivos. Inscrições rápidas, seguras e 100% online."
+  >
+  <!-- TODO: atualizar og:url e og:image para o domínio final de produção -->
+  <meta property="og:url" content="https://www.corraagora.com.br/">
+  <meta property="og:image" content="https://www.corraagora.com.br/images/logo-corraagora-trim.png">
+  <meta property="og:locale" content="pt_BR">
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="CorraAgora | Eventos esportivos">
+  <meta
+    name="twitter:description"
+    content="Encontre e inscreva-se em corridas, MTB, triathlon e outros eventos esportivos perto de você."
+  >
+  <meta name="twitter:image" content="https://www.corraagora.com.br/images/logo-corraagora-trim.png">
 
   <link
     rel="icon"
@@ -168,51 +195,6 @@
 
       </div>
 
-
-      <div class="container search-panel">
-
-        <label class="search-field search-main">
-          <span>⌕</span>
-
-          <input
-            id="searchInput"
-            type="search"
-            placeholder="Buscar evento, cidade ou modalidade..."
-          >
-        </label>
-
-        <label class="search-field">
-          <span>⌖</span>
-
-          <select id="cityFilter">
-            <option value="">Todas as cidades</option>
-          </select>
-        </label>
-
-        <label class="search-field">
-          <span>▣</span>
-
-          <select id="typeFilter">
-            <option value="">Todas as modalidades</option>
-            <option value="MTB">MTB</option>
-            <option value="Speed">Ciclismo de estrada</option>
-            <option value="Corrida">Corrida</option>
-            <option value="Trail Run">Trail Run</option>
-            <option value="Triathlon">Triathlon</option>
-            <option value="Outro">Outro</option>
-          </select>
-        </label>
-
-        <button
-          class="btn btn-primary search-button"
-          id="searchButton"
-          type="button"
-        >
-          Buscar eventos
-        </button>
-
-      </div>
-
     </section>
 
 
@@ -238,6 +220,66 @@
             type="button"
           >
             Ver todos →
+          </button>
+
+        </div>
+
+
+        <div
+          class="search-panel"
+          id="eventsFilterBar"
+        >
+
+          <label class="search-field search-main">
+            <span>⌕</span>
+
+            <input
+              id="searchInput"
+              type="search"
+              placeholder="Buscar evento, cidade ou modalidade..."
+            >
+          </label>
+
+          <label class="search-field">
+            <span>⌖</span>
+
+            <select id="cityFilter">
+              <option value="">Todas as cidades</option>
+            </select>
+          </label>
+
+          <label class="search-field">
+            <span>▣</span>
+
+            <select id="typeFilter">
+              <option value="">Todas as modalidades</option>
+              <option value="MTB">MTB</option>
+              <option value="Speed">Ciclismo de estrada</option>
+              <option value="Corrida">Corrida</option>
+              <option value="Trail Run">Trail Run</option>
+              <option value="Triathlon">Triathlon</option>
+              <option value="Outro">Outro</option>
+            </select>
+          </label>
+
+          <label class="search-field">
+            <span>📅</span>
+
+            <select id="dateFilter">
+              <option value="">Qualquer data</option>
+              <option value="proximos-7-dias">Próximos 7 dias</option>
+              <option value="proximos-30-dias">Próximos 30 dias</option>
+              <option value="este-mes">Este mês</option>
+              <option value="futuros">A partir de hoje</option>
+            </select>
+          </label>
+
+          <button
+            class="btn btn-primary search-button"
+            id="searchButton"
+            type="button"
+          >
+            Buscar eventos
           </button>
 
         </div>
@@ -448,6 +490,7 @@
         <a href="#eventos">Eventos</a>
         <a href="#sobre">Sobre</a>
         <a href="login.html">Organizadores</a>
+        <a href="orcamento.html">Orçamento</a>
       </div>
 
       <div>
@@ -457,7 +500,15 @@
           erikimatias14@gmail.com
         </a>
 
-        <a href="#">Instagram</a>
+        <a
+          href="#"
+          class="link-disabled"
+          aria-disabled="true"
+          title="Em breve"
+          onclick="event.preventDefault();"
+        >
+          Instagram <span class="badge-soon">em breve</span>
+        </a>
         <a href="https://wa.me/5584994419499" target="_blank" rel="noopener noreferrer">WhatsApp</a>
       </div>
 
@@ -467,6 +518,11 @@
       <span>
         © <span id="year"></span> CorraAgora.
       </span>
+
+      <nav class="footer-legal">
+        <a href="termos.html">Termos de Uso</a>
+        <a href="privacidade.html">Política de Privacidade</a>
+      </nav>
 
       <span>
         Projeto inicial da plataforma.
