@@ -468,6 +468,8 @@ body{
 
 .evento-banner{
 
+    position:relative;
+
     width:100%;
 
     height:190px;
@@ -483,6 +485,36 @@ body{
     font-size:48px;
 
     color:#2563eb;
+
+}
+
+.badge-inscritos{
+
+    position:absolute;
+
+    top:12px;
+
+    right:12px;
+
+    display:flex;
+
+    align-items:center;
+
+    gap:6px;
+
+    padding:6px 14px;
+
+    border-radius:999px;
+
+    background:rgba(15,23,42,.72);
+
+    color:#fff;
+
+    font-size:13px;
+
+    font-weight:700;
+
+    backdrop-filter:blur(4px);
 
 }
 

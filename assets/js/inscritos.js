@@ -21,10 +21,13 @@ const resumoConfirmados = document.getElementById("resumoConfirmados");
 const resumoPendentes = document.getElementById("resumoPendentes");
 
 const exportarExcelButton = document.getElementById("exportarExcelButton");
+const seletorEventoPainel = document.getElementById("seletorEventoPainel");
 
 let usuario = null;
 let eventoAtual = null;
 let inscricoes = [];
+let eventosDoOrganizador = [];
+let contagemInscritosPorEvento = {};
 
 async function verificarUsuario() {
     const {
@@ -57,22 +60,6 @@ async function verificarUsuario() {
 
     usuario = session.user;
 
-    const eventoId = new URLSearchParams(window.location.search).get("evento_id");
-
-    if (eventoId) {
-        await abrirEvento(eventoId);
-    } else {
-        await carregarSeletorDeEventos();
-    }
-}
-
-async function carregarSeletorDeEventos() {
-    seletorEventos.classList.remove("hidden");
-    painelInscritos.classList.add("hidden");
-
-    pageTitle.textContent = "Inscritos";
-    pageSubtitle.textContent = "Selecione um evento para ver a lista de inscritos.";
-
     const { data, error } = await supabaseClient
         .from("eventos")
         .select("*")
@@ -80,14 +67,64 @@ async function carregarSeletorDeEventos() {
         .order("data_evento", { ascending: false });
 
     if (error) {
-        listaEventosSeletor.innerHTML = `<p>Não foi possível carregar seus eventos.</p>`;
         console.error(error);
+    }
+
+    eventosDoOrganizador = data || [];
+
+    await carregarContagemInscritosPorEvento();
+    popularSeletorEventoPainel();
+
+    const eventoId = new URLSearchParams(window.location.search).get("evento_id");
+
+    if (eventoId) {
+        await abrirEvento(eventoId);
+    } else {
+        carregarSeletorDeEventos();
+    }
+}
+
+async function carregarContagemInscritosPorEvento() {
+    contagemInscritosPorEvento = {};
+
+    if (eventosDoOrganizador.length === 0) return;
+
+    const { data, error } = await supabaseClient
+        .from("inscricoes")
+        .select("evento_id")
+        .in("evento_id", eventosDoOrganizador.map(evento => evento.id));
+
+    if (error) {
+        console.error("Erro ao carregar contagem de inscritos:", error);
         return;
     }
 
-    const eventos = data || [];
+    (data || []).forEach(inscricao => {
+        contagemInscritosPorEvento[inscricao.evento_id] =
+            (contagemInscritosPorEvento[inscricao.evento_id] || 0) + 1;
+    });
+}
 
-    if (eventos.length === 0) {
+function popularSeletorEventoPainel() {
+    if (!seletorEventoPainel) return;
+
+    seletorEventoPainel.innerHTML = eventosDoOrganizador
+        .map(evento => `<option value="${evento.id}">${escaparHTML(evento.nome)}</option>`)
+        .join("");
+
+    seletorEventoPainel.addEventListener("change", () => {
+        window.location.href = `inscritos.html?evento_id=${seletorEventoPainel.value}`;
+    });
+}
+
+function carregarSeletorDeEventos() {
+    seletorEventos.classList.remove("hidden");
+    painelInscritos.classList.add("hidden");
+
+    pageTitle.textContent = "Inscritos";
+    pageSubtitle.textContent = "Selecione um evento para ver a lista de inscritos.";
+
+    if (eventosDoOrganizador.length === 0) {
         listaEventosSeletor.innerHTML = `
             <div class="empty-state">
                 <h3>Você ainda não tem eventos cadastrados</h3>
@@ -96,9 +133,16 @@ async function carregarSeletorDeEventos() {
         return;
     }
 
-    listaEventosSeletor.innerHTML = eventos.map(evento => `
+    listaEventosSeletor.innerHTML = eventosDoOrganizador.map(evento => {
+        const totalInscritosEvento = contagemInscritosPorEvento[evento.id] || 0;
+
+        return `
         <div class="evento-card">
             <div class="evento-banner">
+                <span class="badge-inscritos">
+                    👥 ${totalInscritosEvento} ${totalInscritosEvento === 1 ? "inscrito" : "inscritos"}
+                </span>
+
                 ${
                     evento.banner_url
                         ? `<img src="${evento.banner_url}" alt="${evento.nome}" style="width:100%;height:170px;object-fit:cover;border-radius:12px;">`
@@ -121,24 +165,21 @@ async function carregarSeletorDeEventos() {
                 </div>
             </div>
         </div>
-    `).join("");
+    `;
+    }).join("");
 }
 
 async function abrirEvento(eventoId) {
     seletorEventos.classList.add("hidden");
     painelInscritos.classList.remove("hidden");
 
-    const { data: evento, error } = await supabaseClient
-        .from("eventos")
-        .select("*")
-        .eq("id", eventoId)
-        .eq("organizador_id", usuario.id)
-        .maybeSingle();
+    const evento = eventosDoOrganizador.find(
+        item => String(item.id) === String(eventoId)
+    );
 
-    if (error || !evento) {
+    if (!evento) {
         pageSubtitle.textContent = "Evento não encontrado.";
         nomeEventoSelecionado.textContent = "Evento não encontrado";
-        console.error(error);
         return;
     }
 
@@ -147,6 +188,10 @@ async function abrirEvento(eventoId) {
     pageTitle.textContent = "Inscritos";
     pageSubtitle.textContent = `Acompanhe quem já se inscreveu em "${evento.nome}".`;
     nomeEventoSelecionado.textContent = evento.nome;
+
+    if (seletorEventoPainel) {
+        seletorEventoPainel.value = String(evento.id);
+    }
 
     await carregarInscricoes(eventoId);
 }

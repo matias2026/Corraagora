@@ -140,11 +140,19 @@ function renderizarEventos() {
 
     lista.forEach(evento => {
 
+        const totalInscritosEvento = inscricoesDosEventos.filter(
+            inscricao => inscricao.evento_id === evento.id
+        ).length;
+
         listaEventos.innerHTML += `
 
         <div class="evento-card">
 
             <div class="evento-banner">
+
+                <span class="badge-inscritos">
+                    👥 ${totalInscritosEvento} ${totalInscritosEvento === 1 ? "inscrito" : "inscritos"}
+                </span>
 
                 ${
                     evento.banner_url
