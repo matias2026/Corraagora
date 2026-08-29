@@ -18,7 +18,8 @@
 .quote-form input,
 .quote-form select,
 .quote-form textarea{
-    font:inherit;
+    font-family:inherit;
+    font-size:16px;
     padding:13px 14px;
     border:1px solid #dbe8f5;
     border-radius:12px;
