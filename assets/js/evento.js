@@ -240,14 +240,47 @@
 
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
-    configurarBotaoCompartilhar(evento);
+    configurarBotaoCompartilhar(evento, categorias);
     configurarCategorias(categorias, loteVigente, lotes);
     configurarLocalizacao(evento);
     configurarRegulamento(evento);
     configurarOrganizador(evento, organizador);
   }
 
-  function configurarBotaoCompartilhar(evento) {
+  function obterFaixaDePreco(categorias) {
+    const precos = (categorias || [])
+      .map((categoria) => categoria.precoAtual)
+      .filter((valor) => typeof valor === "number" && !Number.isNaN(valor) && valor >= 0);
+
+    if (!precos.length) return null;
+
+    const menorPreco = Math.min(...precos);
+
+    return menorPreco === 0
+      ? "Gratuito"
+      : `A partir de ${menorPreco.toLocaleString("pt-BR", {
+          style: "currency",
+          currency: "BRL"
+        })}`;
+  }
+
+  async function obterImagemParaCompartilhar(bannerUrl) {
+    if (!bannerUrl || !navigator.canShare) return null;
+
+    try {
+      const resposta = await fetch(bannerUrl);
+      const blob = await resposta.blob();
+      const arquivo = new File([blob], "evento.jpg", {
+        type: blob.type || "image/jpeg"
+      });
+
+      return navigator.canShare({ files: [arquivo] }) ? arquivo : null;
+    } catch (erro) {
+      return null;
+    }
+  }
+
+  function configurarBotaoCompartilhar(evento, categorias) {
     const botao = document.getElementById("shareEventButton");
     if (!botao) return;
 
@@ -259,32 +292,46 @@
     const cidadeEstado = [evento.cidade, evento.estado]
       .filter(Boolean)
       .join(" - ");
+    const dataFormatada = formatarData(evento.data_evento);
+    const faixaPreco = obterFaixaDePreco(categorias);
 
-    const texto = [
-      evento.nome || "Evento esportivo",
-      cidadeEstado,
-      formatarData(evento.data_evento)
+    const resumo = [
+      `🏆 *${evento.nome || "Evento esportivo"}*`,
+      "",
+      dataFormatada !== "Data a definir" ? `📅 ${dataFormatada}` : null,
+      cidadeEstado ? `📍 ${cidadeEstado}` : null,
+      faixaPreco ? `💰 ${faixaPreco}` : null
     ]
-      .filter(Boolean)
-      .join(" • ");
+      .filter((linha) => linha !== null)
+      .join("\n");
+
+    const textoCompleto = `${resumo}\n\n🔗 FAÇA SUA INSCRIÇÃO AQUI:\n${url}`;
 
     botao.addEventListener("click", async () => {
+      const arquivoImagem = await obterImagemParaCompartilhar(evento.banner_url);
+
       if (navigator.share) {
         try {
-          await navigator.share({
-            title: `${evento.nome || "Evento"} | CorraAgora`,
-            text: `${texto}. Inscreva-se na CorraAgora!`,
-            url
-          });
+          if (arquivoImagem) {
+            await navigator.share({
+              files: [arquivoImagem],
+              title: `${evento.nome || "Evento"} | CorraAgora`,
+              text: textoCompleto
+            });
+          } else {
+            await navigator.share({
+              title: `${evento.nome || "Evento"} | CorraAgora`,
+              text: `${resumo}\n\n🔗 Inscreva-se agora:`,
+              url
+            });
+          }
         } catch (erro) {
           // Usuário cancelou o compartilhamento — não é um erro real.
         }
         return;
       }
 
-      const linkWhatsapp = `https://wa.me/?text=${encodeURIComponent(
-        `${texto}. Inscreva-se na CorraAgora! ${url}`
-      )}`;
+      const linkWhatsapp = `https://wa.me/?text=${encodeURIComponent(textoCompleto)}`;
       window.open(linkWhatsapp, "_blank", "noopener,noreferrer");
     });
   }

@@ -18,6 +18,37 @@ function formatarData(dataISO) {
   return `${dia}/${mes}/${ano}`;
 }
 
+function formatarMoeda(valor) {
+  return new Intl.NumberFormat("pt-BR", {
+    style: "currency",
+    currency: "BRL"
+  }).format(valor);
+}
+
+async function buscarPrecoMinimo(eventoId) {
+  try {
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/categorias?evento_id=eq.${encodeURIComponent(
+        eventoId
+      )}&select=valor`,
+      {
+        headers: {
+          apikey: SUPABASE_PUBLIC_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLIC_KEY}`
+        }
+      }
+    );
+    const categorias = await resp.json();
+    const valores = (Array.isArray(categorias) ? categorias : [])
+      .map((c) => Number(c.valor))
+      .filter((v) => !Number.isNaN(v) && v >= 0);
+
+    return valores.length ? Math.min(...valores) : null;
+  } catch (erro) {
+    return null;
+  }
+}
+
 module.exports = async (req, res) => {
   const protocolo = req.headers["x-forwarded-proto"] || "https";
   const host = req.headers.host;
@@ -39,7 +70,7 @@ module.exports = async (req, res) => {
       const respEvento = await fetch(
         `${SUPABASE_URL}/rest/v1/eventos?slug=eq.${encodeURIComponent(
           slug
-        )}&status=eq.aprovado&select=nome,modalidade,cidade,estado,data_evento,banner_url`,
+        )}&status=eq.aprovado&select=id,nome,modalidade,cidade,estado,data_evento,banner_url`,
         {
           headers: {
             apikey: SUPABASE_PUBLIC_KEY,
@@ -56,11 +87,19 @@ module.exports = async (req, res) => {
           .filter(Boolean)
           .join(" - ");
         const dataFormatada = formatarData(evento.data_evento);
+        const precoMinimo = await buscarPrecoMinimo(evento.id);
+        const precoFormatado =
+          precoMinimo === null
+            ? null
+            : precoMinimo === 0
+            ? "Gratuito"
+            : `A partir de ${formatarMoeda(precoMinimo)}`;
 
         const partesDescricao = [
           evento.modalidade || "Evento esportivo",
           cidadeEstado || null,
-          dataFormatada || null
+          dataFormatada || null,
+          precoFormatado
         ].filter(Boolean);
 
         const titulo = `${nome} | CorraAgora`;
