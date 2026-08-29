@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
 
   let html;
   try {
-    const respHtml = await fetch(`${baseUrl}/evento.html`);
+    const respHtml = await fetch(`${baseUrl}/evento-app.html`);
     html = await respHtml.text();
   } catch (erro) {
     res.status(502).send("Erro ao carregar a página do evento.");
