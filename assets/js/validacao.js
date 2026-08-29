@@ -112,6 +112,81 @@
         return resto === Number(cpf[10]);
     }
 
+    function aplicarMascaraData(input) {
+        input.addEventListener("input", () => {
+            let v = input.value.replace(/\D/g, "").slice(0, 8);
+
+            if (v.length > 4) {
+                v = v.replace(/(\d{2})(\d{2})(\d{1,4})/, "$1/$2/$3");
+            } else if (v.length > 2) {
+                v = v.replace(/(\d{2})(\d{1,2})/, "$1/$2");
+            }
+
+            input.value = v;
+        });
+    }
+
+    function validarData(valor) {
+        const texto = String(valor || "").trim();
+
+        if (!/^\d{2}\/\d{2}\/\d{4}$/.test(texto)) {
+            return false;
+        }
+
+        const [dia, mes, ano] = texto.split("/").map(Number);
+
+        if (mes < 1 || mes > 12) return false;
+        if (ano < 1900 || ano > 2100) return false;
+
+        const data = new Date(ano, mes - 1, dia);
+
+        return (
+            data.getFullYear() === ano &&
+            data.getMonth() === mes - 1 &&
+            data.getDate() === dia
+        );
+    }
+
+    function converterDataBRparaISO(valor) {
+        const texto = String(valor || "").trim();
+        const partes = texto.match(/^(\d{2})\/(\d{2})\/(\d{4})$/);
+
+        if (!partes) return null;
+
+        const [, dia, mes, ano] = partes;
+        return `${ano}-${mes}-${dia}`;
+    }
+
+    function converterDataISOparaBR(valor) {
+        const texto = String(valor || "").trim();
+        const partes = texto.match(/^(\d{4})-(\d{2})-(\d{2})/);
+
+        if (!partes) return "";
+
+        const [, ano, mes, dia] = partes;
+        return `${dia}/${mes}/${ano}`;
+    }
+
+    function validarCampoData(input, mensagem) {
+        const valor = input.value.trim();
+
+        if (!valor) {
+            mostrarErroCampo(input, "Este campo é obrigatório.");
+            return false;
+        }
+
+        if (!validarData(valor)) {
+            mostrarErroCampo(
+                input,
+                mensagem || "Digite uma data válida no formato DD/MM/AAAA."
+            );
+            return false;
+        }
+
+        limparErroCampo(input);
+        return true;
+    }
+
     function limparErroCampo(input) {
         input.classList.remove("campo-invalido");
 
@@ -232,6 +307,11 @@
     window.validarCampoObrigatorio = validarCampoObrigatorio;
     window.validarCampoEmail = validarCampoEmail;
     window.validarCampoCPF = validarCampoCPF;
+    window.aplicarMascaraData = aplicarMascaraData;
+    window.validarData = validarData;
+    window.converterDataBRparaISO = converterDataBRparaISO;
+    window.converterDataISOparaBR = converterDataISOparaBR;
+    window.validarCampoData = validarCampoData;
     window.ativarRevalidacaoAoDigitar = ativarRevalidacaoAoDigitar;
     window.mostrarToast = mostrarToast;
 })();

@@ -58,6 +58,7 @@
   );
 
   window.aplicarMascaraCPF?.(cpfInput);
+  window.aplicarMascaraData?.(dataNascimentoInput);
 
   window.ativarRevalidacaoAoDigitar?.(nomeInput, (input) =>
     window.validarCampoObrigatorio(input, "Digite o nome completo.")
@@ -66,7 +67,7 @@
     window.validarCampoCPF(input)
   );
   window.ativarRevalidacaoAoDigitar?.(dataNascimentoInput, (input) =>
-    window.validarCampoObrigatorio(input, "Informe a data de nascimento.")
+    window.validarCampoData(input)
   );
   window.ativarRevalidacaoAoDigitar?.(sexoInput, (input) =>
     window.validarCampoObrigatorio(input, "Selecione o sexo.")
@@ -96,7 +97,9 @@
 
     nomeInput.value = dadosProprios.nome || "";
     cpfInput.value = dadosProprios.cpf || "";
-    dataNascimentoInput.value = dadosProprios.data_nascimento || "";
+    dataNascimentoInput.value = dadosProprios.data_nascimento
+      ? window.converterDataISOparaBR(dadosProprios.data_nascimento)
+      : "";
     sexoInput.value = dadosProprios.sexo || "";
     emailInput.value = dadosProprios.email || "";
     telefoneInput.value = dadosProprios.telefone || "";
@@ -289,10 +292,7 @@
       "Digite o nome completo."
     );
     const cpfValido = window.validarCampoCPF(cpfInput);
-    const dataNascimentoValida = window.validarCampoObrigatorio(
-      dataNascimentoInput,
-      "Informe a data de nascimento."
-    );
+    const dataNascimentoValida = window.validarCampoData(dataNascimentoInput);
     const sexoValido = window.validarCampoObrigatorio(
       sexoInput,
       "Selecione o sexo."
@@ -415,7 +415,9 @@
         codigo_inscricao: gerarCodigoInscricao(),
         nome: nomeInput.value.trim(),
         cpf: cpfInput.value.trim(),
-        data_nascimento: dataNascimentoInput.value,
+        data_nascimento: window.converterDataBRparaISO(
+          dataNascimentoInput.value
+        ),
         sexo: sexoInput.value,
         email: emailInput.value.trim(),
         telefone: telefoneInput.value.trim(),
