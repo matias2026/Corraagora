@@ -240,10 +240,53 @@
 
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
+    configurarBotaoCompartilhar(evento);
     configurarCategorias(categorias, loteVigente, lotes);
     configurarLocalizacao(evento);
     configurarRegulamento(evento);
     configurarOrganizador(evento, organizador);
+  }
+
+  function configurarBotaoCompartilhar(evento) {
+    const botao = document.getElementById("shareEventButton");
+    if (!botao) return;
+
+    const slug = obterSlugDaURL();
+    const url = `${window.location.origin}/evento.html?slug=${encodeURIComponent(
+      slug
+    )}`;
+
+    const cidadeEstado = [evento.cidade, evento.estado]
+      .filter(Boolean)
+      .join(" - ");
+
+    const texto = [
+      evento.nome || "Evento esportivo",
+      cidadeEstado,
+      formatarData(evento.data_evento)
+    ]
+      .filter(Boolean)
+      .join(" • ");
+
+    botao.addEventListener("click", async () => {
+      if (navigator.share) {
+        try {
+          await navigator.share({
+            title: `${evento.nome || "Evento"} | CorraAgora`,
+            text: `${texto}. Inscreva-se na CorraAgora!`,
+            url
+          });
+        } catch (erro) {
+          // Usuário cancelou o compartilhamento — não é um erro real.
+        }
+        return;
+      }
+
+      const linkWhatsapp = `https://wa.me/?text=${encodeURIComponent(
+        `${texto}. Inscreva-se na CorraAgora! ${url}`
+      )}`;
+      window.open(linkWhatsapp, "_blank", "noopener,noreferrer");
+    });
   }
 
   function configurarCategorias(categorias, loteVigente, lotes) {

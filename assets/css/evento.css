@@ -23,7 +23,11 @@
 
 .event-page-info h1{font-size:clamp(28px,4vw,42px);line-height:1.15;letter-spacing:-.02em;word-break:break-word;margin-bottom:14px}
 
-.event-page-location{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:15px;font-weight:600;margin-bottom:28px}
+.event-page-location{display:flex;align-items:center;gap:6px;color:var(--muted);font-size:15px;font-weight:600;margin-bottom:16px}
+
+.btn-share-evento{display:inline-flex;align-items:center;gap:8px;padding:9px 16px;background:#fff;color:var(--ink);border:1px solid var(--line);border-radius:999px;font-size:13.5px;font-weight:700;cursor:pointer;transition:.2s;margin-bottom:28px}
+.btn-share-evento svg{width:16px;height:16px;flex-shrink:0}
+.btn-share-evento:hover{background:#f5f7fb;border-color:#c9d6e5}
 
 .event-page-description{padding-top:24px;border-top:1px solid var(--line)}
 .event-page-description h2{font-size:20px;margin-bottom:10px}

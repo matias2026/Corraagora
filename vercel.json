@@ -1,0 +1,9 @@
+{
+  "rewrites": [
+    {
+      "source": "/evento.html",
+      "has": [{ "type": "query", "key": "slug" }],
+      "destination": "/api/evento"
+    }
+  ]
+}
