@@ -104,7 +104,7 @@
 .registration-form{display:flex;flex-direction:column;gap:16px}
 .registration-form label{display:flex;flex-direction:column;gap:8px;font-size:13px;font-weight:700;color:#20252d}
 
-.registration-form input,
+.registration-form input:not([type="checkbox"]),
 .registration-form select{
     font:inherit;
     padding:13px 14px;
@@ -120,6 +120,39 @@
 .registration-form select:focus{border-color:var(--blue-strong);box-shadow:0 0 0 3px rgba(61,149,247,.15)}
 
 .registration-form small{font-weight:500;color:var(--muted);font-size:12px}
+
+.registration-terms{display:flex;flex-direction:column;gap:14px;padding:16px;background:#f8fbff;border:1px solid var(--line);border-radius:12px}
+
+.registration-terms-item{
+    display:flex!important;
+    flex-direction:row!important;
+    align-items:flex-start;
+    gap:10px;
+    font-size:13px;
+    font-weight:500;
+    color:#334155;
+    cursor:pointer;
+}
+
+.registration-terms-item input[type="checkbox"]{
+    flex-shrink:0;
+    width:18px;
+    height:18px;
+    margin-top:2px;
+    accent-color:var(--blue-strong);
+    cursor:pointer;
+}
+
+.registration-terms-item span{line-height:1.5}
+
+.registration-terms-item a{color:var(--blue-strong);font-weight:700;text-decoration:underline}
+
+.registration-terms-item.termo-invalido{
+    background:#fef2f2;
+    border-radius:8px;
+    outline:2px solid #fecaca;
+    outline-offset:4px;
+}
 
 .registration-form-message{display:none;padding:12px 14px;border-radius:12px;font-size:13.5px;font-weight:600;text-align:center}
 .registration-form-message.success{display:block;background:#dcfce7;color:#166534}

@@ -27,6 +27,30 @@
   const cupomFeedback = document.getElementById("regCupomFeedback");
   const comprovanteInput = document.getElementById("regComprovante");
 
+  const declaracaoSaudeInput = document.getElementById("regDeclaracaoSaude");
+  const aceiteTermosInput = document.getElementById("regAceiteTermos");
+  const linkRegulamento = document.getElementById("regLinkRegulamento");
+
+  [declaracaoSaudeInput, aceiteTermosInput].forEach((input) => {
+    input?.addEventListener("change", () => {
+      if (input.checked) {
+        input.closest(".registration-terms-item")?.classList.remove(
+          "termo-invalido"
+        );
+      }
+    });
+  });
+
+  linkRegulamento?.addEventListener("click", (event) => {
+    if (!linkRegulamento.getAttribute("href") || linkRegulamento.getAttribute("href") === "#") {
+      event.preventDefault();
+      window.mostrarToast?.(
+        "O organizador ainda não enviou o regulamento oficial deste evento.",
+        "erro"
+      );
+    }
+  });
+
   const regContaLogada = document.getElementById("regContaLogada");
   const regContaDeslogada = document.getElementById("regContaDeslogada");
   const radiosParaQuem = document.querySelectorAll(
@@ -100,6 +124,16 @@
     limparMensagem();
     form.reset();
     limparFeedbackCupom();
+
+    document
+      .querySelectorAll(".registration-terms-item")
+      .forEach((item) => item.classList.remove("termo-invalido"));
+
+    if (evento.regulamento_url) {
+      linkRegulamento.href = evento.regulamento_url;
+    } else {
+      linkRegulamento.href = "#";
+    }
 
     const { data: { session } } = await supabaseClient.auth.getSession();
     sessaoAtual = session;
@@ -284,6 +318,30 @@
       window.mostrarToast?.(
         "Confira os campos destacados antes de enviar.",
         "erro"
+      );
+      return;
+    }
+
+    const declaracaoSaudeItem = declaracaoSaudeInput.closest(
+      ".registration-terms-item"
+    );
+    const aceiteTermosItem = aceiteTermosInput.closest(
+      ".registration-terms-item"
+    );
+
+    declaracaoSaudeItem.classList.toggle(
+      "termo-invalido",
+      !declaracaoSaudeInput.checked
+    );
+    aceiteTermosItem.classList.toggle(
+      "termo-invalido",
+      !aceiteTermosInput.checked
+    );
+
+    if (!declaracaoSaudeInput.checked || !aceiteTermosInput.checked) {
+      mostrarMensagem(
+        "Você precisa aceitar os dois termos acima para enviar a inscrição.",
+        "error"
       );
       return;
     }
