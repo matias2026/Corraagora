@@ -67,6 +67,20 @@
     `;
     document.head.appendChild(estilos);
 
+    function sanitizarUrlExterna(valor) {
+        const texto = String(valor || "").trim();
+        if (!texto) return null;
+
+        try {
+            const url = new URL(texto);
+            return url.protocol === "http:" || url.protocol === "https:"
+                ? url.href
+                : null;
+        } catch (erro) {
+            return null;
+        }
+    }
+
     function validarEmail(valor) {
         return /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(String(valor || "").trim());
     }
@@ -306,6 +320,7 @@
         }, duracaoMs);
     }
 
+    window.sanitizarUrlExterna = sanitizarUrlExterna;
     window.validarEmail = validarEmail;
     window.formatarCPF = formatarCPF;
     window.aplicarMascaraCPF = aplicarMascaraCPF;

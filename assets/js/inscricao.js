@@ -191,8 +191,10 @@
       paymentPixBox.classList.add("hidden");
     }
 
-    if (linkPagamento) {
-      paymentLinkButton.href = linkPagamento;
+    const linkPagamentoSeguro = window.sanitizarUrlExterna(linkPagamento);
+
+    if (linkPagamentoSeguro) {
+      paymentLinkButton.href = linkPagamentoSeguro;
       paymentLinkButton.classList.remove("hidden");
     } else {
       paymentLinkButton.classList.add("hidden");

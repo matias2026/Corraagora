@@ -141,13 +141,13 @@ function carregarSeletorDeEventos() {
             <div class="evento-banner">
                 ${
                     evento.banner_url
-                        ? `<img src="${evento.banner_url}" alt="${evento.nome}" style="width:100%;height:170px;object-fit:cover;border-radius:12px;">`
+                        ? `<img src="${escaparAtributo(evento.banner_url)}" alt="${escaparAtributo(evento.nome)}" style="width:100%;height:170px;object-fit:cover;border-radius:12px;">`
                         : "🏁"
                 }
             </div>
 
             <div class="evento-content">
-                <h3>${evento.nome}</h3>
+                <h3>${escaparHTML(evento.nome)}</h3>
 
                 <div class="evento-stats">
                     <span class="badge-inscritos">
@@ -157,7 +157,7 @@ function carregarSeletorDeEventos() {
 
                 <div class="evento-info">
                     <span>📅 ${formatarData(evento.data_evento)}</span>
-                    <span>📍 ${evento.cidade || "-"}/${evento.estado || "-"}</span>
+                    <span>📍 ${escaparHTML(evento.cidade || "-")}/${escaparHTML(evento.estado || "-")}</span>
                 </div>
 
                 <div class="evento-actions">
@@ -287,7 +287,7 @@ function renderizarInscricoes() {
                         : "-"
                 }
             </td>
-            <td><span class="status-pill status-${statusAtual}">${escaparHTML(i.status || "Pendente")}</span></td>
+            <td><span class="status-pill status-${escaparAtributo(statusAtual)}">${escaparHTML(i.status || "Pendente")}</span></td>
             <td>${formatarData(i.created_at)}</td>
             <td>
                 <div class="tabela-acoes">

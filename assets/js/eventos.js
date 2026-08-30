@@ -152,7 +152,7 @@ function renderizarEventos() {
 
                 ${
                     evento.banner_url
-                        ? `<img src="${evento.banner_url}" alt="${evento.nome}" style="width:100%;height:170px;object-fit:cover;border-radius:12px;">`
+                        ? `<img src="${escaparAtributo(evento.banner_url)}" alt="${escaparAtributo(evento.nome)}" style="width:100%;height:170px;object-fit:cover;border-radius:12px;">`
                         : "🏁"
                 }
 
@@ -160,7 +160,7 @@ function renderizarEventos() {
 
             <div class="evento-content">
 
-                <h3>${evento.nome}</h3>
+                <h3>${escaparHTML(evento.nome)}</h3>
 
                 <div class="evento-stats">
                     <span class="badge-inscritos">
@@ -172,15 +172,15 @@ function renderizarEventos() {
 
                     <span>📅 ${formatarData(evento.data_evento)}</span>
 
-                    <span>📍 ${evento.cidade}/${evento.estado}</span>
+                    <span>📍 ${escaparHTML(evento.cidade)}/${escaparHTML(evento.estado)}</span>
 
-                    <span>🚴 ${evento.modalidade}</span>
+                    <span>🚴 ${escaparHTML(evento.modalidade)}</span>
 
                     <span>💰 Valor por categoria</span>
 
                     <span>
                         Status:
-                        <span class="status-pill status-${evento.status}">
+                        <span class="status-pill status-${escaparAtributo(evento.status)}">
                             ${formatarStatus(evento.status)}
                         </span>
                     </span>
@@ -219,6 +219,17 @@ function renderizarEventos() {
 
     });
 
+}
+
+function escaparHTML(valor) {
+    return String(valor ?? "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;");
+}
+
+function escaparAtributo(valor) {
+    return escaparHTML(valor).replaceAll('"', "&quot;");
 }
 
 function formatarData(data) {

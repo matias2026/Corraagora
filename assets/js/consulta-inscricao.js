@@ -95,7 +95,7 @@
 
     const nomeEBanco = evento.informacoes_pagamento?.trim();
     const chavePix = evento.chave_pix?.trim();
-    const linkPagamento = evento.link_pagamento?.trim();
+    const linkPagamento = window.sanitizarUrlExterna(evento.link_pagamento);
 
     const textoPagamento =
       nomeEBanco ||
