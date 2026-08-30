@@ -139,10 +139,6 @@ function carregarSeletorDeEventos() {
         return `
         <div class="evento-card">
             <div class="evento-banner">
-                <span class="badge-inscritos">
-                    👥 ${totalInscritosEvento} ${totalInscritosEvento === 1 ? "inscrito" : "inscritos"}
-                </span>
-
                 ${
                     evento.banner_url
                         ? `<img src="${evento.banner_url}" alt="${evento.nome}" style="width:100%;height:170px;object-fit:cover;border-radius:12px;">`
@@ -152,6 +148,12 @@ function carregarSeletorDeEventos() {
 
             <div class="evento-content">
                 <h3>${evento.nome}</h3>
+
+                <div class="evento-stats">
+                    <span class="badge-inscritos">
+                        👥 ${totalInscritosEvento} ${totalInscritosEvento === 1 ? "inscrito" : "inscritos"}
+                    </span>
+                </div>
 
                 <div class="evento-info">
                     <span>📅 ${formatarData(evento.data_evento)}</span>
