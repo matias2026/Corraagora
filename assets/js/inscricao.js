@@ -363,13 +363,13 @@
     let cupomAplicado = null;
 
     if (codigoCupomDigitado) {
-      const { data: cupomEncontrado, error: erroCupom } = await supabaseClient
-        .from("cupons")
-        .select("codigo, percentual")
-        .eq("evento_id", evento.id)
-        .eq("codigo", codigoCupomDigitado.toLowerCase())
-        .eq("ativo", true)
-        .maybeSingle();
+      const { data: cuponsEncontrados, error: erroCupom } = await supabaseClient
+        .rpc("validar_cupom", {
+          p_evento_id: evento.id,
+          p_codigo: codigoCupomDigitado.toLowerCase()
+        });
+
+      const cupomEncontrado = cuponsEncontrados?.[0] || null;
 
       if (erroCupom) {
         console.error("Erro ao consultar cupom:", erroCupom);
