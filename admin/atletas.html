@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Todos os eventos | CorraAgora</title>
+    <title>Atletas | CorraAgora</title>
 
     <link
         rel="stylesheet"
@@ -48,10 +48,7 @@
                 Eventos pendentes
             </a>
 
-            <a
-                href="eventos.html"
-                class="active"
-            >
+            <a href="eventos.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 2h6a1 1 0 0 1 1 1v2H8V3a1 1 0 0 1 1-1z"></path><rect x="4" y="4" width="16" height="18" rx="2"></rect><line x1="8" y1="11" x2="16" y2="11"></line><line x1="8" y1="15" x2="16" y2="15"></line></svg>
                 Todos os eventos
             </a>
@@ -66,7 +63,10 @@
                 Organizadores
             </a>
 
-            <a href="atletas.html">
+            <a
+                href="atletas.html"
+                class="active"
+            >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
                 Atletas
             </a>
@@ -96,11 +96,13 @@
 
             <div>
                 <p class="eyebrow">PAINEL DO ADMINISTRADOR</p>
-                <h1>Todos os eventos</h1>
+                <h1>Atletas</h1>
 
                 <p class="dashboard-subtitle">
-                    Veja e edite qualquer evento cadastrado na
-                    plataforma, independente do status.
+                    Todas as contas de atleta cadastradas. Banir impede
+                    a conta de criar novas inscrições (pra si ou pra um
+                    amigo) — o login e o histórico de inscrições
+                    continuam existindo normalmente.
                 </p>
             </div>
 
@@ -114,58 +116,48 @@
 
             <div class="section-header">
                 <div>
-                    <p class="eyebrow">EVENTOS</p>
-                    <h2 id="totalEventosLabel">0 eventos</h2>
+                    <p class="eyebrow">CONTAS DE ATLETA</p>
+                    <h2 id="totalAtletasLabel">0 atletas</h2>
                 </div>
             </div>
 
             <div class="events-toolbar">
-
                 <input
                     type="text"
-                    id="buscarEvento"
-                    placeholder="🔍 Buscar por nome, organizador ou cidade..."
-                >
-
-                <select id="statusFiltro">
-                    <option value="">Todos os status</option>
-                    <option value="pendente">Pendente</option>
-                    <option value="aprovado">Aprovado</option>
-                    <option value="rejeitado">Rejeitado</option>
-                </select>
-
+                    id="buscarAtleta"
+                    placeholder="🔍 Buscar por nome ou e-mail...">
             </div>
 
             <div class="tabela-scroll">
 
                 <table
                     class="tabela-inscritos"
-                    id="tabelaEventos"
+                    id="tabelaAtletas"
                 >
 
                     <thead>
                         <tr>
-                            <th>Evento</th>
-                            <th>Organizador</th>
-                            <th>Local</th>
-                            <th>Data</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Cadastrado em</th>
                             <th>Status</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
 
-                    <tbody id="corpoTabelaEventos"></tbody>
+                    <tbody id="corpoTabelaAtletas"></tbody>
 
                 </table>
 
                 <div
-                    id="semEventos"
+                    id="semAtletas"
                     class="empty-state-box hidden"
                 >
-                    <h3>Nenhum evento encontrado</h3>
+                    <h3>Nenhuma conta de atleta ainda</h3>
 
                     <p>
-                        Ajuste a busca ou o filtro de status.
+                        Assim que alguém criar uma conta de atleta,
+                        ela aparece aqui.
                     </p>
                 </div>
 
@@ -178,7 +170,7 @@
 </div>
 
 <script src="../assets/js/sidebar-toggle.js"></script>
-<script src="../assets/js/admin-eventos.js"></script>
+<script src="../assets/js/atletas.js"></script>
 
 </body>
 </html>
