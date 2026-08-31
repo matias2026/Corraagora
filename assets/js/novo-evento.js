@@ -1031,17 +1031,45 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     irParaEtapa(1);
 
-    // Corrige o teclado virtual do celular encobrindo o campo em foco:
-    // assim que um input/select/textarea recebe foco, centraliza ele na
-    // tela depois de um pequeno delay (dá tempo do teclado abrir e
-    // recalcular o viewport antes de rolar).
+    // Corrige o teclado virtual do celular encobrindo o campo em foco.
+    // Um timeout fixo não é confiável porque o teclado do iOS demora um
+    // tempo variável pra terminar de abrir e encolher o viewport visual
+    // — se rolar cedo demais, o campo fica "centralizado" no tamanho
+    // antigo (antes do teclado) e acaba escondido atrás do teclado ou da
+    // barra fixa de navegação quando o teclado finalmente abre. Por isso
+    // escuta o evento "resize" do visualViewport (dispara quando o
+    // teclado termina de abrir) e só centraliza depois disso, com um
+    // timeout como reforço pra quando o teclado já estava aberto.
     form.addEventListener("focusin", (evento) => {
         const alvo = evento.target;
 
         if (!alvo.matches("input, select, textarea")) return;
 
-        setTimeout(() => {
+        const centralizarCampo = () => {
             alvo.scrollIntoView({ behavior: "smooth", block: "center" });
-        }, 300);
+        };
+
+        if (window.visualViewport) {
+            let jaCentralizou = false;
+
+            const aoAjustarViewport = () => {
+                if (jaCentralizou) return;
+                jaCentralizou = true;
+                centralizarCampo();
+                window.visualViewport.removeEventListener(
+                    "resize",
+                    aoAjustarViewport
+                );
+            };
+
+            window.visualViewport.addEventListener(
+                "resize",
+                aoAjustarViewport
+            );
+
+            setTimeout(aoAjustarViewport, 500);
+        } else {
+            setTimeout(centralizarCampo, 300);
+        }
     });
 });
