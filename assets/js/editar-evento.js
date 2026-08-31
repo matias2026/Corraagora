@@ -767,6 +767,20 @@ function renderizarCupons() {
                                         Copiar
                                     </button>
                                 </div>
+
+                                <div class="cupom-limite">
+                                    <label>Limite de usos</label>
+                                    <input
+                                        type="number"
+                                        min="1"
+                                        step="1"
+                                        class="cupom-limite-input"
+                                        data-percentual="${percentual}"
+                                        placeholder="Ilimitado"
+                                        value="${cupom?.limite_usos ?? ""}"
+                                    >
+                                    <small>${cupom?.usos_atuais || 0} usado${(cupom?.usos_atuais || 0) === 1 ? "" : "s"}</small>
+                                </div>
                             `
                             : ""
                     }
@@ -791,6 +805,12 @@ function renderizarCupons() {
         );
     });
 
+    cuponsContainer.querySelectorAll(".cupom-limite-input").forEach(input => {
+        input.addEventListener("change", () =>
+            atualizarLimiteCupom(Number(input.dataset.percentual), input)
+        );
+    });
+
     cuponsContainer.querySelectorAll(".botao-copiar-cupom").forEach(botao => {
         botao.addEventListener("click", () => {
             navigator.clipboard.writeText(botao.dataset.codigo).then(() => {
@@ -802,6 +822,41 @@ function renderizarCupons() {
             });
         });
     });
+}
+
+async function atualizarLimiteCupom(percentual, inputEl) {
+    const cupomExistente = cuponsPorPercentual[percentual];
+    if (!cupomExistente) return;
+
+    const valorDigitado = inputEl.value.trim();
+    const novoLimite = valorDigitado ? Number(valorDigitado) : null;
+
+    if (novoLimite !== null && (!Number.isInteger(novoLimite) || novoLimite < 1)) {
+        alert("O limite de usos precisa ser um número inteiro maior que zero, ou em branco para ilimitado.");
+        inputEl.value = cupomExistente.limite_usos ?? "";
+        return;
+    }
+
+    inputEl.disabled = true;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("cupons")
+            .update({ limite_usos: novoLimite })
+            .eq("id", cupomExistente.id)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        cuponsPorPercentual[percentual] = data;
+    } catch (error) {
+        console.error("Erro ao atualizar limite do cupom:", error);
+        alert(error.message || "Não foi possível atualizar o limite do cupom.");
+    } finally {
+        inputEl.disabled = false;
+        renderizarCupons();
+    }
 }
 
 async function alternarCupom(percentual, toggleEl) {

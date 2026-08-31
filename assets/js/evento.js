@@ -240,6 +240,7 @@
 
     configurarBanner(evento.banner_url);
     configurarBotaoInscricao(evento);
+    configurarAvisoVagas(evento);
     configurarBotaoCompartilhar(evento, categorias);
     configurarCategorias(categorias, loteVigente, lotes);
     configurarLocalizacao(evento);
@@ -647,6 +648,30 @@
     registrationButton.addEventListener("click", () => {
       window.abrirModalInscricao?.();
     });
+  }
+
+  async function configurarAvisoVagas(evento) {
+    const notaVagas = document.getElementById("vagasEsgotadasNote");
+    if (!notaVagas) return;
+
+    const vagas = Number(evento.vagas);
+    if (!vagas || vagas <= 0) return;
+
+    const { data: totalInscritos, error } = await supabaseClient.rpc(
+      "contar_inscritos_evento",
+      { p_evento_id: evento.id }
+    );
+
+    if (error) {
+      console.error("Erro ao verificar vagas do evento:", error);
+      return;
+    }
+
+    // Só avisa — não bloqueia a inscrição. O organizador decide
+    // manualmente quem confirmar quando as vagas esgotarem.
+    if (Number(totalInscritos) >= vagas) {
+      notaVagas.classList.remove("hidden");
+    }
   }
 
   function formatarData(dataEvento) {

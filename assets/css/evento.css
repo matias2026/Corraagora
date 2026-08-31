@@ -75,6 +75,8 @@
 .event-registration-button{margin-top:18px}
 .event-registration-card small{display:block;margin-top:14px;color:var(--muted);font-size:12px;line-height:1.5;text-align:center}
 
+.vagas-esgotadas-note{background:#fff7ed;border:1px solid #fdba74;color:#9a3412;border-radius:10px;padding:10px 12px}
+
 .event-page .starter-empty{max-width:480px;margin:0 auto;padding:80px 20px;text-align:center}
 .event-page .starter-icon{font-size:48px;line-height:1;margin-bottom:16px}
 .event-page .starter-empty h3{font-size:24px;margin-bottom:10px}
