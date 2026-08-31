@@ -1032,44 +1032,58 @@ document.addEventListener("DOMContentLoaded", async () => {
     irParaEtapa(1);
 
     // Corrige o teclado virtual do celular encobrindo o campo em foco.
-    // Um timeout fixo não é confiável porque o teclado do iOS demora um
-    // tempo variável pra terminar de abrir e encolher o viewport visual
-    // — se rolar cedo demais, o campo fica "centralizado" no tamanho
-    // antigo (antes do teclado) e acaba escondido atrás do teclado ou da
-    // barra fixa de navegação quando o teclado finalmente abre. Por isso
-    // escuta o evento "resize" do visualViewport (dispara quando o
-    // teclado termina de abrir) e só centraliza depois disso, com um
-    // timeout como reforço pra quando o teclado já estava aberto.
+    //
+    // Só rola se o campo estiver de fato escondido atrás do teclado (em
+    // vez de sempre forçar "centralizar", o que move a tela sem
+    // necessidade quando o campo já está visível), e calcula a
+    // distância exata em vez de um "chute". A leitura do tamanho da
+    // tela só acontece depois que o teclado realmente termina de abrir
+    // — via o evento "resize" do visualViewport, não um timeout fixo,
+    // porque o teclado do iOS demora um tempo variável pra abrir, e ler
+    // o tamanho da tela cedo demais dá a distância errada.
     form.addEventListener("focusin", (evento) => {
         const alvo = evento.target;
 
         if (!alvo.matches("input, select, textarea")) return;
 
-        const centralizarCampo = () => {
-            alvo.scrollIntoView({ behavior: "smooth", block: "center" });
+        const ajustarScroll = () => {
+            if (!window.visualViewport) {
+                alvo.scrollIntoView({ behavior: "smooth", block: "center" });
+                return;
+            }
+
+            const rect = alvo.getBoundingClientRect();
+            const alturaVisivel = window.visualViewport.height;
+
+            if (rect.bottom > alturaVisivel) {
+                window.scrollBy({
+                    top: rect.bottom - alturaVisivel + 40,
+                    behavior: "smooth"
+                });
+            }
         };
 
         if (window.visualViewport) {
-            let jaCentralizou = false;
+            let jaAjustou = false;
 
-            const aoAjustarViewport = () => {
-                if (jaCentralizou) return;
-                jaCentralizou = true;
-                centralizarCampo();
+            const aoRedimensionar = () => {
+                if (jaAjustou) return;
+                jaAjustou = true;
+                ajustarScroll();
                 window.visualViewport.removeEventListener(
                     "resize",
-                    aoAjustarViewport
+                    aoRedimensionar
                 );
             };
 
             window.visualViewport.addEventListener(
                 "resize",
-                aoAjustarViewport
+                aoRedimensionar
             );
 
-            setTimeout(aoAjustarViewport, 500);
+            setTimeout(aoRedimensionar, 500);
         } else {
-            setTimeout(centralizarCampo, 300);
+            setTimeout(ajustarScroll, 300);
         }
     });
 });
