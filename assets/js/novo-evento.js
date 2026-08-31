@@ -18,6 +18,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     const formMessage = document.getElementById("formMessage");
     const saveButton = document.getElementById("saveButton");
 
+    window.aplicarMascaraData(document.getElementById("dataEvento"));
+    window.aplicarMascaraHora(document.getElementById("horarioEvento"));
+
     let session = null;
     let bannerPreviewUrl = null;
 
@@ -650,6 +653,22 @@ document.addEventListener("DOMContentLoaded", async () => {
             return;
         }
 
+        if (!window.validarData(dataEvento)) {
+            mostrarMensagem(
+                "Digite uma data válida no formato DD/MM/AAAA.",
+                "error"
+            );
+            return;
+        }
+
+        if (horarioEvento && !window.validarHora(horarioEvento)) {
+            mostrarMensagem(
+                "Digite um horário válido no formato HH:MM.",
+                "error"
+            );
+            return;
+        }
+
         if (!chavePix && !informacoesPagamento && !linkPagamento) {
             mostrarMensagem(
                 "Informe pelo menos uma forma de pagamento: chave PIX, " +
@@ -754,7 +773,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 modalidade,
                 cidade,
                 estado,
-                data_evento: dataEvento,
+                data_evento: window.converterDataBRparaISO(dataEvento),
                 descricao: descricao || null,
                 banner_url: bannerUrl,
                 valor,
@@ -940,4 +959,89 @@ document.addEventListener("DOMContentLoaded", async () => {
             .replaceAll('"', "&quot;")
             .replaceAll("'", "&#039;");
     }
+
+    // ==========================================================================
+    // WIZARD (etapas do formulário)
+    // ==========================================================================
+
+    const wizardSteps = Array.from(
+        form.querySelectorAll(".wizard-step")
+    );
+    const totalEtapas = wizardSteps.length;
+
+    const wizardBackButton = document.getElementById("wizardBackButton");
+    const wizardNextButton = document.getElementById("wizardNextButton");
+    const wizardCancelLink = document.getElementById("wizardCancelLink");
+    const wizardProgressLabel = document.getElementById(
+        "wizardProgressLabel"
+    );
+    const wizardProgressFill = document.getElementById(
+        "wizardProgressFill"
+    );
+
+    let etapaAtual = 1;
+
+    function irParaEtapa(numero) {
+        etapaAtual = Math.min(Math.max(numero, 1), totalEtapas);
+
+        wizardSteps.forEach((step) => {
+            step.classList.toggle(
+                "active",
+                Number(step.dataset.step) === etapaAtual
+            );
+        });
+
+        const primeiraEtapa = etapaAtual === 1;
+        const ultimaEtapa = etapaAtual === totalEtapas;
+
+        wizardBackButton.classList.toggle("hidden", primeiraEtapa);
+        wizardCancelLink.classList.toggle("hidden", !primeiraEtapa);
+        wizardNextButton.classList.toggle("hidden", ultimaEtapa);
+        saveButton.classList.toggle("hidden", !ultimaEtapa);
+
+        wizardProgressLabel.textContent = `Passo ${etapaAtual} de ${totalEtapas}`;
+        wizardProgressFill.style.width = `${
+            (etapaAtual / totalEtapas) * 100
+        }%`;
+
+        form.scrollIntoView({ behavior: "smooth", block: "start" });
+    }
+
+    function validarEtapaAtual() {
+        const etapaEl = wizardSteps[etapaAtual - 1];
+        const invalido = etapaEl.querySelector(":invalid");
+
+        if (invalido) {
+            invalido.reportValidity();
+            invalido.focus();
+            return false;
+        }
+
+        return true;
+    }
+
+    wizardNextButton.addEventListener("click", () => {
+        if (!validarEtapaAtual()) return;
+        irParaEtapa(etapaAtual + 1);
+    });
+
+    wizardBackButton.addEventListener("click", () => {
+        irParaEtapa(etapaAtual - 1);
+    });
+
+    irParaEtapa(1);
+
+    // Corrige o teclado virtual do celular encobrindo o campo em foco:
+    // assim que um input/select/textarea recebe foco, centraliza ele na
+    // tela depois de um pequeno delay (dá tempo do teclado abrir e
+    // recalcular o viewport antes de rolar).
+    form.addEventListener("focusin", (evento) => {
+        const alvo = evento.target;
+
+        if (!alvo.matches("input, select, textarea")) return;
+
+        setTimeout(() => {
+            alvo.scrollIntoView({ behavior: "smooth", block: "center" });
+        }, 300);
+    });
 });

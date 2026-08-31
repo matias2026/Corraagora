@@ -5,6 +5,64 @@
     box-shadow:0 5px 20px rgba(0,0,0,.06);
 }
 
+/* ==========================================================================
+   WIZARD (etapas do formulário)
+   ========================================================================== */
+
+.wizard-progress{
+    margin-bottom:32px;
+}
+
+.wizard-progress-label{
+    display:block;
+    font-size:13px;
+    font-weight:700;
+    letter-spacing:.03em;
+    color:#2563eb;
+    margin-bottom:10px;
+}
+
+.wizard-progress-bar{
+    height:6px;
+    border-radius:999px;
+    background:#e5e7eb;
+    overflow:hidden;
+}
+
+.wizard-progress-fill{
+    height:100%;
+    width:0%;
+    border-radius:999px;
+    background:linear-gradient(90deg,#3d95f7,#2563eb);
+    transition:width .3s ease;
+}
+
+.wizard-step{
+    display:none;
+    animation:wizardFadeIn .25s ease;
+}
+
+.wizard-step.active{
+    display:block;
+}
+
+@keyframes wizardFadeIn{
+    from{opacity:0;transform:translateY(6px)}
+    to{opacity:1;transform:translateY(0)}
+}
+
+.wizard-actions{
+    display:flex;
+    align-items:center;
+    justify-content:flex-end;
+    gap:15px;
+    margin-top:40px;
+}
+
+.wizard-actions .secondary-button{
+    margin-right:auto;
+}
+
 .form-section{
     margin-bottom:40px;
 }
@@ -298,6 +356,60 @@ textarea:focus{
     .form-submit{
         width:100%;
         text-align:center;
+    }
+
+    /* Espaço generoso embaixo pra nenhum campo ficar preso atrás do
+       teclado virtual, e pra não colidir com a barra fixa de ações. */
+    .form-card{
+        padding-bottom:40vh;
+        min-height:100dvh;
+    }
+
+    /* Barra de ações do wizard vira flutuante e fixa no rodapé — fica
+       acessível mesmo com o teclado aberto, sem precisar fechá-lo. */
+    .wizard-actions{
+        position:fixed;
+        left:0;
+        right:0;
+        bottom:0;
+        z-index:40;
+        margin-top:0;
+        padding:14px 16px calc(14px + env(safe-area-inset-bottom));
+        background:rgba(255,255,255,.92);
+        backdrop-filter:blur(10px);
+        -webkit-backdrop-filter:blur(10px);
+        border-top:1px solid #e5e7eb;
+        box-shadow:0 -8px 24px rgba(0,0,0,.08);
+        flex-wrap:wrap;
+    }
+
+    .wizard-actions .secondary-button,
+    .wizard-actions .primary-button{
+        width:auto;
+        flex:1;
+    }
+
+    .wizard-actions #wizardBackButton{
+        flex:0 0 auto;
+        width:auto;
+        margin-right:0;
+    }
+
+    .wizard-progress{
+        position:sticky;
+        top:0;
+        z-index:30;
+        background:#fff;
+        padding-top:4px;
+        margin-bottom:24px;
+    }
+
+    /* No mobile a barra do menu (.sidebar-header) fica sticky no topo
+       e cobre o começo da página — soma essa altura como margem de
+       rolagem pra trocar de etapa nunca esconder o início do
+       formulário atrás dela. */
+    #eventForm{
+        scroll-margin-top:80px;
     }
 
 }

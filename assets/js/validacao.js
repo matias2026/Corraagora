@@ -148,6 +148,34 @@
         });
     }
 
+    function formatarHoraDigitada(valor) {
+        let v = String(valor || "").replace(/\D/g, "").slice(0, 4);
+
+        if (v.length > 2) {
+            v = v.replace(/(\d{2})(\d{1,2})/, "$1:$2");
+        }
+
+        return v;
+    }
+
+    function aplicarMascaraHora(input) {
+        input.addEventListener("input", () => {
+            input.value = formatarHoraDigitada(input.value);
+        });
+    }
+
+    function validarHora(valor) {
+        const texto = String(valor || "").trim();
+
+        if (!/^\d{2}:\d{2}$/.test(texto)) {
+            return false;
+        }
+
+        const [hora, minuto] = texto.split(":").map(Number);
+
+        return hora >= 0 && hora <= 23 && minuto >= 0 && minuto <= 59;
+    }
+
     function validarData(valor) {
         const texto = String(valor || "").trim();
 
@@ -333,6 +361,9 @@
     window.validarCampoCPF = validarCampoCPF;
     window.aplicarMascaraData = aplicarMascaraData;
     window.validarData = validarData;
+    window.formatarHoraDigitada = formatarHoraDigitada;
+    window.aplicarMascaraHora = aplicarMascaraHora;
+    window.validarHora = validarHora;
     window.converterDataBRparaISO = converterDataBRparaISO;
     window.converterDataISOparaBR = converterDataISOparaBR;
     window.validarCampoData = validarCampoData;

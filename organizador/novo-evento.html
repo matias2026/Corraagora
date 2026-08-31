@@ -94,6 +94,20 @@
 
             <form id="eventForm" autocomplete="off">
 
+                <div class="wizard-progress">
+                    <span class="wizard-progress-label" id="wizardProgressLabel">
+                        Passo 1 de 7
+                    </span>
+
+                    <div class="wizard-progress-bar">
+                        <div
+                            class="wizard-progress-fill"
+                            id="wizardProgressFill"
+                        ></div>
+                    </div>
+                </div>
+
+                <div class="wizard-step" data-step="1">
                 <div class="form-section">
                     <h2>Informações do evento</h2>
 
@@ -133,7 +147,9 @@
 
                     </div>
                 </div>
+                </div>
 
+                <div class="wizard-step" data-step="2">
                 <div class="form-section">
                     <h2>Data e localização</h2>
 
@@ -141,12 +157,29 @@
 
                         <div class="form-group">
                             <label for="dataEvento">Data</label>
-                            <input type="date" id="dataEvento" required>
+                            <input
+                                type="text"
+                                id="dataEvento"
+                                class="mascara-data"
+                                inputmode="numeric"
+                                placeholder="DD/MM/AAAA"
+                                maxlength="10"
+                                pattern="\d{2}/\d{2}/\d{4}"
+                                autocomplete="off"
+                                required>
                         </div>
 
                         <div class="form-group">
                             <label for="horarioEvento">Horário</label>
-                            <input type="time" id="horarioEvento">
+                            <input
+                                type="text"
+                                id="horarioEvento"
+                                class="mascara-hora"
+                                inputmode="numeric"
+                                placeholder="HH:MM"
+                                maxlength="5"
+                                pattern="\d{2}:\d{2}"
+                                autocomplete="off">
                         </div>
 
                         <div class="form-group full-width">
@@ -218,9 +251,11 @@
 
                     </div>
                 </div>
+                </div>
 
                 <!-- ORGANIZADOR -->
 
+<div class="wizard-step" data-step="3">
 <div class="form-section">
 
     <h2>Contato do organizador</h2>
@@ -256,9 +291,11 @@
     </div>
 
 </div>
+</div>
 
                 <!-- INSCRIÇÕES -->
 
+<div class="wizard-step" data-step="4">
 <div class="form-section">
 
     <h2>Inscrições</h2>
@@ -380,9 +417,11 @@
     </div>
 
 </div>
+</div>
 
 <!-- LOTES -->
 
+<div class="wizard-step" data-step="5">
 <div class="form-section">
 
     <h2>Lotes</h2>
@@ -407,9 +446,11 @@
     </button>
 
 </div>
+</div>
 
 <!-- CATEGORIAS -->
 
+<div class="wizard-step" data-step="6">
 <div class="form-section">
 
     <h2>Categorias</h2>
@@ -534,9 +575,11 @@
     </button>
 
 </div>
+</div>
 
 <!-- BANNER -->
 
+<div class="wizard-step" data-step="7">
 <div class="form-section">
 
     <h2>Banner do evento</h2>
@@ -614,18 +657,36 @@
 
                     <p id="galeriaNomes" class="file-name"></p>
                 </div>
+                </div>
 
                 <div id="formMessage" class="form-message"></div>
 
-                <div class="form-actions">
+                <div class="wizard-actions">
 
-                    <a href="index.html" class="secondary-button">
+                    <button
+                        type="button"
+                        id="wizardBackButton"
+                        class="secondary-button hidden">
+                        ← Voltar
+                    </button>
+
+                    <a
+                        href="index.html"
+                        class="secondary-button"
+                        id="wizardCancelLink">
                         Cancelar
                     </a>
 
                     <button
+                        type="button"
+                        id="wizardNextButton"
+                        class="primary-button">
+                        Avançar →
+                    </button>
+
+                    <button
                         id="saveButton"
-                        class="primary-button form-submit"
+                        class="primary-button form-submit hidden"
                         type="submit">
 
                         Salvar evento
@@ -643,6 +704,7 @@
 </div>
 <script src="../assets/js/utils.js"></script>
 <script src="../assets/js/storage.js"></script>
+<script src="../assets/js/validacao.js"></script>
 <script src="../assets/js/admin-link.js"></script>
 <script src="../assets/js/sidebar-toggle.js"></script>
 <script src="../assets/js/novo-evento.js"></script>
