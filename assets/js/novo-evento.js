@@ -1056,7 +1056,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
                 if (rect.bottom > alturaVisivel) {
                     window.scrollBy({
-                        top: rect.bottom - alturaVisivel + 50,
+                        top: rect.bottom - alturaVisivel + 120,
                         behavior: "smooth"
                     });
                 }

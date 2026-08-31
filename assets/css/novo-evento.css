@@ -366,9 +366,13 @@ textarea:focus{
     }
 
     /* Espaço generoso embaixo pra nenhum campo ficar preso atrás do
-       teclado virtual, e pra não colidir com a barra fixa de ações. */
+       teclado virtual, e pra não colidir com a barra fixa de ações.
+       Fica em .form-card (o contêiner que envolve o <form> e todas as
+       etapas) em vez de repetir em cada .wizard-step, já que o espaço
+       reservado no ancestral já vale pra etapa ativa, qualquer que
+       ela seja. */
     .form-card{
-        padding-bottom:40vh;
+        padding-bottom:55vh;
         min-height:100dvh;
     }
 
