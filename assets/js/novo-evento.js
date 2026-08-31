@@ -1032,58 +1032,40 @@ document.addEventListener("DOMContentLoaded", async () => {
     irParaEtapa(1);
 
     // Corrige o teclado virtual do celular encobrindo o campo em foco.
-    //
-    // Só rola se o campo estiver de fato escondido atrás do teclado (em
-    // vez de sempre forçar "centralizar", o que move a tela sem
-    // necessidade quando o campo já está visível), e calcula a
-    // distância exata em vez de um "chute". A leitura do tamanho da
-    // tela só acontece depois que o teclado realmente termina de abrir
-    // — via o evento "resize" do visualViewport, não um timeout fixo,
-    // porque o teclado do iOS demora um tempo variável pra abrir, e ler
-    // o tamanho da tela cedo demais dá a distância errada.
+    // Só rola se o campo estiver de fato escondido atrás do teclado, e
+    // calcula a distância exata em vez de um "chute". Confere assim que
+    // foca (com um pequeno delay) e de novo quando o teclado terminar
+    // de abrir/redimensionar o viewport (o "resize" cobre o caso do
+    // teclado demorar mais que o delay inicial pra abrir).
     form.addEventListener("focusin", (evento) => {
         const alvo = evento.target;
 
         if (!alvo.matches("input, select, textarea")) return;
 
-        const ajustarScroll = () => {
-            if (!window.visualViewport) {
+        if (!window.visualViewport) {
+            setTimeout(() => {
                 alvo.scrollIntoView({ behavior: "smooth", block: "center" });
-                return;
-            }
+            }, 300);
+            return;
+        }
 
-            const rect = alvo.getBoundingClientRect();
-            const alturaVisivel = window.visualViewport.height;
+        const ajustarScroll = () => {
+            setTimeout(() => {
+                const rect = alvo.getBoundingClientRect();
+                const alturaVisivel = window.visualViewport.height;
 
-            if (rect.bottom > alturaVisivel) {
-                window.scrollBy({
-                    top: rect.bottom - alturaVisivel + 40,
-                    behavior: "smooth"
-                });
-            }
+                if (rect.bottom > alturaVisivel) {
+                    window.scrollBy({
+                        top: rect.bottom - alturaVisivel + 50,
+                        behavior: "smooth"
+                    });
+                }
+            }, 150);
         };
 
-        if (window.visualViewport) {
-            let jaAjustou = false;
-
-            const aoRedimensionar = () => {
-                if (jaAjustou) return;
-                jaAjustou = true;
-                ajustarScroll();
-                window.visualViewport.removeEventListener(
-                    "resize",
-                    aoRedimensionar
-                );
-            };
-
-            window.visualViewport.addEventListener(
-                "resize",
-                aoRedimensionar
-            );
-
-            setTimeout(aoRedimensionar, 500);
-        } else {
-            setTimeout(ajustarScroll, 300);
-        }
+        ajustarScroll();
+        window.visualViewport.addEventListener("resize", ajustarScroll, {
+            once: true
+        });
     });
 });
