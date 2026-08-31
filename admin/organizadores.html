@@ -9,7 +9,7 @@
         content="width=device-width, initial-scale=1.0"
     >
 
-    <title>Eventos pendentes | CorraAgora</title>
+    <title>Organizadores | CorraAgora</title>
 
     <link
         rel="stylesheet"
@@ -43,10 +43,7 @@
 
         <nav class="sidebar-nav">
 
-            <a
-                href="eventos-pendentes.html"
-                class="active"
-            >
+            <a href="eventos-pendentes.html">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
                 Eventos pendentes
             </a>
@@ -61,7 +58,10 @@
                 Organizadores pendentes
             </a>
 
-            <a href="organizadores.html">
+            <a
+                href="organizadores.html"
+                class="active"
+            >
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
                 Organizadores
             </a>
@@ -91,11 +91,13 @@
 
             <div>
                 <p class="eyebrow">PAINEL DO ADMINISTRADOR</p>
-                <h1>Eventos pendentes</h1>
+                <h1>Organizadores</h1>
 
                 <p class="dashboard-subtitle">
-                    Revise os eventos enviados pelos organizadores.
-                    Só eventos aprovados aparecem para o público.
+                    Todos os organizadores já aprovados na plataforma.
+                    Aqui você pode remover o acesso de organizador de
+                    alguém — a conta continua existindo, só perde a
+                    permissão de gerenciar eventos.
                 </p>
             </div>
 
@@ -109,8 +111,8 @@
 
             <div class="section-header">
                 <div>
-                    <p class="eyebrow">AGUARDANDO REVISÃO</p>
-                    <h2 id="totalPendentesLabel">0 eventos pendentes</h2>
+                    <p class="eyebrow">APROVADOS</p>
+                    <h2 id="totalOrganizadoresLabel">0 organizadores</h2>
                 </div>
             </div>
 
@@ -118,33 +120,31 @@
 
                 <table
                     class="tabela-inscritos"
-                    id="tabelaPendentes"
+                    id="tabelaOrganizadores"
                 >
 
                     <thead>
                         <tr>
-                            <th>Evento</th>
-                            <th>Organizador</th>
-                            <th>Local</th>
-                            <th>Data</th>
-                            <th>Valor</th>
+                            <th>Nome</th>
+                            <th>E-mail</th>
+                            <th>Organizador desde</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
 
-                    <tbody id="corpoTabelaPendentes"></tbody>
+                    <tbody id="corpoTabelaOrganizadores"></tbody>
 
                 </table>
 
                 <div
-                    id="semPendentes"
+                    id="semOrganizadores"
                     class="empty-state-box hidden"
                 >
-                    <h3>Nenhum evento pendente</h3>
+                    <h3>Nenhum organizador aprovado ainda</h3>
 
                     <p>
-                        Assim que um organizador criar um evento,
-                        ele aparece aqui para revisão.
+                        Assim que você aprovar um pedido em
+                        "Organizadores pendentes", ele aparece aqui.
                     </p>
                 </div>
 
@@ -157,7 +157,7 @@
 </div>
 
 <script src="../assets/js/sidebar-toggle.js"></script>
-<script src="../assets/js/eventos-pendentes.js"></script>
+<script src="../assets/js/organizadores.js"></script>
 
 </body>
 </html>

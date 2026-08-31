@@ -45,9 +45,9 @@ async function iniciar() {
 async function carregarPendentes() {
     const { data: organizadores, error } = await supabaseClient
         .from("profiles")
-        .select("id, full_name, email, created_at")
+        .select("id, full_name, email, created_at, status_organizador")
         .eq("role", "organizador")
-        .eq("status_organizador", "pendente")
+        .in("status_organizador", ["pendente", "rejeitado"])
         .order("created_at", { ascending: true });
 
     if (error) {
@@ -57,7 +57,7 @@ async function carregarPendentes() {
         semPendentes.classList.remove("hidden");
         semPendentes.querySelector("h3").textContent =
             "Não foi possível carregar os pedidos pendentes";
-        totalPendentesLabel.textContent = "0 pedidos pendentes";
+        totalPendentesLabel.textContent = "0 aguardando decisão";
         return;
     }
 
@@ -67,8 +67,8 @@ async function carregarPendentes() {
 function renderizarPendentes(organizadores) {
     totalPendentesLabel.textContent =
         organizadores.length === 1
-            ? "1 pedido pendente"
-            : `${organizadores.length} pedidos pendentes`;
+            ? "1 aguardando decisão"
+            : `${organizadores.length} aguardando decisão`;
 
     if (organizadores.length === 0) {
         corpoTabelaPendentes.innerHTML = "";
@@ -102,9 +102,18 @@ function renderizarPendentes(organizadores) {
 }
 
 function criarLinha(organizador) {
+    const jaRejeitado = organizador.status_organizador === "rejeitado";
+
     return `
         <tr data-linha-organizador="${organizador.id}">
-            <td>${escaparHTML(organizador.full_name || "-")}</td>
+            <td>
+                ${escaparHTML(organizador.full_name || "-")}
+                ${
+                    jaRejeitado
+                        ? `<span class="status-pill status-rejeitado">Acesso removido</span>`
+                        : `<span class="status-pill status-pendente">Pendente</span>`
+                }
+            </td>
             <td>${escaparHTML(organizador.email || "-")}</td>
             <td>${formatarData(organizador.created_at)}</td>
             <td>
@@ -121,6 +130,7 @@ function criarLinha(organizador) {
                         type="button"
                         class="btn-reject"
                         data-rejeitar="${organizador.id}"
+                        ${jaRejeitado ? "disabled" : ""}
                     >
                         ✕ Rejeitar
                     </button>
@@ -155,7 +165,7 @@ async function atualizarStatus(botao, organizadorId, novoStatus) {
     const restantes = corpoTabelaPendentes.querySelectorAll("tr").length;
 
     totalPendentesLabel.textContent =
-        restantes === 1 ? "1 pedido pendente" : `${restantes} pedidos pendentes`;
+        restantes === 1 ? "1 aguardando decisão" : `${restantes} aguardando decisão`;
 
     if (restantes === 0) {
         tabelaPendentes.classList.add("hidden");
