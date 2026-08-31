@@ -551,6 +551,9 @@ document.addEventListener("DOMContentLoaded", async () => {
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
+        // Trava contra duplo envio (ex.: duplo toque no mobile).
+        if (saveButton.disabled) return;
+
         limparMensagem();
 
         const nome = document.getElementById("nome").value.trim();
