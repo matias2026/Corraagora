@@ -1054,13 +1054,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                 const rect = alvo.getBoundingClientRect();
                 const alturaVisivel = window.visualViewport.height;
 
-                if (rect.bottom > alturaVisivel) {
+                // Margem de tolerância de 30px: no Chrome mobile o
+                // teclado às vezes reporta a altura do viewport um
+                // pouco antes de estabilizar de vez, deixando o campo
+                // colado bem na borda mesmo sem "rect.bottom >
+                // alturaVisivel" estritamente. Disparando um pouco
+                // antes evita esse coladinho.
+                if (rect.bottom > alturaVisivel - 30) {
                     window.scrollBy({
-                        top: rect.bottom - alturaVisivel + 120,
+                        top: rect.bottom - alturaVisivel + 140,
                         behavior: "smooth"
                     });
                 }
-            }, 150);
+            }, 200);
         };
 
         ajustarScroll();
