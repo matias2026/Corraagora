@@ -119,6 +119,7 @@
                                 type="text"
                                 id="nome"
                                 placeholder="Ex.: 2º Desafio XCM Nísia Floresta"
+                                autocomplete="off"
                                 required>
                         </div>
 
@@ -142,6 +143,7 @@
                             <textarea
                                 id="descricao"
                                 rows="6"
+                                autocomplete="off"
                                 placeholder="Descreva o evento, percurso, estrutura e informações importantes."></textarea>
                         </div>
 
@@ -189,6 +191,7 @@
                                 type="text"
                                 id="endereco"
                                 placeholder="Local da largada ou endereço completo"
+                                autocomplete="off"
                                 required>
                         </div>
 
@@ -200,7 +203,8 @@
                             <input
                                 type="url"
                                 id="localizacaoUrl"
-                                placeholder="https://maps.google.com/...">
+                                placeholder="https://maps.google.com/..."
+                                autocomplete="off">
 
                             <small class="section-description">
                                 Cole o link completo do Google Maps (não o
@@ -211,7 +215,7 @@
 
                         <div class="form-group">
                             <label for="cidade">Cidade</label>
-                            <input type="text" id="cidade" required>
+                            <input type="text" id="cidade" autocomplete="off" required>
                         </div>
 
                         <div class="form-group">
@@ -274,7 +278,8 @@
             <input
                 type="text"
                 id="organizadorContato"
-                placeholder="(84) 99999-9999">
+                placeholder="(84) 99999-9999"
+                autocomplete="off">
         </div>
 
         <div class="form-group">
@@ -285,7 +290,8 @@
             <input
                 type="text"
                 id="organizadorInstagram"
-                placeholder="@seuevento">
+                placeholder="@seuevento"
+                autocomplete="off">
         </div>
 
     </div>
@@ -311,6 +317,7 @@
                 min="0"
                 step="0.01"
                 placeholder="0,00"
+                autocomplete="off"
                 required>
         </div>
 
@@ -322,6 +329,7 @@
                 id="vagas"
                 min="0"
                 placeholder="Ex.: 150"
+                autocomplete="off"
                 required>
         </div>
 
@@ -333,6 +341,7 @@
             <textarea
                 id="informacoesPagamento"
                 rows="2"
+                autocomplete="off"
                 placeholder="Ex.: João Organizador - Banco Nubank"></textarea>
 
             <small class="section-description">
@@ -349,7 +358,8 @@
             <input
                 type="text"
                 id="chavePix"
-                placeholder="Ex.: (84) 99999-9999, e-mail ou chave aleatória">
+                placeholder="Ex.: (84) 99999-9999, e-mail ou chave aleatória"
+                autocomplete="off">
 
             <small class="section-description">
                 O atleta vê essa chave com um botão pra copiar direto
@@ -365,7 +375,8 @@
             <input
                 type="url"
                 id="linkPagamento"
-                placeholder="https://mpago.la/... ou link da sua operadora">
+                placeholder="https://mpago.la/... ou link da sua operadora"
+                autocomplete="off">
 
             <small class="section-description">
                 Cole aqui o link de cobrança gerado na sua conta do
@@ -490,6 +501,7 @@
                         id="distanciaPro"
                         min="0"
                         step="0.1"
+                        autocomplete="off"
                         placeholder="Ex.: 60">
                 </div>
 
@@ -502,6 +514,7 @@
                         id="distanciaSport"
                         min="0"
                         step="0.1"
+                        autocomplete="off"
                         placeholder="Ex.: 30">
                 </div>
 
@@ -524,6 +537,7 @@
                 <input
                     type="text"
                     id="distanciaPersonalizada"
+                    autocomplete="off"
                     placeholder="Ex.: 15km">
 
                 <select id="distanciaPersonalizadaNivel">
@@ -716,22 +730,22 @@
 
             <div class="form-group">
                 <label>Nome da categoria</label>
-                <input type="text" class="categoria-nome" placeholder="Ex.: Elite Masculino">
+                <input type="text" class="categoria-nome" autocomplete="off" placeholder="Ex.: Elite Masculino">
             </div>
 
             <div class="form-group">
                 <label>Percurso</label>
-                <input type="text" class="categoria-percurso" placeholder="Ex.: Pro, Sport">
+                <input type="text" class="categoria-percurso" autocomplete="off" placeholder="Ex.: Pro, Sport">
             </div>
 
             <div class="form-group">
                 <label>Idade mínima</label>
-                <input type="number" class="categoria-idade-min">
+                <input type="number" class="categoria-idade-min" autocomplete="off">
             </div>
 
             <div class="form-group">
                 <label>Idade máxima</label>
-                <input type="number" class="categoria-idade-max">
+                <input type="number" class="categoria-idade-max" autocomplete="off">
             </div>
 
             <div class="form-group">
@@ -769,7 +783,7 @@
 
             <div class="form-group">
                 <label>Nome do lote</label>
-                <input type="text" class="lote-nome" placeholder="Ex.: 1º Lote">
+                <input type="text" class="lote-nome" autocomplete="off" placeholder="Ex.: 1º Lote">
             </div>
 
             <div class="form-group">
@@ -784,7 +798,7 @@
 
             <div class="form-group">
                 <label>Valor (todas as categorias)</label>
-                <input type="number" class="lote-valor" min="0" step="0.01" placeholder="0,00">
+                <input type="number" class="lote-valor" min="0" step="0.01" autocomplete="off" placeholder="0,00">
             </div>
 
         </div>
