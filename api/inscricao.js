@@ -10,6 +10,11 @@ const SUPABASE_PUBLIC_KEY = "sb_publishable_l3qNE9dzBeefjdKpRyzVOg_bkm51ZI4";
 // 0.5 é o valor recomendado pelo Google como ponto de partida.
 const RECAPTCHA_SCORE_MINIMO = 0.5;
 
+// Limite de tentativas por IP — cobre uma inscrição com direito a um retry
+// (erro de rede, etc.) sem sobrar muita margem pra um script em loop.
+const RATE_LIMIT_TENTATIVAS = 3;
+const RATE_LIMIT_JANELA_SEGUNDOS = 60;
+
 // Só esses campos podem vir do cliente — impede que alguém injete um
 // campo extra (ex.: "status: confirmado") no corpo da requisição.
 const CAMPOS_PERMITIDOS_INSCRICAO = [
@@ -31,6 +36,62 @@ const CAMPOS_PERMITIDOS_INSCRICAO = [
   "status",
   "usuario_id"
 ];
+
+async function dentroDoLimite(ip) {
+  if (!ip) return true;
+
+  try {
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/rpc/verificar_rate_limit_inscricao`,
+      {
+        method: "POST",
+        headers: {
+          apikey: SUPABASE_PUBLIC_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLIC_KEY}`,
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          p_ip: ip,
+          p_limite: RATE_LIMIT_TENTATIVAS,
+          p_janela_segundos: RATE_LIMIT_JANELA_SEGUNDOS
+        })
+      }
+    );
+
+    if (!resp.ok) return true; // Falha ao checar não deve travar inscrição legítima.
+
+    return await resp.json();
+  } catch (erro) {
+    return true;
+  }
+}
+
+async function eventoAceitaInscricao(eventoId) {
+  try {
+    const resp = await fetch(
+      `${SUPABASE_URL}/rest/v1/eventos?id=eq.${encodeURIComponent(
+        eventoId
+      )}&select=status,inscricoes_abertas`,
+      {
+        headers: {
+          apikey: SUPABASE_PUBLIC_KEY,
+          Authorization: `Bearer ${SUPABASE_PUBLIC_KEY}`
+        }
+      }
+    );
+
+    if (!resp.ok) return true; // Falha ao checar: deixa a RLS decidir na hora do insert.
+
+    const eventos = await resp.json();
+    const evento = Array.isArray(eventos) ? eventos[0] : null;
+
+    if (!evento) return true; // Evento inexistente: deixa o insert falhar com o erro real.
+
+    return evento.status === "aprovado" && evento.inscricoes_abertas === true;
+  } catch (erro) {
+    return true;
+  }
+}
 
 async function verificarRecaptcha(token, ip) {
   const params = new URLSearchParams({
@@ -78,10 +139,27 @@ module.exports = async (req, res) => {
     return;
   }
 
-  try {
-    const ip =
-      (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || undefined;
+  const ip =
+    (req.headers["x-forwarded-for"] || "").split(",")[0].trim() || undefined;
 
+  if (!(await dentroDoLimite(ip))) {
+    res.status(429).json({
+      erro: "Muitas tentativas em pouco tempo. Aguarde um instante e tente novamente."
+    });
+    return;
+  }
+
+  if (
+    dadosInscricao.evento_id &&
+    !(await eventoAceitaInscricao(dadosInscricao.evento_id))
+  ) {
+    res.status(400).json({
+      erro: "As inscrições para este evento não estão mais abertas."
+    });
+    return;
+  }
+
+  try {
     const resultado = await verificarRecaptcha(recaptchaToken, ip);
 
     const aprovado =
