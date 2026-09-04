@@ -1,6 +1,23 @@
 (() => {
   "use strict";
 
+  const RECAPTCHA_SITE_KEY = "6LeOOqctAAAAAA7KkRcp7AIuNKNHFdS2BGGogB0Z";
+
+  function obterTokenRecaptcha(acao) {
+    return new Promise((resolve) => {
+      if (!window.grecaptcha?.execute) {
+        resolve(null);
+        return;
+      }
+      window.grecaptcha.ready(() => {
+        window.grecaptcha
+          .execute(RECAPTCHA_SITE_KEY, { action: acao })
+          .then(resolve)
+          .catch(() => resolve(null));
+      });
+    });
+  }
+
   const modal = document.getElementById("registrationModal");
   const closeButton = document.getElementById("registrationModalClose");
   const form = document.getElementById("registrationForm");
@@ -398,6 +415,16 @@
     ativarCarregamento(true);
 
     try {
+      const recaptchaToken = await obterTokenRecaptcha("inscricao");
+
+      if (!recaptchaToken) {
+        mostrarMensagem(
+          "Não foi possível validar o reCAPTCHA. Recarregue a página e tente novamente.",
+          "error"
+        );
+        return;
+      }
+
       const comprovanteUrl = arquivo
         ? await window.uploadComprovante(arquivo, evento.id)
         : null;
@@ -434,11 +461,24 @@
         usuario_id: sessaoAtual?.user?.id || null
       };
 
-      const { error } = await supabaseClient
-        .from("inscricoes")
-        .insert(inscricao);
+      const resposta = await fetch("/api/inscricao", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          recaptchaToken,
+          inscricao,
+          accessToken: sessaoAtual?.access_token || null
+        })
+      });
 
-      if (error) throw error;
+      const resultado = await resposta.json().catch(() => ({}));
+
+      if (!resposta.ok) {
+        throw new Error(
+          resultado.erro ||
+            "Não foi possível enviar sua inscrição. Tente novamente."
+        );
+      }
 
       mostrarMensagem(
         `Inscrição enviada! Seu código é ${inscricao.codigo_inscricao}. ` +

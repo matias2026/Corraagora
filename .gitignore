@@ -3,3 +3,8 @@ Thumbs.db
 .vscode/
 node_modules/
 scratchpad/
+.env
+.env.local
+.env*.local
+
+.vercel
