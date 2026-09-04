@@ -266,8 +266,20 @@ function renderizarInscricoes() {
     tabelaInscritos.classList.remove("hidden");
     semInscritos.classList.add("hidden");
 
+    const vagas = Number(eventoAtual?.vagas);
+    const confirmados = inscricoes.filter(
+        i => (i.status || "").toLowerCase() === "confirmado"
+    ).length;
+    const vagasEsgotadas = vagas > 0 && confirmados >= vagas;
+
+    document
+        .getElementById("vagasLimiteAtingidoNota")
+        ?.classList.toggle("hidden", !vagasEsgotadas);
+
     corpoTabelaInscritos.innerHTML = lista.map(i => {
         const statusAtual = (i.status || "pendente").toLowerCase();
+        const bloquearConfirmar =
+            statusAtual !== "confirmado" && vagasEsgotadas;
 
         return `
         <tr data-linha-inscricao="${i.id}">
@@ -295,7 +307,8 @@ function renderizarInscricoes() {
                         type="button"
                         class="btn-approve"
                         data-confirmar="${i.id}"
-                        ${statusAtual === "confirmado" ? "disabled" : ""}
+                        ${statusAtual === "confirmado" || bloquearConfirmar ? "disabled" : ""}
+                        ${bloquearConfirmar ? `title="Limite de ${vagas} vaga(s) já atingido"` : ""}
                     >
                         ✓ Confirmar
                     </button>

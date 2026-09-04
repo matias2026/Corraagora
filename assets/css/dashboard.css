@@ -836,3 +836,14 @@ body{
     opacity:.6;
     cursor:default;
 }
+
+.vagas-limite-nota{
+    display:block;
+    background:#fff7ed;
+    border:1px solid #fdba74;
+    color:#9a3412;
+    border-radius:10px;
+    padding:10px 12px;
+    margin-bottom:16px;
+    line-height:1.5;
+}
