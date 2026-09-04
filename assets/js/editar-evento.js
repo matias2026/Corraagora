@@ -25,6 +25,9 @@ const estadoInput =
 const dataEventoInput =
     document.getElementById("dataEvento");
 
+const vagasInput =
+    document.getElementById("vagas");
+
 const descricaoInput =
     document.getElementById("descricao");
 
@@ -538,6 +541,9 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
     dataEventoInput.value =
         evento.data_evento || "";
 
+    vagasInput.value =
+        evento.vagas ?? "";
+
     descricaoInput.value =
         evento.descricao || "";
 
@@ -940,10 +946,19 @@ form.addEventListener(
                 !cidade ||
                 !estado ||
                 !modalidade ||
-                !dataEventoInput.value
+                !dataEventoInput.value ||
+                vagasInput.value.trim() === ""
             ) {
                 throw new Error(
                     "Preencha todos os campos obrigatórios."
+                );
+            }
+
+            const vagas = Number(vagasInput.value);
+
+            if (!Number.isInteger(vagas) || vagas < 0) {
+                throw new Error(
+                    "Informe um número de vagas válido."
                 );
             }
 
@@ -987,6 +1002,7 @@ form.addEventListener(
                 cidade,
                 estado,
                 data_evento: dataEventoInput.value,
+                vagas,
                 descricao:
                     descricaoInput.value.trim() || null,
                 informacoes_pagamento:
