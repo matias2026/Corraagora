@@ -44,6 +44,7 @@
   const categoriaSelect = document.getElementById("regCategoria");
   const cupomInput = document.getElementById("regCupom");
   const cupomFeedback = document.getElementById("regCupomFeedback");
+  const comprovanteWrapper = document.getElementById("regComprovanteWrapper");
   const comprovanteInput = document.getElementById("regComprovante");
 
   const declaracaoSaudeInput = document.getElementById("regDeclaracaoSaude");
@@ -221,12 +222,15 @@
 
     const mostrarEquipe = evento.mostrar_campo_equipe !== false;
     const mostrarLicencaCbc = evento.mostrar_campo_licenca_cbc !== false;
+    const mostrarComprovante = evento.mostrar_campo_comprovante !== false;
 
     equipeWrapper?.classList.toggle("hidden", !mostrarEquipe);
     licencaCbcWrapper?.classList.toggle("hidden", !mostrarLicencaCbc);
+    comprovanteWrapper?.classList.toggle("hidden", !mostrarComprovante);
 
     if (!mostrarEquipe) equipeInput.value = "";
     if (!mostrarLicencaCbc) licencaCbcInput.value = "";
+    if (!mostrarComprovante) comprovanteInput.value = "";
 
     preencherCategorias(window.categoriasDoEvento || []);
 

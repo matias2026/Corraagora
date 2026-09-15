@@ -55,6 +55,9 @@ const mostrarEquipeInput =
 const mostrarLicencaCbcInput =
     document.getElementById("mostrarLicencaCbc");
 
+const mostrarComprovanteInput =
+    document.getElementById("mostrarComprovante");
+
 const statusAtual =
     document.getElementById("statusAtual");
 
@@ -577,6 +580,9 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
     mostrarLicencaCbcInput.checked =
         evento.mostrar_campo_licenca_cbc !== false;
 
+    mostrarComprovanteInput.checked =
+        evento.mostrar_campo_comprovante !== false;
+
     galeriaAtualCount = totalBanners;
 
     galeriaAtualInfo.textContent = totalBanners
@@ -1032,7 +1038,9 @@ form.addEventListener(
                 mostrar_campo_equipe:
                     mostrarEquipeInput.checked,
                 mostrar_campo_licenca_cbc:
-                    mostrarLicencaCbcInput.checked
+                    mostrarLicencaCbcInput.checked,
+                mostrar_campo_comprovante:
+                    mostrarComprovanteInput.checked
             };
 
             const bannerNovoFile = bannerNovoInput.files[0] || null;
