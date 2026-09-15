@@ -172,11 +172,13 @@
           </div>
         </div>
 
-        <div
-          class="hero-ticket"
-          aria-hidden="true"
-        >
-          <div class="ticket-shape">
+        <div class="hero-ticket">
+
+          <div
+            class="ticket-shape"
+            id="heroTicketFallback"
+            aria-hidden="true"
+          >
 
             <span class="speed speed-1"></span>
             <span class="speed speed-2"></span>
@@ -191,6 +193,15 @@
             </div>
 
           </div>
+
+          <div
+            class="hero-carousel hidden"
+            id="heroCarousel"
+          >
+            <div class="hero-carousel-track"></div>
+            <div class="hero-carousel-dots"></div>
+          </div>
+
         </div>
 
       </div>
@@ -535,6 +546,7 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   <script src="assets/js/supabase.js"></script>
   <script src="assets/js/events.js"></script>
+  <script src="assets/js/hero-carousel.js"></script>
   <script src="assets/js/script.js"></script>
 
 <script defer src="/_vercel/insights/script.js"></script>
