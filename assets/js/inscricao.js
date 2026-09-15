@@ -35,7 +35,9 @@
   const sexoInput = document.getElementById("regSexo");
   const emailInput = document.getElementById("regEmail");
   const telefoneInput = document.getElementById("regTelefone");
+  const equipeWrapper = document.getElementById("regEquipeWrapper");
   const equipeInput = document.getElementById("regEquipe");
+  const licencaCbcWrapper = document.getElementById("regLicencaCbcWrapper");
   const licencaCbcInput = document.getElementById("regLicencaCbc");
   const cidadeInput = document.getElementById("regCidade");
   const categoriaWrapper = document.getElementById("regCategoriaWrapper");
@@ -216,6 +218,15 @@
     } else {
       paymentLinkButton.classList.add("hidden");
     }
+
+    const mostrarEquipe = evento.mostrar_campo_equipe !== false;
+    const mostrarLicencaCbc = evento.mostrar_campo_licenca_cbc !== false;
+
+    equipeWrapper?.classList.toggle("hidden", !mostrarEquipe);
+    licencaCbcWrapper?.classList.toggle("hidden", !mostrarLicencaCbc);
+
+    if (!mostrarEquipe) equipeInput.value = "";
+    if (!mostrarLicencaCbc) licencaCbcInput.value = "";
 
     preencherCategorias(window.categoriasDoEvento || []);
 

@@ -601,6 +601,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const destaque =
             document.getElementById("destaque").checked;
 
+        const mostrarEquipe =
+            document.getElementById("mostrarEquipe").checked;
+
+        const mostrarLicencaCbc =
+            document.getElementById("mostrarLicencaCbc").checked;
+
         const bannerFile = bannerInput.files[0] || null;
         const regulamentoFile =
             regulamentoInput.files[0] || null;
@@ -793,7 +799,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 link_pagamento: linkPagamento || null,
                 localizacao_url: localizacaoUrl || null,
                 organizador_contato: organizadorContato || null,
-                organizador_instagram: organizadorInstagram || null
+                organizador_instagram: organizadorInstagram || null,
+                mostrar_campo_equipe: mostrarEquipe,
+                mostrar_campo_licenca_cbc: mostrarLicencaCbc
             };
 
             const { data: eventoCriado, error } =
