@@ -58,6 +58,12 @@ const mostrarLicencaCbcInput =
 const mostrarComprovanteInput =
     document.getElementById("mostrarComprovante");
 
+const mostrarCupomInput =
+    document.getElementById("mostrarCupom");
+
+const mostrarPagamentoInput =
+    document.getElementById("mostrarPagamento");
+
 const statusAtual =
     document.getElementById("statusAtual");
 
@@ -583,6 +589,12 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
     mostrarComprovanteInput.checked =
         evento.mostrar_campo_comprovante !== false;
 
+    mostrarCupomInput.checked =
+        evento.mostrar_campo_cupom !== false;
+
+    mostrarPagamentoInput.checked =
+        evento.mostrar_campo_pagamento !== false;
+
     galeriaAtualCount = totalBanners;
 
     galeriaAtualInfo.textContent = totalBanners
@@ -1040,7 +1052,11 @@ form.addEventListener(
                 mostrar_campo_licenca_cbc:
                     mostrarLicencaCbcInput.checked,
                 mostrar_campo_comprovante:
-                    mostrarComprovanteInput.checked
+                    mostrarComprovanteInput.checked,
+                mostrar_campo_cupom:
+                    mostrarCupomInput.checked,
+                mostrar_campo_pagamento:
+                    mostrarPagamentoInput.checked
             };
 
             const bannerNovoFile = bannerNovoInput.files[0] || null;

@@ -42,10 +42,12 @@
   const cidadeInput = document.getElementById("regCidade");
   const categoriaWrapper = document.getElementById("regCategoriaWrapper");
   const categoriaSelect = document.getElementById("regCategoria");
+  const cupomWrapper = document.getElementById("regCupomWrapper");
   const cupomInput = document.getElementById("regCupom");
   const cupomFeedback = document.getElementById("regCupomFeedback");
   const comprovanteWrapper = document.getElementById("regComprovanteWrapper");
   const comprovanteInput = document.getElementById("regComprovante");
+  const paymentInfoBox = document.getElementById("paymentInfoBox");
 
   const declaracaoSaudeInput = document.getElementById("regDeclaracaoSaude");
   const aceiteTermosInput = document.getElementById("regAceiteTermos");
@@ -223,14 +225,22 @@
     const mostrarEquipe = evento.mostrar_campo_equipe !== false;
     const mostrarLicencaCbc = evento.mostrar_campo_licenca_cbc !== false;
     const mostrarComprovante = evento.mostrar_campo_comprovante !== false;
+    const mostrarCupom = evento.mostrar_campo_cupom !== false;
+    const mostrarPagamento = evento.mostrar_campo_pagamento !== false;
 
     equipeWrapper?.classList.toggle("hidden", !mostrarEquipe);
     licencaCbcWrapper?.classList.toggle("hidden", !mostrarLicencaCbc);
     comprovanteWrapper?.classList.toggle("hidden", !mostrarComprovante);
+    cupomWrapper?.classList.toggle("hidden", !mostrarCupom);
+    paymentInfoBox?.classList.toggle("hidden", !mostrarPagamento);
 
     if (!mostrarEquipe) equipeInput.value = "";
     if (!mostrarLicencaCbc) licencaCbcInput.value = "";
     if (!mostrarComprovante) comprovanteInput.value = "";
+    if (!mostrarCupom) {
+      cupomInput.value = "";
+      limparFeedbackCupom();
+    }
 
     preencherCategorias(window.categoriasDoEvento || []);
 
