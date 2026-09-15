@@ -25,6 +25,7 @@ a{text-decoration:none;color:inherit}
 button,input,select{font:inherit}
 button{cursor:pointer}
 .hidden{display:none!important}
+.scroll-anchor{display:block;height:0;scroll-margin-top:100px}
 
 .container{width:min(1180px,calc(100% - 40px));margin-inline:auto}
 
