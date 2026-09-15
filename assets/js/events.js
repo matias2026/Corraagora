@@ -46,16 +46,13 @@
 
     esconderMensagens();
 
-    const eventosEmDestaque = todosOsEventos.filter(
-      (evento) => evento.destaque === true
+    renderizarEventos(ordenarComDestaqueEmPrimeiro(todosOsEventos));
+  }
+
+  function ordenarComDestaqueEmPrimeiro(eventos) {
+    return [...eventos].sort(
+      (a, b) => (b.destaque === true) - (a.destaque === true)
     );
-
-    const eventosParaExibir =
-      eventosEmDestaque.length > 0
-        ? eventosEmDestaque
-        : todosOsEventos;
-
-    renderizarEventos(eventosParaExibir);
   }
 
   function renderizarEventos(eventos) {
@@ -119,6 +116,10 @@
       </div>
     `;
 
+  const seloDestaque = evento.destaque === true
+    ? `<span class="event-destaque-badge">⭐ Destaque</span>`
+    : "";
+
   return `
     <article
       class="event-card"
@@ -128,6 +129,7 @@
     >
 
       <div class="event-banner">
+        ${seloDestaque}
         ${banner}
       </div>
 
@@ -248,7 +250,7 @@
     if (typeFilter) typeFilter.value = "";
     if (dateFilter) dateFilter.value = "";
 
-    renderizarEventos(todosOsEventos);
+    renderizarEventos(ordenarComDestaqueEmPrimeiro(todosOsEventos));
   }
 
   function avaliarFiltroData(dataEvento, filtro) {
