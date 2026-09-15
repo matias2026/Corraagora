@@ -109,6 +109,26 @@ async function verificarRecaptcha(token, ip) {
   return resp.json();
 }
 
+// Segunda camada, além do v3 acima: a caixinha "Não sou um robô" (v2),
+// mesma usada no login. Dificulta um script mandar várias inscrições em
+// sequência automaticamente — cada envio exige resolver o desafio, coisa
+// que o v3 (só calcula uma nota, sem interação nenhuma) não exige.
+async function verificarRecaptchaV2(token, ip) {
+  const params = new URLSearchParams({
+    secret: process.env.RECAPTCHA_LOGIN_SECRET_KEY,
+    response: token
+  });
+  if (ip) params.set("remoteip", ip);
+
+  const resp = await fetch("https://www.google.com/recaptcha/api/siteverify", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: params.toString()
+  });
+
+  return resp.json();
+}
+
 function montarInscricaoSegura(dados) {
   const inscricao = {};
   for (const campo of CAMPOS_PERMITIDOS_INSCRICAO) {
@@ -127,10 +147,15 @@ module.exports = async (req, res) => {
   }
 
   const corpo = typeof req.body === "string" ? JSON.parse(req.body || "{}") : req.body || {};
-  const { recaptchaToken, inscricao: dadosInscricao, accessToken } = corpo;
+  const { recaptchaToken, recaptchaTokenV2, inscricao: dadosInscricao, accessToken } = corpo;
 
   if (!recaptchaToken || typeof recaptchaToken !== "string") {
     res.status(400).json({ erro: "Token do reCAPTCHA ausente." });
+    return;
+  }
+
+  if (!recaptchaTokenV2 || typeof recaptchaTokenV2 !== "string") {
+    res.status(400).json({ erro: "Confirme que você não é um robô." });
     return;
   }
 
@@ -173,6 +198,17 @@ module.exports = async (req, res) => {
       res.status(400).json({
         erro:
           "Não foi possível confirmar que você não é um robô. Recarregue a página e tente novamente."
+      });
+      return;
+    }
+
+    const resultadoV2 = await verificarRecaptchaV2(recaptchaTokenV2, ip);
+
+    if (!resultadoV2.success) {
+      console.error("reCAPTCHA v2 reprovado:", resultadoV2);
+      res.status(400).json({
+        erro:
+          "Não foi possível confirmar que você não é um robô. Marque a caixinha e tente de novo."
       });
       return;
     }
