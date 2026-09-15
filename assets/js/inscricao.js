@@ -35,13 +35,16 @@
   const sexoInput = document.getElementById("regSexo");
   const emailInput = document.getElementById("regEmail");
   const telefoneInput = document.getElementById("regTelefone");
+  const equipeWrapper = document.getElementById("regEquipeWrapper");
   const equipeInput = document.getElementById("regEquipe");
+  const licencaCbcWrapper = document.getElementById("regLicencaCbcWrapper");
   const licencaCbcInput = document.getElementById("regLicencaCbc");
   const cidadeInput = document.getElementById("regCidade");
   const categoriaWrapper = document.getElementById("regCategoriaWrapper");
   const categoriaSelect = document.getElementById("regCategoria");
   const cupomInput = document.getElementById("regCupom");
   const cupomFeedback = document.getElementById("regCupomFeedback");
+  const comprovanteWrapper = document.getElementById("regComprovanteWrapper");
   const comprovanteInput = document.getElementById("regComprovante");
 
   const declaracaoSaudeInput = document.getElementById("regDeclaracaoSaude");
@@ -216,6 +219,18 @@
     } else {
       paymentLinkButton.classList.add("hidden");
     }
+
+    const mostrarEquipe = evento.mostrar_campo_equipe !== false;
+    const mostrarLicencaCbc = evento.mostrar_campo_licenca_cbc !== false;
+    const mostrarComprovante = evento.mostrar_campo_comprovante !== false;
+
+    equipeWrapper?.classList.toggle("hidden", !mostrarEquipe);
+    licencaCbcWrapper?.classList.toggle("hidden", !mostrarLicencaCbc);
+    comprovanteWrapper?.classList.toggle("hidden", !mostrarComprovante);
+
+    if (!mostrarEquipe) equipeInput.value = "";
+    if (!mostrarLicencaCbc) licencaCbcInput.value = "";
+    if (!mostrarComprovante) comprovanteInput.value = "";
 
     preencherCategorias(window.categoriasDoEvento || []);
 
