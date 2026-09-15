@@ -36,7 +36,7 @@
 .hero-carousel-slide{position:absolute;inset:0;opacity:0;transition:opacity .8s ease}
 .hero-carousel-slide.active{opacity:1}
 .hero-carousel-slide a{display:block;width:100%;height:100%}
-.hero-carousel-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.hero-carousel-slide img{width:100%;height:100%;object-fit:contain;display:block}
 .hero-carousel-dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:7px;z-index:2}
 .hero-carousel-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,.6);border:none;padding:0;cursor:pointer;transition:background .2s ease,transform .2s ease}
 .hero-carousel-dot.active{background:#fff;transform:scale(1.3)}
