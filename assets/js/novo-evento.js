@@ -610,6 +610,12 @@ document.addEventListener("DOMContentLoaded", async () => {
         const mostrarComprovante =
             document.getElementById("mostrarComprovante").checked;
 
+        const mostrarCupom =
+            document.getElementById("mostrarCupom").checked;
+
+        const mostrarPagamento =
+            document.getElementById("mostrarPagamento").checked;
+
         const bannerFile = bannerInput.files[0] || null;
         const regulamentoFile =
             regulamentoInput.files[0] || null;
@@ -805,7 +811,9 @@ document.addEventListener("DOMContentLoaded", async () => {
                 organizador_instagram: organizadorInstagram || null,
                 mostrar_campo_equipe: mostrarEquipe,
                 mostrar_campo_licenca_cbc: mostrarLicencaCbc,
-                mostrar_campo_comprovante: mostrarComprovante
+                mostrar_campo_comprovante: mostrarComprovante,
+                mostrar_campo_cupom: mostrarCupom,
+                mostrar_campo_pagamento: mostrarPagamento
             };
 
             const { data: eventoCriado, error } =
