@@ -640,7 +640,7 @@
 
     if (evento.inscricoes_abertas === false) {
       registrationButton.disabled = true;
-      registrationButton.textContent = "Inscrições encerradas";
+      registrationButton.textContent = "Inscrições em breve";
       notaEncerrada?.classList.remove("hidden");
       return;
     }
