@@ -49,6 +49,9 @@ const organizadorContatoInput =
 const organizadorInstagramInput =
     document.getElementById("organizadorInstagram");
 
+const inscricoesAbertasInput =
+    document.getElementById("inscricoesAbertas");
+
 const mostrarEquipeInput =
     document.getElementById("mostrarEquipe");
 
@@ -580,6 +583,9 @@ function preencherFormulario(evento, categorias, lotes, precos, totalBanners) {
     organizadorInstagramInput.value =
         evento.organizador_instagram || "";
 
+    inscricoesAbertasInput.checked =
+        evento.inscricoes_abertas !== false;
+
     mostrarEquipeInput.checked =
         evento.mostrar_campo_equipe !== false;
 
@@ -1047,6 +1053,8 @@ form.addEventListener(
                     organizadorContatoInput.value.trim() || null,
                 organizador_instagram:
                     organizadorInstagramInput.value.trim() || null,
+                inscricoes_abertas:
+                    inscricoesAbertasInput.checked,
                 mostrar_campo_equipe:
                     mostrarEquipeInput.checked,
                 mostrar_campo_licenca_cbc:

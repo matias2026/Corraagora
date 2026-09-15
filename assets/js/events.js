@@ -120,6 +120,8 @@
     ? `<span class="event-destaque-badge">⭐ Destaque</span>`
     : "";
 
+  const inscricoesAbertas = evento.inscricoes_abertas !== false;
+
   return `
     <article
       class="event-card"
@@ -168,10 +170,10 @@
           </div>
 
           <a
-            class="event-button"
+            class="event-button${inscricoesAbertas ? "" : " event-button-em-breve"}"
             href="evento.html?slug=${slug}"
           >
-            Inscrever-se
+            ${inscricoesAbertas ? "Inscrever-se" : "Inscrições em breve"}
           </a>
 
         </div>

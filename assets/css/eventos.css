@@ -17,6 +17,8 @@
 .event-price{display:flex;flex-direction:column;gap:3px}.event-price small{color:#94a3b8;font-size:12px}.event-price strong{color:#0f172a;font-size:22px;line-height:1}
 .event-button{min-height:48px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;border-radius:13px;background:#1677ff;color:#fff;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(22,119,255,.22);transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
 .event-button:hover{background:#0f66db;transform:translateY(-2px);box-shadow:0 12px 26px rgba(22,119,255,.3)}
+.event-button-em-breve{background:#94a3b8;box-shadow:none}
+.event-button-em-breve:hover{background:#94a3b8;transform:none;box-shadow:none}
 .empty-state{text-align:center;background:#f6fbff;border:1px dashed #b9dafa;padding:24px;border-radius:16px;color:#51697e}
 @media(max-width:1100px){.events-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:700px){.events-grid{grid-template-columns:1fr;gap:22px}.event-card{border-radius:18px}.event-card-content{padding:18px}.event-title{font-size:22px}.event-card-footer{align-items:stretch;flex-direction:column}.event-button{width:100%}}
