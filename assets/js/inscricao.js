@@ -3,16 +3,6 @@
 
   const RECAPTCHA_SITE_KEY = "6LeOOqctAAAAAA7KkRcp7AIuNKNHFdS2BGGogB0Z";
 
-  let recaptchaV2Token = null;
-
-  window.onRegRecaptchaV2 = function onRegRecaptchaV2(token) {
-    recaptchaV2Token = token;
-  };
-
-  window.onRegRecaptchaV2Expirado = function onRegRecaptchaV2Expirado() {
-    recaptchaV2Token = null;
-  };
-
   // Sem prazo máximo, "grecaptcha.ready" travava pra sempre se o Google
   // nunca chamasse o callback (rede instável, script que não terminou de
   // carregar etc.) - o botão ficava preso em "Enviando..." sem erro nenhum
@@ -187,8 +177,6 @@
     limparMensagem();
     form.reset();
     limparFeedbackCupom();
-    window.grecaptcha?.reset();
-    recaptchaV2Token = null;
 
     document
       .querySelectorAll(".registration-terms-item")
@@ -430,14 +418,6 @@
       return;
     }
 
-    if (!recaptchaV2Token) {
-      mostrarMensagem(
-        "Confirme que você não é um robô.",
-        "error"
-      );
-      return;
-    }
-
     const arquivo = comprovanteInput.files[0];
     const limiteArquivo = 10 * 1024 * 1024;
 
@@ -544,7 +524,6 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               recaptchaToken,
-              recaptchaTokenV2: recaptchaV2Token,
               inscricao,
               accessToken: sessaoAtual?.access_token || null
             })
@@ -578,8 +557,6 @@
       form.reset();
       preencherCategorias(window.categoriasDoEvento || []);
       limparFeedbackCupom();
-      window.grecaptcha?.reset();
-      recaptchaV2Token = null;
 
       setTimeout(fecharModal, 4000);
     } catch (error) {
@@ -590,9 +567,6 @@
           "Não foi possível enviar sua inscrição. Tente novamente.",
         "error"
       );
-
-      window.grecaptcha?.reset();
-      recaptchaV2Token = null;
     } finally {
       ativarCarregamento(false);
     }
