@@ -24,6 +24,7 @@ const exportarExcelButton = document.getElementById("exportarExcelButton");
 const seletorEventoPainel = document.getElementById("seletorEventoPainel");
 
 let usuario = null;
+let souAdmin = false;
 let eventoAtual = null;
 let inscricoes = [];
 let eventosDoOrganizador = [];
@@ -59,12 +60,21 @@ async function verificarUsuario() {
     }
 
     usuario = session.user;
+    souAdmin = perfil?.role === "admin";
 
-    const { data, error } = await supabaseClient
+    // Admin enxerga os inscritos de qualquer evento (RLS já permite isso
+    // na tabela "inscricoes" — migration 0008); o organizador comum só
+    // vê os próprios eventos.
+    let consultaEventos = supabaseClient
         .from("eventos")
         .select("*")
-        .eq("organizador_id", usuario.id)
         .order("data_evento", { ascending: false });
+
+    if (!souAdmin) {
+        consultaEventos = consultaEventos.eq("organizador_id", usuario.id);
+    }
+
+    const { data, error } = await consultaEventos;
 
     if (error) {
         console.error(error);
