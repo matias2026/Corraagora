@@ -13,19 +13,47 @@
     recaptchaV2Token = null;
   };
 
+  // Sem prazo máximo, "grecaptcha.ready" travava pra sempre se o Google
+  // nunca chamasse o callback (rede instável, script que não terminou de
+  // carregar etc.) - o botão ficava preso em "Enviando..." sem erro nenhum
+  // e sem jeito de tentar de novo a não ser recarregando a página.
   function obterTokenRecaptcha(acao) {
     return new Promise((resolve) => {
+      let resolvido = false;
+
+      const finalizar = (valor) => {
+        if (resolvido) return;
+        resolvido = true;
+        resolve(valor);
+      };
+
       if (!window.grecaptcha?.execute) {
-        resolve(null);
+        finalizar(null);
         return;
       }
+
+      setTimeout(() => finalizar(null), 15000);
+
       window.grecaptcha.ready(() => {
         window.grecaptcha
           .execute(RECAPTCHA_SITE_KEY, { action: acao })
-          .then(resolve)
-          .catch(() => resolve(null));
+          .then(finalizar)
+          .catch(() => finalizar(null));
       });
     });
+  }
+
+  // Mesmo motivo do timeout acima: "fetch" sozinho pode ficar pendurado
+  // pra sempre numa conexão instável, sem nunca resolver nem falhar.
+  async function enviarComTimeout(url, opcoes, ms) {
+    const controlador = new AbortController();
+    const temporizador = setTimeout(() => controlador.abort(), ms);
+
+    try {
+      return await fetch(url, { ...opcoes, signal: controlador.signal });
+    } finally {
+      clearTimeout(temporizador);
+    }
   }
 
   const modal = document.getElementById("registrationModal");
@@ -506,16 +534,31 @@
         usuario_id: sessaoAtual?.user?.id || null
       };
 
-      const resposta = await fetch("/api/inscricao", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          recaptchaToken,
-          recaptchaTokenV2: recaptchaV2Token,
-          inscricao,
-          accessToken: sessaoAtual?.access_token || null
-        })
-      });
+      let resposta;
+
+      try {
+        resposta = await enviarComTimeout(
+          "/api/inscricao",
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              recaptchaToken,
+              recaptchaTokenV2: recaptchaV2Token,
+              inscricao,
+              accessToken: sessaoAtual?.access_token || null
+            })
+          },
+          20000
+        );
+      } catch (erroEnvio) {
+        if (erroEnvio.name === "AbortError") {
+          throw new Error(
+            "A conexão demorou demais para responder. Confira sua internet e tente novamente."
+          );
+        }
+        throw erroEnvio;
+      }
 
       const resultado = await resposta.json().catch(() => ({}));
 
