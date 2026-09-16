@@ -172,6 +172,13 @@ function criarLinha(evento) {
                         ✏️ Editar
                     </a>
 
+                    <a
+                        class="btn-users"
+                        href="../organizador/inscritos.html?evento_id=${evento.id}"
+                    >
+                        👥 Inscritos
+                    </a>
+
                     ${
                         status !== "aprovado"
                             ? `<button type="button" class="btn-approve" data-evento-id="${evento.id}" data-status-botao="aprovado">✓ Aprovar</button>`
