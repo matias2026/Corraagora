@@ -1,0 +1,11 @@
+/* Ajustes finos e efeitos visuais personalizados para o CorraAgora */
+body {
+    background-color: #0f1115;
+    color: #ffffff;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
