@@ -10,6 +10,7 @@ let segundosProva = 0;
 let cronometroAtivo = false;
 let intervaloCronometro = null;
 let eventoAtualId = null;
+let categoriaAtivaNome = null;
 
 // Relógio em tempo real no cabeçalho
 setInterval(() => {
@@ -141,18 +142,54 @@ async function carregarDadosEvento() {
     }
 }
 
+// Só marca qual categoria vai correr nesta bateria — quem realmente
+// dispara o cronômetro é o botão "Iniciar largada" (com a contagem
+// regressiva), não a simples seleção da categoria.
 function selecionarCategoria(catId, catNome) {
+    categoriaAtivaNome = catNome;
     document.getElementById("categoriaSelecionadaBadge").innerText =
         `Categoria Ativa: ${catNome}`;
+}
 
-    if (!cronometroAtivo) {
-        cronometroAtivo = true;
-        intervaloCronometro = setInterval(() => {
-            segundosProva++;
-            document.getElementById("cronometroGlobal").innerText =
-                formatarSegundosParaRelogio(segundosProva);
-        }, 1000);
+// Botão "▶ INICIAR LARGADA (5s)" — faz a contagem regressiva de verdade
+// e só então começa a cronometrar (era um botão sem nenhuma função
+// ligada a ele antes desta correção).
+function iniciarLargada() {
+    if (!categoriaAtivaNome) {
+        alert("Selecione uma categoria antes de iniciar a largada.");
+        return;
     }
+
+    if (cronometroAtivo) {
+        alert("O cronômetro já está em andamento para esta bateria.");
+        return;
+    }
+
+    const botao = document.getElementById("botaoIniciarLargada");
+    botao.disabled = true;
+
+    let restante = 5;
+    botao.innerHTML = `<span>⏳</span> Largando em ${restante}...`;
+
+    const intervaloContagem = setInterval(() => {
+        restante--;
+
+        if (restante <= 0) {
+            clearInterval(intervaloContagem);
+            botao.innerHTML = `<span>✔</span> Em andamento`;
+
+            cronometroAtivo = true;
+            segundosProva = 0;
+            intervaloCronometro = setInterval(() => {
+                segundosProva++;
+                document.getElementById("cronometroGlobal").innerText =
+                    formatarSegundosParaRelogio(segundosProva);
+            }, 1000);
+            return;
+        }
+
+        botao.innerHTML = `<span>⏳</span> Largando em ${restante}...`;
+    }, 1000);
 }
 
 // 3. Registrar chegada consultando a tabela de inscrições, e gravar o
