@@ -10,7 +10,10 @@ let segundosProva = 0;
 let cronometroAtivo = false;
 let intervaloCronometro = null;
 let eventoAtualId = null;
-let categoriaAtivaNome = null;
+
+// Categorias da bateria atual — um Set de nomes, porque uma largada
+// conjunta pode reunir várias categorias saindo juntas no mesmo disparo.
+let categoriasAtivas = new Set();
 
 // Relógio em tempo real no cabeçalho
 setInterval(() => {
@@ -114,6 +117,9 @@ async function carregarDadosEvento() {
 
         if (error) throw error;
 
+        categoriasAtivas.clear();
+        atualizarBadgeCategorias();
+
         const listaDiv = document.getElementById("listaCategorias");
         listaDiv.innerHTML = "";
 
@@ -125,12 +131,12 @@ async function carregarDadosEvento() {
 
         categorias.forEach((cat) => {
             listaDiv.innerHTML += `
-                <div class="p-3.5 bg-[#0f1115] rounded-xl border border-gray-800 flex justify-between items-center">
+                <div class="p-3.5 bg-[#0f1115] rounded-xl border border-gray-800 flex justify-between items-center" data-categoria-nome="${cat.nome}">
                     <div>
                         <span class="font-bold text-white text-sm block">${cat.nome}</span>
                         <span class="text-xs text-gray-400">Aguardando largada</span>
                     </div>
-                    <button onclick="selecionarCategoria('${cat.id}', '${cat.nome}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-colors">
+                    <button onclick="alternarCategoria('${cat.nome}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-colors">
                         Selecionar
                     </button>
                 </div>
@@ -142,21 +148,52 @@ async function carregarDadosEvento() {
     }
 }
 
-// Só marca qual categoria vai correr nesta bateria — quem realmente
-// dispara o cronômetro é o botão "Iniciar largada" (com a contagem
-// regressiva), não a simples seleção da categoria.
-function selecionarCategoria(catId, catNome) {
-    categoriaAtivaNome = catNome;
-    document.getElementById("categoriaSelecionadaBadge").innerText =
-        `Categoria Ativa: ${catNome}`;
+// Liga/desliga uma categoria na "bateria" atual — largada conjunta
+// significa várias categorias marcadas ao mesmo tempo, todas recebendo
+// o mesmo disparo e o mesmo cronômetro.
+function alternarCategoria(catNome) {
+    if (cronometroAtivo) {
+        alert("Não é possível mudar a seleção com o cronômetro já em andamento.");
+        return;
+    }
+
+    if (categoriasAtivas.has(catNome)) {
+        categoriasAtivas.delete(catNome);
+    } else {
+        categoriasAtivas.add(catNome);
+    }
+
+    const card = document.querySelector(`[data-categoria-nome="${catNome}"]`);
+    const botao = card?.querySelector("button");
+    const ativa = categoriasAtivas.has(catNome);
+
+    if (botao) {
+        botao.textContent = ativa ? "✓ Selecionada" : "Selecionar";
+        botao.classList.toggle("bg-red-600", ativa);
+        botao.classList.toggle("hover:bg-red-500", ativa);
+        botao.classList.toggle("bg-blue-600", !ativa);
+        botao.classList.toggle("hover:bg-blue-500", !ativa);
+    }
+
+    atualizarBadgeCategorias();
+}
+
+function atualizarBadgeCategorias() {
+    const badge = document.getElementById("categoriaSelecionadaBadge");
+
+    badge.innerText =
+        categoriasAtivas.size === 0
+            ? "Nenhuma categoria selecionada"
+            : `Bateria: ${[...categoriasAtivas].join(", ")}`;
 }
 
 // Botão "▶ INICIAR LARGADA (5s)" — faz a contagem regressiva de verdade
 // e só então começa a cronometrar (era um botão sem nenhuma função
-// ligada a ele antes desta correção).
+// ligada a ele antes desta correção). Dispara pra todas as categorias
+// marcadas ao mesmo tempo — é o mesmo cronômetro pra todas elas.
 function iniciarLargada() {
-    if (!categoriaAtivaNome) {
-        alert("Selecione uma categoria antes de iniciar a largada.");
+    if (categoriasAtivas.size === 0) {
+        alert("Selecione ao menos uma categoria antes de iniciar a largada.");
         return;
     }
 
@@ -222,6 +259,15 @@ async function registrarChegada() {
         if (!inscricao) {
             alert(
                 `Placa #${numeral} não encontrada nas inscrições deste evento!`
+            );
+            input.value = "";
+            input.focus();
+            return;
+        }
+
+        if (!categoriasAtivas.has(inscricao.categoria)) {
+            alert(
+                `Placa #${numeral} é da categoria "${inscricao.categoria}", que não está na bateria atual (${[...categoriasAtivas].join(", ")}).`
             );
             input.value = "";
             input.focus();
