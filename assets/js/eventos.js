@@ -210,6 +210,14 @@ function renderizarEventos() {
         ⏱️ Cronometragem
     </a>
 
+    <a
+        href="../resultados-publicos.html?evento_id=${evento.id}"
+        class="btn-results"
+        target="_blank"
+    >
+        📋 Resultados
+    </a>
+
     <button
         type="button"
         class="btn-delete"

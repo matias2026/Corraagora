@@ -5,15 +5,33 @@
 
 let sessaoAtual = null;
 let perfilAtual = null;
-
-let segundosProva = 0;
-let cronometroAtivo = false;
-let intervaloCronometro = null;
 let eventoAtualId = null;
 
-// Categorias da bateria atual — um Set de nomes, porque uma largada
-// conjunta pode reunir várias categorias saindo juntas no mesmo disparo.
-let categoriasAtivas = new Set();
+// Cronômetro geral — só uma referência visual de tempo decorrido desde
+// que o evento foi carregado. Nunca é usado pra calcular tempo líquido
+// de nenhum atleta; cada bateria tem o seu próprio cronômetro pra isso.
+let segundosGeral = 0;
+let intervaloGeral = null;
+
+// Categorias do evento carregado (cache pra poder re-renderizar a lista
+// sem precisar consultar o Supabase de novo a cada clique).
+let categoriasCache = [];
+
+// Categorias marcadas na tela, formando a PRÓXIMA bateria a ser disparada.
+let categoriasSelecionadas = new Set();
+
+// Categorias que já largaram em alguma bateria — ficam bloqueadas pra
+// não serem selecionadas de novo noutra bateria.
+let categoriasJaLargadas = new Set();
+
+// Cada bateria é uma largada independente: { id, categorias (Set),
+// segundos, intervalo }. Várias podem estar rodando ao mesmo tempo.
+let baterias = [];
+let proximoBateriaId = 1;
+
+// Trava a seleção de categorias só durante a contagem regressiva de uma
+// largada — não impede outras baterias já disparadas de continuar rodando.
+let contagemRegressivaAtiva = false;
 
 // Relógio em tempo real no cabeçalho
 setInterval(() => {
@@ -99,7 +117,8 @@ async function carregarEventosDropdown() {
     }
 }
 
-// 2. Puxar dados do evento selecionado (Categorias)
+// 2. Puxar dados do evento selecionado (categorias) e reiniciar todo o
+// estado de baterias — baterias de um evento não fazem sentido pra outro.
 async function carregarDadosEvento() {
     const select = document.getElementById("selectEvento");
     eventoAtualId = select.value;
@@ -117,90 +136,143 @@ async function carregarDadosEvento() {
 
         if (error) throw error;
 
-        categoriasAtivas.clear();
-        atualizarBadgeCategorias();
+        baterias.forEach((bateria) => clearInterval(bateria.intervalo));
+        baterias = [];
+        categoriasSelecionadas.clear();
+        categoriasJaLargadas.clear();
+        contagemRegressivaAtiva = false;
 
-        const listaDiv = document.getElementById("listaCategorias");
-        listaDiv.innerHTML = "";
+        document.getElementById("listaBaterias").innerHTML = `
+            <p id="semBaterias" class="text-xs text-gray-500 col-span-full">
+                Nenhuma bateria disparada ainda.
+            </p>
+        `;
 
-        if (!categorias || categorias.length === 0) {
-            listaDiv.innerHTML =
-                '<p class="text-xs text-gray-400">Nenhuma categoria encontrada para este evento.</p>';
-            return;
-        }
+        const botao = document.getElementById("botaoIniciarLargada");
+        botao.disabled = false;
+        botao.innerHTML = `<span>▶</span> INICIAR LARGADA (5s)`;
 
-        categorias.forEach((cat) => {
-            listaDiv.innerHTML += `
-                <div class="p-3.5 bg-[#0f1115] rounded-xl border border-gray-800 flex justify-between items-center" data-categoria-nome="${cat.nome}">
-                    <div>
-                        <span class="font-bold text-white text-sm block">${cat.nome}</span>
-                        <span class="text-xs text-gray-400">Aguardando largada</span>
-                    </div>
-                    <button onclick="alternarCategoria('${cat.nome}')" class="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-colors">
-                        Selecionar
-                    </button>
-                </div>
-            `;
-        });
+        categoriasCache = categorias || [];
+        atualizarListaCategorias();
+        atualizarBadgeSelecao();
+        iniciarCronometroGeral();
     } catch (err) {
         console.error("Erro ao carregar categorias:", err.message);
         alert("Erro ao conectar com o Supabase.");
     }
 }
 
-// Liga/desliga uma categoria na "bateria" atual — largada conjunta
-// significa várias categorias marcadas ao mesmo tempo, todas recebendo
-// o mesmo disparo e o mesmo cronômetro.
-function alternarCategoria(catNome) {
-    if (cronometroAtivo) {
-        alert("Não é possível mudar a seleção com o cronômetro já em andamento.");
+// Cronômetro geral — recomeça do zero a cada evento carregado, e nunca
+// para (não representa a largada de ninguém, só o tempo desde a carga).
+function iniciarCronometroGeral() {
+    clearInterval(intervaloGeral);
+    segundosGeral = 0;
+    document.getElementById("cronometroGeral").innerText =
+        formatarSegundosParaRelogio(0);
+
+    intervaloGeral = setInterval(() => {
+        segundosGeral++;
+        document.getElementById("cronometroGeral").innerText =
+            formatarSegundosParaRelogio(segundosGeral);
+    }, 1000);
+}
+
+// Re-renderiza a lista de categorias a partir do cache + do estado atual
+// (selecionada pra próxima bateria, ou já largada numa bateria anterior).
+function atualizarListaCategorias() {
+    const listaDiv = document.getElementById("listaCategorias");
+
+    if (categoriasCache.length === 0) {
+        listaDiv.innerHTML =
+            '<p class="text-xs text-gray-400">Nenhuma categoria encontrada para este evento.</p>';
         return;
     }
 
-    if (categoriasAtivas.has(catNome)) {
-        categoriasAtivas.delete(catNome);
-    } else {
-        categoriasAtivas.add(catNome);
-    }
+    listaDiv.innerHTML = categoriasCache
+        .map((cat) => {
+            if (categoriasJaLargadas.has(cat.nome)) {
+                const bateriaDaCategoria = baterias.find((b) =>
+                    b.categorias.has(cat.nome)
+                );
+                const numeroBateria = bateriaDaCategoria ? bateriaDaCategoria.id : "?";
 
-    const card = document.querySelector(`[data-categoria-nome="${catNome}"]`);
-    const botao = card?.querySelector("button");
-    const ativa = categoriasAtivas.has(catNome);
+                return `
+                    <div class="p-3.5 bg-[#0f1115] rounded-xl border border-gray-800 flex justify-between items-center opacity-60" data-categoria-nome="${cat.nome}">
+                        <div>
+                            <span class="font-bold text-white text-sm block">${cat.nome}</span>
+                            <span class="text-xs text-emerald-400">Já largou — Bateria #${numeroBateria}</span>
+                        </div>
+                        <button disabled class="px-3 py-1.5 bg-gray-800 text-gray-500 text-xs font-bold rounded-lg cursor-not-allowed">
+                            Largou
+                        </button>
+                    </div>
+                `;
+            }
 
-    if (botao) {
-        botao.textContent = ativa ? "✓ Selecionada" : "Selecionar";
-        botao.classList.toggle("bg-red-600", ativa);
-        botao.classList.toggle("hover:bg-red-500", ativa);
-        botao.classList.toggle("bg-blue-600", !ativa);
-        botao.classList.toggle("hover:bg-blue-500", !ativa);
-    }
+            const ativa = categoriasSelecionadas.has(cat.nome);
 
-    atualizarBadgeCategorias();
+            return `
+                <div class="p-3.5 bg-[#0f1115] rounded-xl border border-gray-800 flex justify-between items-center" data-categoria-nome="${cat.nome}">
+                    <div>
+                        <span class="font-bold text-white text-sm block">${cat.nome}</span>
+                        <span class="text-xs text-gray-400">Aguardando largada</span>
+                    </div>
+                    <button onclick="alternarCategoria('${cat.nome}')" class="px-3 py-1.5 ${ativa ? "bg-red-600 hover:bg-red-500" : "bg-blue-600 hover:bg-blue-500"} text-white text-xs font-bold rounded-lg transition-colors">
+                        ${ativa ? "✓ Selecionada" : "Selecionar"}
+                    </button>
+                </div>
+            `;
+        })
+        .join("");
 }
 
-function atualizarBadgeCategorias() {
+// Liga/desliga uma categoria na seleção da PRÓXIMA bateria.
+function alternarCategoria(catNome) {
+    if (contagemRegressivaAtiva) {
+        alert("Aguarde a contagem regressiva atual terminar antes de mudar a seleção.");
+        return;
+    }
+
+    if (categoriasJaLargadas.has(catNome)) {
+        alert(`A categoria "${catNome}" já largou e não pode ser selecionada de novo.`);
+        return;
+    }
+
+    if (categoriasSelecionadas.has(catNome)) {
+        categoriasSelecionadas.delete(catNome);
+    } else {
+        categoriasSelecionadas.add(catNome);
+    }
+
+    atualizarListaCategorias();
+    atualizarBadgeSelecao();
+}
+
+function atualizarBadgeSelecao() {
     const badge = document.getElementById("categoriaSelecionadaBadge");
 
     badge.innerText =
-        categoriasAtivas.size === 0
+        categoriasSelecionadas.size === 0
             ? "Nenhuma categoria selecionada"
-            : `Bateria: ${[...categoriasAtivas].join(", ")}`;
+            : `Próxima bateria: ${[...categoriasSelecionadas].join(", ")}`;
 }
 
 // Botão "▶ INICIAR LARGADA (5s)" — faz a contagem regressiva de verdade
-// e só então começa a cronometrar (era um botão sem nenhuma função
-// ligada a ele antes desta correção). Dispara pra todas as categorias
-// marcadas ao mesmo tempo — é o mesmo cronômetro pra todas elas.
+// e só então dispara uma NOVA bateria com as categorias marcadas. Outras
+// baterias já disparadas continuam rodando normalmente durante a espera.
 function iniciarLargada() {
-    if (categoriasAtivas.size === 0) {
+    if (categoriasSelecionadas.size === 0) {
         alert("Selecione ao menos uma categoria antes de iniciar a largada.");
         return;
     }
 
-    if (cronometroAtivo) {
-        alert("O cronômetro já está em andamento para esta bateria.");
+    if (contagemRegressivaAtiva) {
+        alert("Aguarde a contagem regressiva atual terminar.");
         return;
     }
+
+    const categoriasDaBateria = new Set(categoriasSelecionadas);
+    contagemRegressivaAtiva = true;
 
     const botao = document.getElementById("botaoIniciarLargada");
     botao.disabled = true;
@@ -213,15 +285,11 @@ function iniciarLargada() {
 
         if (restante <= 0) {
             clearInterval(intervaloContagem);
-            botao.innerHTML = `<span>✔</span> Em andamento`;
+            dispararBateria(categoriasDaBateria);
 
-            cronometroAtivo = true;
-            segundosProva = 0;
-            intervaloCronometro = setInterval(() => {
-                segundosProva++;
-                document.getElementById("cronometroGlobal").innerText =
-                    formatarSegundosParaRelogio(segundosProva);
-            }, 1000);
+            botao.disabled = false;
+            botao.innerHTML = `<span>▶</span> INICIAR LARGADA (5s)`;
+            contagemRegressivaAtiva = false;
             return;
         }
 
@@ -229,9 +297,59 @@ function iniciarLargada() {
     }, 1000);
 }
 
-// 3. Registrar chegada consultando a tabela de inscrições, e gravar o
-// resultado de verdade (antes só atualizava a tela — se a página
-// recarregasse, todos os tempos eram perdidos).
+// Cria a bateria de verdade: registra as categorias como "já largadas"
+// (bloqueando-as pras próximas seleções) e liga o cronômetro próprio dela.
+function dispararBateria(categoriasDaBateria) {
+    const bateria = {
+        id: proximoBateriaId++,
+        categorias: categoriasDaBateria,
+        segundos: 0,
+        intervalo: null
+    };
+
+    baterias.push(bateria);
+
+    categoriasDaBateria.forEach((nome) => {
+        categoriasJaLargadas.add(nome);
+        categoriasSelecionadas.delete(nome);
+    });
+
+    renderizarCartaoBateria(bateria);
+    atualizarListaCategorias();
+    atualizarBadgeSelecao();
+
+    bateria.intervalo = setInterval(() => {
+        bateria.segundos++;
+        const relogio = document.getElementById(`bateria-${bateria.id}-clock`);
+        if (relogio) {
+            relogio.innerText = formatarSegundosParaRelogio(bateria.segundos);
+        }
+    }, 1000);
+}
+
+function renderizarCartaoBateria(bateria) {
+    const lista = document.getElementById("listaBaterias");
+    const semBaterias = document.getElementById("semBaterias");
+    if (semBaterias) semBaterias.remove();
+
+    const nomesCategorias = [...bateria.categorias].join(", ");
+
+    const card = document.createElement("div");
+    card.id = `bateria-${bateria.id}`;
+    card.className =
+        "bg-[#0f1115] p-4 rounded-2xl border border-red-500/30 shadow-lg text-center";
+    card.innerHTML = `
+        <span class="text-xs text-gray-400">Bateria #${bateria.id}</span>
+        <p class="text-xs text-red-400 font-semibold mb-1 truncate" title="${nomesCategorias}">${nomesCategorias}</p>
+        <div class="font-mono text-2xl md:text-3xl font-bold text-red-500" id="bateria-${bateria.id}-clock">00:00:00</div>
+    `;
+
+    lista.appendChild(card);
+}
+
+// 3. Registrar chegada consultando a tabela de inscrições, achando
+// automaticamente a bateria certa pela categoria do atleta, e gravando o
+// resultado de verdade com o tempo líquido daquela bateria específica.
 async function registrarChegada() {
     const input = document.getElementById("inputNumeral");
     const numeral = input.value.trim();
@@ -265,9 +383,13 @@ async function registrarChegada() {
             return;
         }
 
-        if (!categoriasAtivas.has(inscricao.categoria)) {
+        const bateriaDaCategoria = baterias.find((b) =>
+            b.categorias.has(inscricao.categoria)
+        );
+
+        if (!bateriaDaCategoria) {
             alert(
-                `Placa #${numeral} é da categoria "${inscricao.categoria}", que não está na bateria atual (${[...categoriasAtivas].join(", ")}).`
+                `Placa #${numeral} é da categoria "${inscricao.categoria}", que ainda não teve a largada disparada em nenhuma bateria.`
             );
             input.value = "";
             input.focus();
@@ -276,7 +398,7 @@ async function registrarChegada() {
 
         const nomeAtleta = inscricao.nome || "Atleta";
         const horarioAtual = new Date().toLocaleTimeString("pt-BR");
-        const tempoProvaSegundos = segundosProva;
+        const tempoProvaSegundos = bateriaDaCategoria.segundos;
         const tempoProvaStr = formatarSegundosParaRelogio(tempoProvaSegundos);
 
         const { error: erroResultado } = await supabaseClient
@@ -302,7 +424,7 @@ async function registrarChegada() {
         document.getElementById("cardUltimoAtleta").innerHTML = `
             <p class="text-xs text-gray-400">Último registo:</p>
             <p class="text-sm font-bold text-emerald-400">#${numeral} - ${nomeAtleta}</p>
-            <p class="text-xs text-gray-300 font-mono mt-0.5">Tempo: ${tempoProvaStr}</p>
+            <p class="text-xs text-gray-300 font-mono mt-0.5">Bateria #${bateriaDaCategoria.id} · Tempo: ${tempoProvaStr}</p>
         `;
 
         const tbody = document.getElementById("tabelaResultados");

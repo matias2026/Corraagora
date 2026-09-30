@@ -83,8 +83,9 @@
                     </h2>
                     <p class="text-xs text-gray-400">
                         Marque uma ou mais categorias pra largarem juntas
-                        na mesma bateria, depois inicie a contagem
-                        regressiva.
+                        numa bateria. Cada bateria roda com seu próprio
+                        cronômetro, independente das demais — dá pra
+                        disparar várias ao longo do evento.
                     </p>
 
                     <div
@@ -123,14 +124,18 @@
                             Nenhuma categoria selecionada
                         </span>
                         <h3 class="text-sm text-gray-400">
-                            Cronômetro da Bateria
+                            Cronômetro Geral (referência)
                         </h3>
                         <div
-                            id="cronometroGlobal"
+                            id="cronometroGeral"
                             class="text-4xl md:text-5xl lg:text-6xl font-mono font-bold text-red-500 my-3 tracking-tight whitespace-nowrap drop-shadow-[0_0_25px_rgba(239,68,68,0.5)]"
                         >
                             00:00:00
                         </div>
+                        <p class="text-xs text-gray-500">
+                            Conta desde que o evento foi carregado — não é
+                            o tempo de nenhuma bateria.
+                        </p>
                     </div>
 
                     <div class="w-full space-y-3">
@@ -142,8 +147,9 @@
                             <span>▶</span> INICIAR LARGADA (5s)
                         </button>
                         <p class="text-xs text-gray-500">
-                            O tempo líquido começa a contar após o disparo
-                            verde.
+                            Dispara uma nova bateria com as categorias
+                            marcadas — outras baterias continuam rodando
+                            normalmente.
                         </p>
                     </div>
                 </div>
@@ -184,6 +190,25 @@
                             Aguardando primeira chegada...
                         </p>
                     </div>
+                </div>
+            </div>
+
+            <!-- Baterias em Andamento: cada largada cria seu próprio
+                 cronômetro independente, e vários podem rodar ao mesmo
+                 tempo enquanto outras categorias ainda aguardam. -->
+            <div
+                class="bg-[#161b22] p-6 rounded-2xl border border-gray-800 shadow-lg space-y-4"
+            >
+                <h2 class="text-base font-semibold text-gray-200 flex items-center gap-2">
+                    🏃 Baterias em Andamento
+                </h2>
+                <div
+                    id="listaBaterias"
+                    class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4"
+                >
+                    <p id="semBaterias" class="text-xs text-gray-500 col-span-full">
+                        Nenhuma bateria disparada ainda.
+                    </p>
                 </div>
             </div>
 

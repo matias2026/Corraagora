@@ -552,7 +552,9 @@ body{
 
     display:flex;
 
-    gap:10px;
+    flex-wrap:wrap;
+
+    gap:8px;
 
     margin-top:22px;
 
@@ -561,19 +563,21 @@ body{
 .evento-actions a,
 .evento-actions button{
 
-    flex:1;
+    flex:1 1 calc(33.333% - 6px);
+
+    min-width:90px;
 
     text-align:center;
 
     text-decoration:none;
 
-    padding:12px;
+    padding:10px 6px;
 
     border-radius:10px;
 
     font-weight:600;
 
-    font-size:15px;
+    font-size:13px;
 
     border:none;
 
@@ -626,6 +630,20 @@ body{
     background:#dc2626;
 
     color:#fff;
+
+}
+
+.btn-results{
+
+    background:#7c3aed;
+
+    color:#fff;
+
+}
+
+.btn-results:hover{
+
+    background:#6d28d9;
 
 }
 
