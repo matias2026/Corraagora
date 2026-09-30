@@ -2,7 +2,7 @@
 const SUPABASE_URL = "https://ymaybquglfajllruqub.supabase.co";
 const SUPABASE_ANON_KEY = "sb_publishable_l3qNE9dzBeefjdKpRyzVOg_bkm51ZI4";
 
-// Inicializa o cliente do Supabase
+// Inicializa o cliente do Supabase apenas uma vez
 const supabaseClient = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Relógio em tempo real no cabeçalho
@@ -29,12 +29,14 @@ async function carregarEventosDropdown() {
         const select = document.getElementById("selectEvento");
         select.innerHTML = '<option value="">Selecione o Evento...</option>';
 
-        eventos.forEach((evento) => {
-            const opt = document.createElement("option");
-            opt.value = evento.id;
-            opt.text = evento.nome;
-            select.add(opt);
-        });
+        if (eventos) {
+            eventos.forEach((evento) => {
+                const opt = document.createElement("option");
+                opt.value = evento.id;
+                opt.text = evento.nome;
+                select.add(opt);
+            });
+        }
     } catch (err) {
         console.error("Erro ao carregar eventos:", err.message);
     }
@@ -130,12 +132,11 @@ async function registrarChegada() {
     }
 
     try {
-        // Busca na tabela inscricoes pelo número da placa e ID do evento
         const { data: inscricao, error } = await supabaseClient
             .from("inscricoes")
             .select("*")
             .eq("evento_id", eventoAtualId)
-            .eq("numero", numeral) // Ajuste para o nome da coluna da placa na sua tabela inscricoes, se necessário
+            .eq("numero", numeral)
             .single();
 
         if (error || !inscricao) {
@@ -152,7 +153,6 @@ async function registrarChegada() {
         const tempoProvaStr =
             document.getElementById("cronometroGlobal").innerText;
 
-        // Atualiza o card do último atleta na tela
         document.getElementById("cardUltimoAtleta").innerHTML = `
             <p class="text-xs text-gray-400">Último registro:</p>
             <p class="text-sm font-bold text-emerald-400">#${numeral} - ${nomeAtleta}</p>
