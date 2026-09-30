@@ -154,7 +154,7 @@ async function registrarChegada() {
             document.getElementById("cronometroGlobal").innerText;
 
         document.getElementById("cardUltimoAtleta").innerHTML = `
-            <p class="text-xs text-gray-400">Último registro:</p>
+            <p class="text-xs text-gray-400">Último registo:</p>
             <p class="text-sm font-bold text-emerald-400">#${numeral} - ${nomeAtleta}</p>
             <p class="text-xs text-gray-300 font-mono mt-0.5">Tempo: ${tempoProvaStr}</p>
         `;
