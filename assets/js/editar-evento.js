@@ -238,6 +238,9 @@ function adicionarCategoria(categoria = {}) {
     const sexo =
         fragmento.querySelector(".categoria-sexo");
 
+    const numeroInicial =
+        fragmento.querySelector(".categoria-numero-inicial");
+
     const removerButton =
         fragmento.querySelector(".remover-categoria");
 
@@ -255,6 +258,9 @@ function adicionarCategoria(categoria = {}) {
 
     sexo.value =
         categoria.sexo || "";
+
+    numeroInicial.value =
+        categoria.numero_inicial ?? "";
 
     removerButton.addEventListener("click", () => {
         card.remove();
@@ -358,6 +364,11 @@ function obterCategoriasFormulario() {
                     .querySelector(".categoria-sexo")
                     .value;
 
+            const numeroInicial =
+                card
+                    .querySelector(".categoria-numero-inicial")
+                    .value;
+
             if (!nome) {
                 return;
             }
@@ -371,6 +382,8 @@ function obterCategoriasFormulario() {
                 idade_max:
                     valorOuNull(idadeMax),
                 sexo: sexo || null,
+                numero_inicial:
+                    valorOuNull(numeroInicial),
                 ordem: index + 1
             });
         });
@@ -1179,6 +1192,7 @@ form.addEventListener(
                 idade_min: categoria.idade_min,
                 idade_max: categoria.idade_max,
                 sexo: categoria.sexo,
+                numero_inicial: categoria.numero_inicial,
                 ordem: categoria.ordem
             }));
 

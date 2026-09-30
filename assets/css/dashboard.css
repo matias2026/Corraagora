@@ -621,6 +621,14 @@ body{
 
 }
 
+.btn-timer{
+
+    background:#dc2626;
+
+    color:#fff;
+
+}
+
 .btn-delete:hover{
 
     background:#dc2626;
