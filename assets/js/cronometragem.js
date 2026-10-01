@@ -7,10 +7,10 @@ let sessaoAtual = null;
 let perfilAtual = null;
 let eventoAtualId = null;
 
-// Cronômetro geral — só uma referência visual de tempo decorrido desde
-// que o evento foi carregado. Nunca é usado pra calcular tempo líquido
-// de nenhum atleta; cada bateria tem o seu próprio cronômetro pra isso.
-let segundosGeral = 0;
+// Cronômetro geral — só uma referência visual de tempo decorrido desde a
+// primeira largada do evento. Nunca é usado pra calcular tempo líquido de
+// nenhum atleta; cada bateria tem o seu próprio cronômetro pra isso.
+let horarioReferenciaGeral = null;
 let intervaloGeral = null;
 
 // Categorias do evento carregado (cache pra poder re-renderizar a lista
@@ -25,11 +25,15 @@ let categoriasSelecionadas = new Set();
 let categoriasJaLargadas = new Set();
 
 // Cada bateria é uma largada independente: { id, categorias (Set),
-// segundos, intervalo, status }. status é "ativa" ou "encerrada" — ao
-// encerrar, o cronômetro congela e novas chegadas pra essa bateria são
-// bloqueadas. Várias baterias podem estar rodando ao mesmo tempo.
+// horarioLargada, horarioEncerrada, intervalo, status }. horarioLargada e
+// horarioEncerrada são timestamps (ms) vindos do banco (tabela
+// "cronometragem_baterias") — o tempo decorrido é sempre CALCULADO a
+// partir deles (nunca incrementado num contador local), pra sobreviver a
+// um F5/recarregamento da página sem perder o cronômetro em andamento.
+// status é "ativa" ou "encerrada" — ao encerrar, o cronômetro congela e
+// novas chegadas pra essa bateria são bloqueadas. Várias baterias podem
+// estar rodando ao mesmo tempo.
 let baterias = [];
-let proximoBateriaId = 1;
 
 // Trava a seleção de categorias só durante a contagem regressiva de uma
 // largada — não impede outras baterias já disparadas de continuar rodando.
@@ -52,6 +56,40 @@ function formatarSegundosParaRelogio(totalSegundos) {
     const mins = Math.floor((segundos % 3600) / 60).toString().padStart(2, "0");
     const secs = (segundos % 60).toString().padStart(2, "0");
     return `${hrs}:${mins}:${secs}`;
+}
+
+// Tempo decorrido de uma bateria, sempre calculado a partir do horário de
+// largada salvo no banco (nunca de um contador incrementado localmente) —
+// é isso que permite recuperar o cronômetro certo depois de um F5.
+function segundosDecorridosBateria(bateria) {
+    const fim =
+        bateria.status === "encerrada" && bateria.horarioEncerrada
+            ? bateria.horarioEncerrada
+            : Date.now();
+    return Math.floor((fim - bateria.horarioLargada) / 1000);
+}
+
+// (Re)liga o relógio visual de uma bateria — usado tanto ao criar uma
+// bateria nova quanto ao recuperar uma já em andamento depois de recarregar
+// a página. Bateria encerrada só atualiza o mostrador uma vez (tempo final
+// congelado) e não liga nenhum intervalo.
+function ligarIntervaloBateria(bateria) {
+    clearInterval(bateria.intervalo);
+
+    const atualizar = () => {
+        const relogio = document.getElementById(`bateria-${bateria.id}-clock`);
+        if (relogio) {
+            relogio.innerText = formatarSegundosParaRelogio(
+                segundosDecorridosBateria(bateria)
+            );
+        }
+    };
+
+    atualizar();
+
+    if (bateria.status === "ativa") {
+        bateria.intervalo = setInterval(atualizar, 1000);
+    }
 }
 
 // --- TECLADO NUMÉRICO (estilo calculadora) ---
@@ -145,8 +183,11 @@ async function carregarEventosDropdown() {
     }
 }
 
-// 2. Puxar dados do evento selecionado (categorias) e reiniciar todo o
-// estado de baterias — baterias de um evento não fazem sentido pra outro.
+// 2. Puxar dados do evento selecionado (categorias) e reconstruir o
+// estado de baterias a partir do banco — se a prova já estava em
+// andamento (página recarregada, aba travou, etc.), as baterias e o
+// cronômetro geral voltam com o horário real de largada, em vez de
+// começarem do zero.
 async function carregarDadosEvento() {
     const select = document.getElementById("selectEvento");
     eventoAtualId = select.value;
@@ -157,50 +198,119 @@ async function carregarDadosEvento() {
     }
 
     try {
-        const { data: categorias, error } = await supabaseClient
-            .from("categorias")
-            .select("*")
-            .eq("evento_id", eventoAtualId);
+        const [
+            { data: evento, error: erroEvento },
+            { data: categorias, error: erroCategorias },
+            { data: bateriasSalvas, error: erroBaterias }
+        ] = await Promise.all([
+            supabaseClient
+                .from("eventos")
+                .select("cronometragem_encerrada, cronometragem_encerrada_em")
+                .eq("id", eventoAtualId)
+                .single(),
+            supabaseClient
+                .from("categorias")
+                .select("*")
+                .eq("evento_id", eventoAtualId),
+            supabaseClient
+                .from("cronometragem_baterias")
+                .select("*")
+                .eq("evento_id", eventoAtualId)
+                .order("horario_largada", { ascending: true })
+        ]);
 
-        if (error) throw error;
+        if (erroEvento) throw erroEvento;
+        if (erroCategorias) throw erroCategorias;
+        if (erroBaterias) throw erroBaterias;
 
         baterias.forEach((bateria) => clearInterval(bateria.intervalo));
         baterias = [];
         categoriasSelecionadas.clear();
         categoriasJaLargadas.clear();
         contagemRegressivaAtiva = false;
-        eventoEncerrado = false;
+        clearInterval(intervaloGeral);
 
-        document.getElementById("listaBaterias").innerHTML = `
-            <p id="semBaterias" class="text-xs text-gray-500 col-span-full">
-                Nenhuma bateria disparada ainda.
-            </p>
-        `;
-
+        document.getElementById("listaBaterias").innerHTML = "";
         document.getElementById("avisoProvaConcluida").classList.add("hidden");
 
-        const botao = document.getElementById("botaoIniciarLargada");
-        botao.disabled = false;
-        botao.innerHTML = `<span>▶</span> INICIAR LARGADA (5s)`;
-
-        const botaoEncerrar = document.getElementById("botaoEncerrarEvento");
-        botaoEncerrar.disabled = false;
-        botaoEncerrar.innerHTML = `🏁 Encerrar Evento`;
-
         categoriasCache = categorias || [];
+
+        // Reconstrói as baterias já disparadas (se houver) a partir do que
+        // está salvo no banco, religando o relógio de cada uma a partir do
+        // horário real de largada.
+        (bateriasSalvas || []).forEach((registro) => {
+            const bateria = {
+                id: registro.id,
+                categorias: new Set(registro.categorias || []),
+                horarioLargada: new Date(registro.horario_largada).getTime(),
+                horarioEncerrada: registro.horario_encerrada
+                    ? new Date(registro.horario_encerrada).getTime()
+                    : null,
+                intervalo: null,
+                status: registro.status
+            };
+
+            baterias.push(bateria);
+            bateria.categorias.forEach((nome) => categoriasJaLargadas.add(nome));
+
+            renderizarCartaoBateria(bateria);
+            ligarIntervaloBateria(bateria);
+        });
+
+        if (baterias.length === 0) {
+            document.getElementById("listaBaterias").innerHTML = `
+                <p id="semBaterias" class="text-xs text-gray-500 col-span-full">
+                    Nenhuma bateria disparada ainda.
+                </p>
+            `;
+        }
+
+        eventoEncerrado = !!evento?.cronometragem_encerrada;
+
+        const botao = document.getElementById("botaoIniciarLargada");
+        const botaoEncerrar = document.getElementById("botaoEncerrarEvento");
+
+        if (eventoEncerrado) {
+            botao.disabled = true;
+            botao.innerHTML = `<span>🏁</span> Evento Encerrado`;
+            botaoEncerrar.disabled = true;
+            botaoEncerrar.innerHTML = `✔ Evento Encerrado`;
+            document.getElementById("avisoProvaConcluida").classList.remove("hidden");
+        } else {
+            botao.disabled = false;
+            botao.innerHTML = `<span>▶</span> INICIAR LARGADA (5s)`;
+            botaoEncerrar.disabled = false;
+            botaoEncerrar.innerHTML = `🏁 Encerrar Evento`;
+        }
+
         atualizarListaCategorias();
         atualizarBadgeSelecao();
 
-        // Cronômetro geral só começa a contar na primeira largada do
-        // evento (dispararBateria) — carregar o evento apenas zera o
-        // mostrador, pra não começar a contar antes de a prova começar
-        // de verdade (vale tanto pra evento de 1 categoria quanto de várias).
-        clearInterval(intervaloGeral);
-        segundosGeral = 0;
-        document.getElementById("cronometroGeral").innerText =
-            formatarSegundosParaRelogio(0);
+        // Cronômetro geral: recomeça a contar a partir da PRIMEIRA largada
+        // já registrada no banco (se houver) — senão fica zerado esperando
+        // a primeira largada de verdade (dispararBateria). Se o evento já
+        // foi encerrado oficialmente, o mostrador fica congelado no tempo
+        // do encerramento, em vez de continuar contando.
+        if (baterias.length > 0) {
+            const referencia = Math.min(...baterias.map((b) => b.horarioLargada));
+
+            if (eventoEncerrado && evento?.cronometragem_encerrada_em) {
+                const segundosCongelados = Math.floor(
+                    (new Date(evento.cronometragem_encerrada_em).getTime() -
+                        referencia) /
+                        1000
+                );
+                document.getElementById("cronometroGeral").innerText =
+                    formatarSegundosParaRelogio(segundosCongelados);
+            } else {
+                iniciarCronometroGeral(referencia);
+            }
+        } else {
+            document.getElementById("cronometroGeral").innerText =
+                formatarSegundosParaRelogio(0);
+        }
     } catch (err) {
-        console.error("Erro ao carregar categorias:", err.message);
+        console.error("Erro ao carregar dados do evento:", err.message);
         alert("Erro ao conectar com o Supabase.");
     }
 }
@@ -208,18 +318,21 @@ async function carregarDadosEvento() {
 // Cronômetro geral — começa a contar na primeira largada do evento (seja
 // evento de uma categoria só ou de várias) e nunca para depois disso; não
 // representa a largada de nenhuma categoria específica, só o tempo desde
-// que a prova oficialmente começou.
-function iniciarCronometroGeral() {
+// que a prova oficialmente começou. Recebe o horário (ms) dessa primeira
+// largada e CALCULA o tempo decorrido a partir dele — nunca incrementa um
+// contador local — pra sobreviver a um F5 no meio da prova.
+function iniciarCronometroGeral(horarioReferencia) {
     clearInterval(intervaloGeral);
-    segundosGeral = 0;
-    document.getElementById("cronometroGeral").innerText =
-        formatarSegundosParaRelogio(0);
+    horarioReferenciaGeral = horarioReferencia;
 
-    intervaloGeral = setInterval(() => {
-        segundosGeral++;
+    const atualizar = () => {
+        const segundos = Math.floor((Date.now() - horarioReferenciaGeral) / 1000);
         document.getElementById("cronometroGeral").innerText =
-            formatarSegundosParaRelogio(segundosGeral);
-    }, 1000);
+            formatarSegundosParaRelogio(segundos);
+    };
+
+    atualizar();
+    intervaloGeral = setInterval(atualizar, 1000);
 }
 
 // Re-renderiza a lista de categorias a partir do cache + do estado atual
@@ -355,15 +468,41 @@ function iniciarLargada() {
     }, 1000);
 }
 
-// Cria a bateria de verdade: registra as categorias como "já largadas"
+// Cria a bateria de verdade: grava a largada no banco (horário real, pra
+// sobreviver a um F5), registra as categorias como "já largadas"
 // (bloqueando-as pras próximas seleções) e liga o cronômetro próprio dela.
-function dispararBateria(categoriasDaBateria) {
+async function dispararBateria(categoriasDaBateria) {
+    const categoriasArray = [...categoriasDaBateria];
+    let registroSalvo;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("cronometragem_baterias")
+            .insert({
+                evento_id: Number(eventoAtualId),
+                categorias: categoriasArray,
+                criado_por: sessaoAtual?.user?.id || null
+            })
+            .select()
+            .single();
+
+        if (error) throw error;
+        registroSalvo = data;
+    } catch (err) {
+        console.error("Erro ao registrar largada:", err.message);
+        alert(
+            "Não foi possível registrar a largada no banco de dados — a bateria NÃO foi iniciada. Tente de novo."
+        );
+        return;
+    }
+
     const primeiraBateriaDoEvento = baterias.length === 0;
 
     const bateria = {
-        id: proximoBateriaId++,
+        id: registroSalvo.id,
         categorias: categoriasDaBateria,
-        segundos: 0,
+        horarioLargada: new Date(registroSalvo.horario_largada).getTime(),
+        horarioEncerrada: null,
         intervalo: null,
         status: "ativa"
     };
@@ -371,7 +510,7 @@ function dispararBateria(categoriasDaBateria) {
     baterias.push(bateria);
 
     if (primeiraBateriaDoEvento) {
-        iniciarCronometroGeral();
+        iniciarCronometroGeral(bateria.horarioLargada);
     }
 
     categoriasDaBateria.forEach((nome) => {
@@ -382,14 +521,7 @@ function dispararBateria(categoriasDaBateria) {
     renderizarCartaoBateria(bateria);
     atualizarListaCategorias();
     atualizarBadgeSelecao();
-
-    bateria.intervalo = setInterval(() => {
-        bateria.segundos++;
-        const relogio = document.getElementById(`bateria-${bateria.id}-clock`);
-        if (relogio) {
-            relogio.innerText = formatarSegundosParaRelogio(bateria.segundos);
-        }
-    }, 1000);
+    ligarIntervaloBateria(bateria);
 }
 
 function renderizarCartaoBateria(bateria) {
@@ -416,7 +548,7 @@ function atualizarCartaoBateria(bateria, card) {
     card.innerHTML = `
         <span class="text-xs text-gray-400">Bateria #${bateria.id}</span>
         <p class="text-xs ${encerrada ? "text-gray-500" : "text-red-400"} font-semibold mb-1 truncate" title="${nomesCategorias}">${nomesCategorias}</p>
-        <div class="font-mono text-2xl md:text-3xl font-bold ${encerrada ? "text-gray-500" : "text-red-500"}" id="bateria-${bateria.id}-clock">${formatarSegundosParaRelogio(bateria.segundos)}</div>
+        <div class="font-mono text-2xl md:text-3xl font-bold ${encerrada ? "text-gray-500" : "text-red-500"}" id="bateria-${bateria.id}-clock">${formatarSegundosParaRelogio(segundosDecorridosBateria(bateria))}</div>
         ${
             encerrada
                 ? `<span class="inline-block mt-2 px-2 py-0.5 bg-gray-800 text-gray-400 text-[11px] font-bold rounded-full">✔ Encerrada</span>`
@@ -427,9 +559,28 @@ function atualizarCartaoBateria(bateria, card) {
 
 // Congela o cronômetro daquela bateria (tempo final fica registrado) e
 // bloqueia novas chegadas pras categorias dela — não afeta outras baterias.
-function encerrarBateria(bateriaId) {
+// Grava o horário de encerramento no banco antes de congelar na tela, pra
+// o tempo final não mudar se a página for recarregada depois.
+async function encerrarBateria(bateriaId) {
     const bateria = baterias.find((b) => b.id === bateriaId);
     if (!bateria || bateria.status === "encerrada") return;
+
+    try {
+        const { data, error } = await supabaseClient
+            .from("cronometragem_baterias")
+            .update({ status: "encerrada", horario_encerrada: new Date().toISOString() })
+            .eq("id", bateriaId)
+            .select()
+            .single();
+
+        if (error) throw error;
+
+        bateria.horarioEncerrada = new Date(data.horario_encerrada).getTime();
+    } catch (err) {
+        console.error("Erro ao encerrar bateria:", err.message);
+        alert("Não foi possível encerrar a bateria no banco de dados. Tente de novo.");
+        return;
+    }
 
     clearInterval(bateria.intervalo);
     bateria.status = "encerrada";
@@ -443,8 +594,9 @@ function encerrarBateria(bateriaId) {
 }
 
 // Encerra oficialmente a cronometragem do evento inteiro: para todas as
-// baterias ainda ativas, trava novas largadas e novas chegadas.
-function encerrarEvento() {
+// baterias ainda ativas, trava novas largadas e novas chegadas. Grava a
+// flag no evento (banco) pra esse estado sobreviver a um F5 também.
+async function encerrarEvento() {
     if (!eventoAtualId) {
         alert("Selecione e carregue um evento primeiro.");
         return;
@@ -459,11 +611,29 @@ function encerrarEvento() {
     );
     if (!confirmar) return;
 
-    baterias.forEach((bateria) => {
-        if (bateria.status !== "encerrada") {
-            encerrarBateria(bateria.id);
-        }
-    });
+    try {
+        await Promise.all(
+            baterias
+                .filter((bateria) => bateria.status !== "encerrada")
+                .map((bateria) => encerrarBateria(bateria.id))
+        );
+
+        const { error } = await supabaseClient
+            .from("eventos")
+            .update({
+                cronometragem_encerrada: true,
+                cronometragem_encerrada_em: new Date().toISOString()
+            })
+            .eq("id", eventoAtualId);
+
+        if (error) throw error;
+    } catch (err) {
+        console.error("Erro ao encerrar evento:", err.message);
+        alert(
+            "Não foi possível encerrar oficialmente o evento no banco de dados. Tente de novo."
+        );
+        return;
+    }
 
     eventoEncerrado = true;
     clearInterval(intervaloGeral);
@@ -554,7 +724,7 @@ async function registrarChegada() {
 
         const nomeAtleta = inscricao.nome || "Atleta";
         const horarioAtual = new Date().toLocaleTimeString("pt-BR");
-        const tempoProvaSegundos = bateriaDaCategoria.segundos;
+        const tempoProvaSegundos = segundosDecorridosBateria(bateriaDaCategoria);
         const tempoProvaStr = formatarSegundosParaRelogio(tempoProvaSegundos);
 
         const { error: erroResultado } = await supabaseClient
