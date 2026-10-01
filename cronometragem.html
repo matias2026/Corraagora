@@ -50,6 +50,13 @@
                     >
                         Puxar Evento
                     </button>
+                    <button
+                        id="botaoEncerrarEvento"
+                        onclick="encerrarEvento()"
+                        class="px-5 py-2.5 bg-gray-800 hover:bg-red-700 border border-gray-700 text-gray-300 hover:text-white font-semibold text-sm rounded-xl transition-colors whitespace-nowrap"
+                    >
+                        🏁 Encerrar Evento
+                    </button>
                 </div>
 
                 <!-- Status de Rede / Hora -->
@@ -69,6 +76,14 @@
                     </div>
                 </div>
             </header>
+
+            <!-- Aviso de prova encerrada -->
+            <div
+                id="avisoProvaConcluida"
+                class="hidden bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 rounded-2xl p-4 text-center font-bold"
+            >
+                🏁 Prova concluída — a cronometragem deste evento foi encerrada oficialmente.
+            </div>
 
             <!-- Grid Principal -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">

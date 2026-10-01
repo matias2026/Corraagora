@@ -25,13 +25,19 @@ let categoriasSelecionadas = new Set();
 let categoriasJaLargadas = new Set();
 
 // Cada bateria é uma largada independente: { id, categorias (Set),
-// segundos, intervalo }. Várias podem estar rodando ao mesmo tempo.
+// segundos, intervalo, status }. status é "ativa" ou "encerrada" — ao
+// encerrar, o cronômetro congela e novas chegadas pra essa bateria são
+// bloqueadas. Várias baterias podem estar rodando ao mesmo tempo.
 let baterias = [];
 let proximoBateriaId = 1;
 
 // Trava a seleção de categorias só durante a contagem regressiva de uma
 // largada — não impede outras baterias já disparadas de continuar rodando.
 let contagemRegressivaAtiva = false;
+
+// Depois de encerrado, o evento inteiro para: nenhuma largada nova, nenhuma
+// chegada nova, cronômetro geral congelado.
+let eventoEncerrado = false;
 
 // Relógio em tempo real no cabeçalho
 setInterval(() => {
@@ -141,6 +147,7 @@ async function carregarDadosEvento() {
         categoriasSelecionadas.clear();
         categoriasJaLargadas.clear();
         contagemRegressivaAtiva = false;
+        eventoEncerrado = false;
 
         document.getElementById("listaBaterias").innerHTML = `
             <p id="semBaterias" class="text-xs text-gray-500 col-span-full">
@@ -148,9 +155,15 @@ async function carregarDadosEvento() {
             </p>
         `;
 
+        document.getElementById("avisoProvaConcluida").classList.add("hidden");
+
         const botao = document.getElementById("botaoIniciarLargada");
         botao.disabled = false;
         botao.innerHTML = `<span>▶</span> INICIAR LARGADA (5s)`;
+
+        const botaoEncerrar = document.getElementById("botaoEncerrarEvento");
+        botaoEncerrar.disabled = false;
+        botaoEncerrar.innerHTML = `🏁 Encerrar Evento`;
 
         categoriasCache = categorias || [];
         atualizarListaCategorias();
@@ -195,15 +208,18 @@ function atualizarListaCategorias() {
                     b.categorias.has(cat.nome)
                 );
                 const numeroBateria = bateriaDaCategoria ? bateriaDaCategoria.id : "?";
+                const encerrada = bateriaDaCategoria?.status === "encerrada";
 
                 return `
                     <div class="p-3.5 bg-[#0f1115] rounded-xl border border-gray-800 flex justify-between items-center opacity-60" data-categoria-nome="${cat.nome}">
                         <div>
                             <span class="font-bold text-white text-sm block">${cat.nome}</span>
-                            <span class="text-xs text-emerald-400">Já largou — Bateria #${numeroBateria}</span>
+                            <span class="text-xs ${encerrada ? "text-gray-500" : "text-emerald-400"}">
+                                ${encerrada ? "Encerrada" : "Em andamento"} — Bateria #${numeroBateria}
+                            </span>
                         </div>
                         <button disabled class="px-3 py-1.5 bg-gray-800 text-gray-500 text-xs font-bold rounded-lg cursor-not-allowed">
-                            Largou
+                            ${encerrada ? "✔ Encerrada" : "Largou"}
                         </button>
                     </div>
                 `;
@@ -230,6 +246,11 @@ function atualizarListaCategorias() {
 function alternarCategoria(catNome) {
     if (contagemRegressivaAtiva) {
         alert("Aguarde a contagem regressiva atual terminar antes de mudar a seleção.");
+        return;
+    }
+
+    if (eventoEncerrado) {
+        alert("O evento já foi encerrado. Não é possível iniciar novas baterias.");
         return;
     }
 
@@ -261,6 +282,11 @@ function atualizarBadgeSelecao() {
 // e só então dispara uma NOVA bateria com as categorias marcadas. Outras
 // baterias já disparadas continuam rodando normalmente durante a espera.
 function iniciarLargada() {
+    if (eventoEncerrado) {
+        alert("O evento já foi encerrado. Não é possível iniciar novas baterias.");
+        return;
+    }
+
     if (categoriasSelecionadas.size === 0) {
         alert("Selecione ao menos uma categoria antes de iniciar a largada.");
         return;
@@ -304,7 +330,8 @@ function dispararBateria(categoriasDaBateria) {
         id: proximoBateriaId++,
         categorias: categoriasDaBateria,
         segundos: 0,
-        intervalo: null
+        intervalo: null,
+        status: "ativa"
     };
 
     baterias.push(bateria);
@@ -332,19 +359,86 @@ function renderizarCartaoBateria(bateria) {
     const semBaterias = document.getElementById("semBaterias");
     if (semBaterias) semBaterias.remove();
 
-    const nomesCategorias = [...bateria.categorias].join(", ");
-
     const card = document.createElement("div");
     card.id = `bateria-${bateria.id}`;
-    card.className =
-        "bg-[#0f1115] p-4 rounded-2xl border border-red-500/30 shadow-lg text-center";
-    card.innerHTML = `
-        <span class="text-xs text-gray-400">Bateria #${bateria.id}</span>
-        <p class="text-xs text-red-400 font-semibold mb-1 truncate" title="${nomesCategorias}">${nomesCategorias}</p>
-        <div class="font-mono text-2xl md:text-3xl font-bold text-red-500" id="bateria-${bateria.id}-clock">00:00:00</div>
-    `;
+    atualizarCartaoBateria(bateria, card);
 
     lista.appendChild(card);
+}
+
+// Reconstrói o conteúdo do card de uma bateria a partir do estado atual —
+// usado tanto na criação quanto depois de encerrar, pra trocar o relógio
+// vermelho "ao vivo" pelo estado "encerrada" sem recriar o card inteiro.
+function atualizarCartaoBateria(bateria, card) {
+    const nomesCategorias = [...bateria.categorias].join(", ");
+    const encerrada = bateria.status === "encerrada";
+
+    card.className = `bg-[#0f1115] p-4 rounded-2xl border shadow-lg text-center ${encerrada ? "border-gray-700 opacity-70" : "border-red-500/30"}`;
+
+    card.innerHTML = `
+        <span class="text-xs text-gray-400">Bateria #${bateria.id}</span>
+        <p class="text-xs ${encerrada ? "text-gray-500" : "text-red-400"} font-semibold mb-1 truncate" title="${nomesCategorias}">${nomesCategorias}</p>
+        <div class="font-mono text-2xl md:text-3xl font-bold ${encerrada ? "text-gray-500" : "text-red-500"}" id="bateria-${bateria.id}-clock">${formatarSegundosParaRelogio(bateria.segundos)}</div>
+        ${
+            encerrada
+                ? `<span class="inline-block mt-2 px-2 py-0.5 bg-gray-800 text-gray-400 text-[11px] font-bold rounded-full">✔ Encerrada</span>`
+                : `<button onclick="encerrarBateria(${bateria.id})" class="mt-2 w-full py-1.5 bg-gray-800 hover:bg-red-700 text-gray-300 hover:text-white text-[11px] font-bold rounded-lg transition-colors">Encerrar Bateria</button>`
+        }
+    `;
+}
+
+// Congela o cronômetro daquela bateria (tempo final fica registrado) e
+// bloqueia novas chegadas pras categorias dela — não afeta outras baterias.
+function encerrarBateria(bateriaId) {
+    const bateria = baterias.find((b) => b.id === bateriaId);
+    if (!bateria || bateria.status === "encerrada") return;
+
+    clearInterval(bateria.intervalo);
+    bateria.status = "encerrada";
+
+    const card = document.getElementById(`bateria-${bateria.id}`);
+    if (card) {
+        atualizarCartaoBateria(bateria, card);
+    }
+
+    atualizarListaCategorias();
+}
+
+// Encerra oficialmente a cronometragem do evento inteiro: para todas as
+// baterias ainda ativas, trava novas largadas e novas chegadas.
+function encerrarEvento() {
+    if (!eventoAtualId) {
+        alert("Selecione e carregue um evento primeiro.");
+        return;
+    }
+
+    if (eventoEncerrado) {
+        return;
+    }
+
+    const confirmar = window.confirm(
+        "Tem certeza que deseja encerrar oficialmente a cronometragem deste evento? Todas as baterias em andamento serão encerradas e não será mais possível registrar chegadas."
+    );
+    if (!confirmar) return;
+
+    baterias.forEach((bateria) => {
+        if (bateria.status !== "encerrada") {
+            encerrarBateria(bateria.id);
+        }
+    });
+
+    eventoEncerrado = true;
+    clearInterval(intervaloGeral);
+
+    const botaoLargada = document.getElementById("botaoIniciarLargada");
+    botaoLargada.disabled = true;
+    botaoLargada.innerHTML = `<span>🏁</span> Evento Encerrado`;
+
+    const botaoEncerrar = document.getElementById("botaoEncerrarEvento");
+    botaoEncerrar.disabled = true;
+    botaoEncerrar.innerHTML = `✔ Evento Encerrado`;
+
+    document.getElementById("avisoProvaConcluida").classList.remove("hidden");
 }
 
 // 3. Registrar chegada consultando a tabela de inscrições, achando
@@ -361,6 +455,12 @@ async function registrarChegada() {
 
     if (!eventoAtualId) {
         alert("Selecione e carregue um evento primeiro.");
+        return;
+    }
+
+    if (eventoEncerrado) {
+        alert("O evento já foi encerrado. Não é possível registrar novas chegadas.");
+        input.value = "";
         return;
     }
 
@@ -390,6 +490,15 @@ async function registrarChegada() {
         if (!bateriaDaCategoria) {
             alert(
                 `Placa #${numeral} é da categoria "${inscricao.categoria}", que ainda não teve a largada disparada em nenhuma bateria.`
+            );
+            input.value = "";
+            input.focus();
+            return;
+        }
+
+        if (bateriaDaCategoria.status === "encerrada") {
+            alert(
+                `A Bateria #${bateriaDaCategoria.id} (${inscricao.categoria}) já foi encerrada — não é possível registrar novas chegadas pra ela.`
             );
             input.value = "";
             input.focus();

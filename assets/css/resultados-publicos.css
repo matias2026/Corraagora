@@ -1,14 +1,30 @@
+.conta-header-inner{display:flex;align-items:center;justify-content:space-between;padding:16px 0}
+.conta-logo-link img{height:36px;display:block}
+.conta-nav{display:flex;align-items:center;gap:20px}
+.conta-nav a{color:var(--text);font-weight:600;text-decoration:none;font-size:14px}
+.conta-nav a:hover{color:var(--blue-strong)}
+
 .resultados-page{padding:48px 0 100px}
 .resultados-page h1{font-size:clamp(28px,4vw,38px);margin-bottom:8px}
 .resultados-page .subtitle{color:var(--muted);margin-bottom:28px}
 
+.resultados-filtros{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px}
+.resultados-filtros select{flex:1;min-width:160px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink)}
+
 .resultados-selector{display:flex;flex-wrap:wrap;gap:12px;align-items:center;margin-bottom:32px}
 .resultados-selector select{flex:1;min-width:220px;padding:12px 14px;border:1px solid var(--line);border-radius:12px;font:inherit;background:#fff;color:var(--ink)}
+
+.resultados-abas{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px}
+.resultados-aba{padding:8px 16px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--ink);font:inherit;font-weight:600;font-size:13px;cursor:pointer;transition:.2s}
+.resultados-aba:hover{border-color:var(--blue-strong)}
+.resultados-aba.ativa{background:var(--blue-strong);border-color:var(--blue-strong);color:#fff}
 
 .resultados-container{display:flex;flex-direction:column;gap:28px}
 
 .resultados-categoria{background:#fff;border:1px solid var(--line);border-radius:16px;padding:22px 24px;box-shadow:var(--shadow-soft)}
-.resultados-categoria h2{font-size:17px;margin-bottom:14px}
+.resultados-categoria-header{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:center;gap:8px;margin-bottom:14px}
+.resultados-categoria-header h2{margin:0;font-size:17px}
+.resultados-completaram{font-size:12px;font-weight:700;color:var(--muted);background:#f3f6fa;padding:4px 10px;border-radius:999px;white-space:nowrap}
 
 .resultados-tabela{width:100%;border-collapse:collapse;font-size:14px}
 .resultados-tabela th{text-align:left;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:.03em;padding-bottom:10px;border-bottom:1px solid var(--line)}
