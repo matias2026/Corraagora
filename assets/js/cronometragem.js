@@ -483,6 +483,15 @@ async function registrarChegada() {
             return;
         }
 
+        if (inscricao.status !== "confirmado") {
+            alert(
+                `Placa #${numeral} (${inscricao.nome || "atleta"}) está com inscrição "${inscricao.status}", não confirmada — não é possível registrar a chegada.`
+            );
+            input.value = "";
+            input.focus();
+            return;
+        }
+
         const bateriaDaCategoria = baterias.find((b) =>
             b.categorias.has(inscricao.categoria)
         );
