@@ -1,0 +1,48 @@
+name: Build Cronometragem Desktop (Windows)
+
+# Compila o instalador .exe do programa de cronometragem offline num
+# Windows de verdade (precisa disso — não dá pra gerar um instalador do
+# Windows a partir de Linux sem Wine). Dispara sozinho quando algo muda
+# dentro de cronometragem-desktop/ no main, e também pode ser disparado
+# manualmente na aba "Actions" do GitHub quando quiser gerar o instalador
+# sem ter mudado nada no código.
+on:
+  push:
+    branches: [main]
+    paths:
+      - "cronometragem-desktop/**"
+      - ".github/workflows/build-cronometragem-desktop.yml"
+  workflow_dispatch: {}
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    defaults:
+      run:
+        working-directory: cronometragem-desktop
+
+    steps:
+      - name: Baixar o código
+        uses: actions/checkout@v4
+
+      - name: Preparar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Compilar o CSS (Tailwind)
+        run: npm run build:css
+
+      - name: Gerar o instalador do Windows
+        run: npx electron-builder --win --publish never
+
+      - name: Disponibilizar o instalador pra baixar
+        uses: actions/upload-artifact@v4
+        with:
+          name: CronometragemCorraAgora-instalador-windows
+          path: cronometragem-desktop/dist/*.exe
+          if-no-files-found: error

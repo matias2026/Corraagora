@@ -1,0 +1,140 @@
+/* Barra de ferramentas do app offline — propositalmente independente do
+   tema da página (funciona tanto sobre o fundo escuro da cronometragem
+   quanto sobre o fundo claro da página de resultados). */
+
+.barra-offline {
+    font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+.barra-offline-inner {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    background: #111827;
+    color: #e5e7eb;
+    border: 1px solid #1f2937;
+    border-radius: 14px;
+    padding: 12px 16px;
+    margin-bottom: 16px;
+}
+
+.barra-offline-status {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 13px;
+    flex-wrap: wrap;
+}
+
+.barra-offline-status strong {
+    color: #34d399;
+}
+
+.barra-offline-botoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.barra-offline-botoes button {
+    background: #1f2937;
+    color: #e5e7eb;
+    border: 1px solid #374151;
+    border-radius: 10px;
+    padding: 8px 12px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+}
+
+.barra-offline-botoes button:hover {
+    background: #374151;
+}
+
+.barra-offline-modal {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999;
+}
+
+.barra-offline-modal.hidden {
+    display: none;
+}
+
+.barra-offline-modal-caixa {
+    background: #111827;
+    color: #e5e7eb;
+    border: 1px solid #374151;
+    border-radius: 16px;
+    padding: 24px;
+    width: min(420px, 90vw);
+}
+
+.barra-offline-modal-caixa h3 {
+    margin: 0 0 8px;
+    font-size: 16px;
+}
+
+.barra-offline-modal-caixa p {
+    margin: 0 0 16px;
+    font-size: 13px;
+    color: #9ca3af;
+}
+
+.barra-offline-modal-caixa label {
+    display: block;
+    font-size: 13px;
+    margin-bottom: 12px;
+}
+
+.barra-offline-modal-caixa input {
+    display: block;
+    width: 100%;
+    margin-top: 4px;
+    background: #0f1115;
+    border: 1px solid #374151;
+    border-radius: 8px;
+    padding: 8px 10px;
+    color: #e5e7eb;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.barra-offline-modal-acoes {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-top: 8px;
+}
+
+.barra-offline-modal-acoes button {
+    border-radius: 10px;
+    padding: 8px 14px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border: 1px solid #374151;
+}
+
+#botaoCancelarSincronizar {
+    background: transparent;
+    color: #e5e7eb;
+}
+
+#botaoConfirmarSincronizar {
+    background: #0099ff;
+    color: #ffffff;
+    border-color: #0099ff;
+}
+
+#botaoConfirmarSincronizar:disabled {
+    opacity: 0.6;
+    cursor: wait;
+}
