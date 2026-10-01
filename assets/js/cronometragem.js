@@ -168,15 +168,25 @@ async function carregarDadosEvento() {
         categoriasCache = categorias || [];
         atualizarListaCategorias();
         atualizarBadgeSelecao();
-        iniciarCronometroGeral();
+
+        // Cronômetro geral só começa a contar na primeira largada do
+        // evento (dispararBateria) — carregar o evento apenas zera o
+        // mostrador, pra não começar a contar antes de a prova começar
+        // de verdade (vale tanto pra evento de 1 categoria quanto de várias).
+        clearInterval(intervaloGeral);
+        segundosGeral = 0;
+        document.getElementById("cronometroGeral").innerText =
+            formatarSegundosParaRelogio(0);
     } catch (err) {
         console.error("Erro ao carregar categorias:", err.message);
         alert("Erro ao conectar com o Supabase.");
     }
 }
 
-// Cronômetro geral — recomeça do zero a cada evento carregado, e nunca
-// para (não representa a largada de ninguém, só o tempo desde a carga).
+// Cronômetro geral — começa a contar na primeira largada do evento (seja
+// evento de uma categoria só ou de várias) e nunca para depois disso; não
+// representa a largada de nenhuma categoria específica, só o tempo desde
+// que a prova oficialmente começou.
 function iniciarCronometroGeral() {
     clearInterval(intervaloGeral);
     segundosGeral = 0;
@@ -326,6 +336,8 @@ function iniciarLargada() {
 // Cria a bateria de verdade: registra as categorias como "já largadas"
 // (bloqueando-as pras próximas seleções) e liga o cronômetro próprio dela.
 function dispararBateria(categoriasDaBateria) {
+    const primeiraBateriaDoEvento = baterias.length === 0;
+
     const bateria = {
         id: proximoBateriaId++,
         categorias: categoriasDaBateria,
@@ -335,6 +347,10 @@ function dispararBateria(categoriasDaBateria) {
     };
 
     baterias.push(bateria);
+
+    if (primeiraBateriaDoEvento) {
+        iniciarCronometroGeral();
+    }
 
     categoriasDaBateria.forEach((nome) => {
         categoriasJaLargadas.add(nome);

@@ -206,6 +206,8 @@ function renderizarEventos() {
     <a
         href="../cronometragem.html?evento_id=${evento.id}"
         class="btn-timer"
+        target="_blank"
+        rel="noopener noreferrer"
     >
         ⏱️ Cronometragem
     </a>
