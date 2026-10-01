@@ -238,6 +238,12 @@ function adicionarCategoria(categoria = {}) {
     const sexo =
         fragmento.querySelector(".categoria-sexo");
 
+    const numeroInicial =
+        fragmento.querySelector(".categoria-numero-inicial");
+
+    const distanciaKm =
+        fragmento.querySelector(".categoria-distancia-km");
+
     const removerButton =
         fragmento.querySelector(".remover-categoria");
 
@@ -255,6 +261,12 @@ function adicionarCategoria(categoria = {}) {
 
     sexo.value =
         categoria.sexo || "";
+
+    numeroInicial.value =
+        categoria.numero_inicial ?? "";
+
+    distanciaKm.value =
+        categoria.distancia_km ?? "";
 
     removerButton.addEventListener("click", () => {
         card.remove();
@@ -358,6 +370,16 @@ function obterCategoriasFormulario() {
                     .querySelector(".categoria-sexo")
                     .value;
 
+            const numeroInicial =
+                card
+                    .querySelector(".categoria-numero-inicial")
+                    .value;
+
+            const distanciaKm =
+                card
+                    .querySelector(".categoria-distancia-km")
+                    .value;
+
             if (!nome) {
                 return;
             }
@@ -371,6 +393,10 @@ function obterCategoriasFormulario() {
                 idade_max:
                     valorOuNull(idadeMax),
                 sexo: sexo || null,
+                numero_inicial:
+                    valorOuNull(numeroInicial),
+                distancia_km:
+                    valorOuNull(distanciaKm),
                 ordem: index + 1
             });
         });
@@ -1179,6 +1205,8 @@ form.addEventListener(
                 idade_min: categoria.idade_min,
                 idade_max: categoria.idade_max,
                 sexo: categoria.sexo,
+                numero_inicial: categoria.numero_inicial,
+                distancia_km: categoria.distancia_km,
                 ordem: categoria.ordem
             }));
 

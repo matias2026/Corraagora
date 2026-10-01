@@ -245,6 +245,10 @@ document.addEventListener("DOMContentLoaded", async () => {
                 dadosPreenchidos.idade_max || "";
             clone.querySelector(".categoria-sexo").value =
                 dadosPreenchidos.sexo || "";
+            clone.querySelector(".categoria-numero-inicial").value =
+                dadosPreenchidos.numero_inicial || "";
+            clone.querySelector(".categoria-distancia-km").value =
+                dadosPreenchidos.distancia_km || "";
         }
 
         categoriasContainer.appendChild(clone);
@@ -650,7 +654,19 @@ document.addEventListener("DOMContentLoaded", async () => {
                     idade_max: Number(
                         card.querySelector(".categoria-idade-max").value || 0
                     ),
-                    sexo: card.querySelector(".categoria-sexo").value
+                    sexo: card.querySelector(".categoria-sexo").value,
+                    numero_inicial: (() => {
+                        const valor = card
+                            .querySelector(".categoria-numero-inicial")
+                            .value.trim();
+                        return valor ? Number(valor) : null;
+                    })(),
+                    distancia_km: (() => {
+                        const valor = card
+                            .querySelector(".categoria-distancia-km")
+                            .value.trim();
+                        return valor ? Number(valor) : null;
+                    })()
                 });
             });
 
@@ -858,6 +874,8 @@ document.addEventListener("DOMContentLoaded", async () => {
                 idade_min: categoria.idade_min,
                 idade_max: categoria.idade_max,
                 sexo: categoria.sexo || null,
+                numero_inicial: categoria.numero_inicial,
+                distancia_km: categoria.distancia_km,
                 ordem: index + 1
             }));
 

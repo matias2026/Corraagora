@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#8ec8ff">
+    <meta name="description" content="Acompanhe os resultados ao vivo de eventos esportivos na CorraAgora.">
+    <title>Resultados | CorraAgora</title>
+
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/resultados-publicos.css">
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="assets/js/supabase.js"></script>
+</head>
+
+<body>
+
+<header class="site-header">
+    <div class="container conta-header-inner">
+        <a href="index.html" class="conta-logo-link">
+            <img src="images/logo-corraagora-compacta.png" alt="CorraAgora">
+        </a>
+
+        <nav class="conta-nav">
+            <a href="index.html">Ver eventos</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container resultados-page">
+
+    <h1>Resultados</h1>
+    <p class="subtitle">Acompanhe os resultados da prova em tempo real, à medida que a cronometragem registra as chegadas.</p>
+
+    <div class="resultados-filtros">
+        <select id="selectAnoFiltro">
+            <option value="">Todos os anos</option>
+        </select>
+        <select id="selectModalidadeFiltro">
+            <option value="">Todas as modalidades</option>
+        </select>
+    </div>
+
+    <div class="resultados-selector">
+        <select id="selectEventoResultados">
+            <option value="">Selecione o evento...</option>
+        </select>
+        <button type="button" id="atualizarResultadosButton" class="btn btn-outline">🔄 Atualizar</button>
+    </div>
+
+    <div id="resultadosContainer" class="resultados-container"></div>
+
+    <div id="semResultados" class="starter-empty hidden">
+        <div class="starter-icon">🏁</div>
+        <h3>Nenhum resultado ainda</h3>
+        <p>Assim que a equipe de cronometragem registrar as primeiras chegadas, elas aparecem aqui.</p>
+    </div>
+
+</main>
+
+<script src="assets/js/resultados-publicos.js"></script>
+
+<script defer src="/_vercel/insights/script.js"></script>
+<script src="/assets/js/cookie-aviso.js" defer></script>
+</body>
+</html>
