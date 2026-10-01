@@ -184,9 +184,28 @@
                             type="number"
                             id="inputNumeral"
                             placeholder="Nº da Placa"
+                            inputmode="none"
                             autofocus
                             class="w-full bg-[#0f1115] border border-gray-700 rounded-xl px-4 py-3 text-3xl font-mono text-center text-white focus:outline-none focus:border-blue-500"
                         />
+                    </div>
+
+                    <!-- Teclado numérico tipo calculadora — mais rápido que
+                         digitar no teclado físico/do celular, e evita que o
+                         teclado do aparelho abra por cima da tela. -->
+                    <div class="grid grid-cols-3 gap-2">
+                        <button type="button" onclick="digitarNumeral('1')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">1</button>
+                        <button type="button" onclick="digitarNumeral('2')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">2</button>
+                        <button type="button" onclick="digitarNumeral('3')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">3</button>
+                        <button type="button" onclick="digitarNumeral('4')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">4</button>
+                        <button type="button" onclick="digitarNumeral('5')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">5</button>
+                        <button type="button" onclick="digitarNumeral('6')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">6</button>
+                        <button type="button" onclick="digitarNumeral('7')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">7</button>
+                        <button type="button" onclick="digitarNumeral('8')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">8</button>
+                        <button type="button" onclick="digitarNumeral('9')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">9</button>
+                        <button type="button" onclick="limparNumeral()" class="py-3 bg-gray-800 border border-gray-700 rounded-xl text-sm font-bold text-red-400 hover:bg-red-900/40 transition-colors">C</button>
+                        <button type="button" onclick="digitarNumeral('0')" class="py-3 bg-[#0f1115] border border-gray-700 rounded-xl text-xl font-mono font-bold text-white hover:bg-gray-800 transition-colors">0</button>
+                        <button type="button" onclick="apagarUltimoDigitoNumeral()" class="py-3 bg-gray-800 border border-gray-700 rounded-xl text-xl font-bold text-gray-300 hover:bg-gray-700 transition-colors">⌫</button>
                     </div>
 
                     <button

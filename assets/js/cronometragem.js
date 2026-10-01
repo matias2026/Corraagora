@@ -54,6 +54,28 @@ function formatarSegundosParaRelogio(totalSegundos) {
     return `${hrs}:${mins}:${secs}`;
 }
 
+// --- TECLADO NUMÉRICO (estilo calculadora) ---
+// Mais rápido pra digitar o número da placa do que o teclado físico ou o
+// teclado virtual do celular/tablet (que o "inputmode=none" no HTML evita
+// que abra por cima da tela).
+function digitarNumeral(digito) {
+    const input = document.getElementById("inputNumeral");
+    input.value = (input.value || "") + digito;
+    input.focus();
+}
+
+function apagarUltimoDigitoNumeral() {
+    const input = document.getElementById("inputNumeral");
+    input.value = (input.value || "").slice(0, -1);
+    input.focus();
+}
+
+function limparNumeral() {
+    const input = document.getElementById("inputNumeral");
+    input.value = "";
+    input.focus();
+}
+
 // --- CONTROLE DE ACESSO ---
 // Página de uso interno (equipe de cronometragem) — precisa de sessão de
 // organizador (dono do evento) ou admin, igual ao painel do organizador.
