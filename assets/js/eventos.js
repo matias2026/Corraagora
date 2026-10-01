@@ -212,6 +212,14 @@ function renderizarEventos() {
         ⏱️ Cronometragem
     </a>
 
+    <button
+        type="button"
+        class="btn-timer"
+        onclick="exportarParaCronometragemOffline(${evento.id})"
+    >
+        📥 Exportar offline
+    </button>
+
     <a
         href="../resultados-publicos.html?evento_id=${evento.id}"
         class="btn-results"
@@ -330,6 +338,69 @@ async function excluirEvento(eventoId) {
         alert(
             error.message ||
             "Não foi possível excluir o evento."
+        );
+    }
+}
+
+// Baixa um arquivo .json com tudo que o programa de cronometragem offline
+// precisa pra funcionar sem internet: dados do evento, categorias (com a
+// faixa de numeração de peito) e os inscritos já confirmados (nome, CPF,
+// número de peito, categoria). O "id" de cada inscrito vai junto pra,
+// depois da prova, os resultados poderem ser sincronizados de volta pra
+// inscrição certa no banco online.
+async function exportarParaCronometragemOffline(eventoId) {
+    try {
+        const [
+            { data: evento, error: erroEvento },
+            { data: categorias, error: erroCategorias },
+            { data: inscritos, error: erroInscritos }
+        ] = await Promise.all([
+            supabaseClient
+                .from("eventos")
+                .select("id, nome, data_evento, horario_evento")
+                .eq("id", eventoId)
+                .single(),
+            supabaseClient
+                .from("categorias")
+                .select("nome, numero_inicial, percurso, distancia_km")
+                .eq("evento_id", eventoId),
+            supabaseClient
+                .from("inscricoes")
+                .select("id, nome, cpf, numero, categoria")
+                .eq("evento_id", eventoId)
+                .eq("status", "confirmado")
+        ]);
+
+        if (erroEvento) throw erroEvento;
+        if (erroCategorias) throw erroCategorias;
+        if (erroInscritos) throw erroInscritos;
+
+        const pacote = {
+            formato: "cronometragem-offline-v1",
+            gerado_em: new Date().toISOString(),
+            evento,
+            categorias: categorias || [],
+            inscritos: inscritos || []
+        };
+
+        const nomeArquivo = `cronometragem-offline-evento-${eventoId}.json`;
+        const blob = new Blob([JSON.stringify(pacote, null, 2)], {
+            type: "application/json"
+        });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = nomeArquivo;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        URL.revokeObjectURL(url);
+    } catch (error) {
+        console.error("Erro ao exportar evento para cronometragem offline:", error);
+        alert(
+            error.message ||
+            "Não foi possível exportar os dados do evento para a cronometragem offline."
         );
     }
 }
