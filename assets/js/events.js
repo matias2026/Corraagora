@@ -121,6 +121,7 @@
     : "";
 
   const inscricoesAbertas = evento.inscricoes_abertas !== false;
+  const finalizado = eventoJaFinalizado(evento.data_evento);
 
   return `
     <article
@@ -169,12 +170,30 @@
             <strong>${valor || "Consulte"}</strong>
           </div>
 
-          <a
-            class="event-button${inscricoesAbertas ? "" : " event-button-em-breve"}"
-            href="evento.html?slug=${slug}"
-          >
-            ${inscricoesAbertas ? "Inscrever-se" : "Inscrições em breve"}
-          </a>
+          ${
+            finalizado
+              ? `
+                <div class="event-button-group">
+                  <span class="event-button event-button-finalizado">
+                    🏁 Evento finalizado
+                  </span>
+                  <a
+                    class="event-button event-button-resultados"
+                    href="resultados-publicos.html?evento_id=${evento.id}"
+                  >
+                    📋 Ver resultados
+                  </a>
+                </div>
+              `
+              : `
+                <a
+                  class="event-button${inscricoesAbertas ? "" : " event-button-em-breve"}"
+                  href="evento.html?slug=${slug}"
+                >
+                  ${inscricoesAbertas ? "Inscrever-se" : "Inscrições em breve"}
+                </a>
+              `
+          }
 
         </div>
 
@@ -326,6 +345,25 @@
 
       cityFilter.appendChild(option);
     });
+  }
+
+  // Evento é considerado finalizado quando a data já passou (comparando só
+  // a data, sem horário) — não depende de nenhum campo manual no banco.
+  function eventoJaFinalizado(dataEvento) {
+    if (!dataEvento) return false;
+
+    const partes = String(dataEvento).slice(0, 10).split("-").map(Number);
+    if (partes.length !== 3 || partes.some((parte) => !Number.isInteger(parte))) {
+      return false;
+    }
+
+    const [ano, mes, dia] = partes;
+    const data = new Date(ano, mes - 1, dia);
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    return data.getTime() < hoje.getTime();
   }
 
   function obterDadosDaData(dataEvento) {

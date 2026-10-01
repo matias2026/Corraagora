@@ -633,10 +633,39 @@
     eventSymbol.classList.add("hidden");
   }
 
+  // Evento é considerado finalizado quando a data já passou (comparando só
+  // a data, sem horário) — não depende de nenhum campo manual no banco.
+  function eventoJaFinalizado(dataEvento) {
+    if (!dataEvento) return false;
+
+    const [ano, mes, dia] = String(dataEvento).slice(0, 10).split("-").map(Number);
+    if (![ano, mes, dia].every(Number.isInteger)) return false;
+
+    const data = new Date(ano, mes - 1, dia);
+
+    const hoje = new Date();
+    hoje.setHours(0, 0, 0, 0);
+
+    return data.getTime() < hoje.getTime();
+  }
+
   function configurarBotaoInscricao(evento) {
     const notaEncerrada = document.getElementById(
       "registrationClosedNote"
     );
+    const botaoResultados = document.getElementById("verResultadosButton");
+
+    if (eventoJaFinalizado(evento.data_evento)) {
+      registrationButton.disabled = true;
+      registrationButton.textContent = "🏁 Evento finalizado";
+
+      if (botaoResultados) {
+        botaoResultados.href = `resultados-publicos.html?evento_id=${evento.id}`;
+        botaoResultados.classList.remove("hidden");
+      }
+
+      return;
+    }
 
     if (evento.inscricoes_abertas === false) {
       registrationButton.disabled = true;
