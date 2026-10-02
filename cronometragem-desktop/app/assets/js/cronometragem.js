@@ -877,6 +877,113 @@ async function exportarResultadosPDF() {
     }
 }
 
+// --- TREINO AVULSO (sem evento, sem inscrições) ---
+// Pra treino ou teste rápido: só marca a ordem de chegada (1º, 2º, 3º...)
+// e o tempo, sem precisar de evento carregado, categoria ou inscrito
+// nenhum. Totalmente separado do cronômetro geral e das baterias do
+// evento — nada aqui é salvo em banco nenhum, é só enquanto a página
+// estiver aberta.
+let avulsoAtivo = false;
+let avulsoHorarioInicio = null;
+let avulsoIntervalo = null;
+let avulsoResultados = [];
+
+function iniciarTreinoAvulso() {
+    if (avulsoAtivo) return;
+
+    if (avulsoResultados.length > 0) {
+        const confirmar = window.confirm(
+            "Iniciar um novo treino avulso vai apagar a lista de chegadas anterior. Quer continuar?"
+        );
+        if (!confirmar) return;
+    }
+
+    avulsoResultados = [];
+    avulsoHorarioInicio = Date.now();
+    avulsoAtivo = true;
+
+    atualizarTabelaAvulso();
+
+    document.getElementById("botaoIniciarTreinoAvulso").textContent =
+        "▶ Reiniciar treino avulso";
+
+    const botaoRegistrar = document.getElementById("botaoRegistrarChegadaAvulsa");
+    botaoRegistrar.disabled = false;
+    botaoRegistrar.className =
+        "px-5 py-3 bg-amber-500 hover:bg-amber-400 text-black font-bold rounded-xl transition-colors flex-1 md:flex-none";
+
+    const botaoEncerrar = document.getElementById("botaoEncerrarTreinoAvulso");
+    botaoEncerrar.disabled = false;
+    botaoEncerrar.className =
+        "px-5 py-3 bg-gray-800 hover:bg-red-700 text-gray-300 hover:text-white font-bold rounded-xl transition-colors";
+
+    clearInterval(avulsoIntervalo);
+
+    const atualizarRelogioAvulso = () => {
+        const segundos = Math.floor((Date.now() - avulsoHorarioInicio) / 1000);
+        document.getElementById("avulsoCronometro").innerText =
+            formatarSegundosParaRelogio(segundos);
+    };
+
+    atualizarRelogioAvulso();
+    avulsoIntervalo = setInterval(atualizarRelogioAvulso, 1000);
+}
+
+function registrarChegadaAvulsa() {
+    if (!avulsoAtivo) return;
+
+    const tempoSegundos = Math.floor((Date.now() - avulsoHorarioInicio) / 1000);
+    avulsoResultados.push({ posicao: avulsoResultados.length + 1, tempoSegundos });
+    atualizarTabelaAvulso();
+}
+
+function encerrarTreinoAvulso() {
+    if (!avulsoAtivo) return;
+
+    clearInterval(avulsoIntervalo);
+    avulsoAtivo = false;
+
+    const botaoRegistrar = document.getElementById("botaoRegistrarChegadaAvulsa");
+    botaoRegistrar.disabled = true;
+    botaoRegistrar.className =
+        "px-5 py-3 bg-gray-800 text-gray-500 font-bold rounded-xl cursor-not-allowed transition-colors flex-1 md:flex-none";
+
+    const botaoEncerrar = document.getElementById("botaoEncerrarTreinoAvulso");
+    botaoEncerrar.disabled = true;
+    botaoEncerrar.className =
+        "px-5 py-3 bg-gray-800 text-gray-500 font-bold rounded-xl cursor-not-allowed transition-colors";
+
+    document.getElementById("botaoIniciarTreinoAvulso").textContent =
+        "▶ Iniciar treino avulso";
+}
+
+function atualizarTabelaAvulso() {
+    const tbody = document.getElementById("tabelaAvulso");
+
+    if (avulsoResultados.length === 0) {
+        tbody.innerHTML = `
+            <tr>
+                <td colspan="2" class="py-3 text-center text-xs text-gray-500">
+                    Nenhuma chegada registrada ainda.
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    tbody.innerHTML = [...avulsoResultados]
+        .reverse()
+        .map(
+            (resultado) => `
+                <tr>
+                    <td class="py-2 font-mono font-bold text-amber-400">${resultado.posicao}º</td>
+                    <td class="py-2 font-mono text-gray-300">${formatarSegundosParaRelogio(resultado.tempoSegundos)}</td>
+                </tr>
+            `
+        )
+        .join("");
+}
+
 // --- INICIALIZAÇÃO ---
 // O script já roda no fim do <body>, então o DOM já está pronto — não
 // precisa esperar window.onload (que só dispara depois de imagens etc.).
