@@ -14,6 +14,9 @@ on:
       - ".github/workflows/build-cronometragem-desktop.yml"
   workflow_dispatch: {}
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: windows-latest
@@ -40,9 +43,24 @@ jobs:
       - name: Gerar o instalador do Windows
         run: npx electron-builder --win --publish never
 
-      - name: Disponibilizar o instalador pra baixar
+      - name: Disponibilizar o instalador pra baixar (artifact da execução)
         uses: actions/upload-artifact@v4
         with:
           name: CronometragemCorraAgora-instalador-windows
           path: cronometragem-desktop/dist/*.exe
           if-no-files-found: error
+
+      # Além do artifact acima (que expira e baixa compactado/mais devagar,
+      # exigindo login no GitHub mesmo o repositório sendo público), publica
+      # o mesmo .exe como um Release — link direto, sem zip, sem expirar e
+      # sem precisar estar logado, porque o repositório é público.
+      - name: Publicar o instalador como Release (download direto e mais rápido)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release delete cronometragem-desktop-latest --yes --cleanup-tag --repo "${{ github.repository }}" || true
+          gh release create cronometragem-desktop-latest dist/*.exe \
+            --repo "${{ github.repository }}" \
+            --title "Cronometragem CorraAgora (instalador Windows)" \
+            --notes "Instalador mais recente da cronometragem offline, gerado automaticamente a partir do commit ${{ github.sha }}. Sempre que o código mudar, este Release é substituído por uma versão nova no mesmo link."
