@@ -91,6 +91,12 @@ function montarInscritosPorCategoriaPublico(eventoId) {
 }
 
 async function executar(tabela, estado) {
+    // Relê o arquivo do disco antes de cada consulta/gravação — sem isso,
+    // uma janela aberta antes de outra registrar uma chegada (ex.: a janela
+    // de Resultados aberta antes da Cronometragem gravar algo) ficava com
+    // os dados antigos presos na memória, mesmo clicando em "Atualizar".
+    armazenamento = window.electronAPI.lerDadosSync();
+
     if (tabela === "profiles") {
         // Página offline não tem login — qualquer um que abriu o
         // programa já "é" o organizador/admin dono dos dados locais.
