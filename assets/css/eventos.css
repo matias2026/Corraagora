@@ -14,6 +14,9 @@
 .event-official{display:flex;align-items:center;gap:8px;margin-bottom:24px;color:#475569;font-size:14px;font-weight:700}
 .event-official span{color:#f59e0b;letter-spacing:1px}
 .event-card-footer{margin-top:auto;padding-top:18px;border-top:1px solid #e5e7eb;display:flex;align-items:flex-end;justify-content:space-between;gap:18px}
+.event-card-footer-finalizado{flex-direction:column;align-items:stretch;gap:14px}
+.event-card-footer-finalizado .event-button-group{width:100%}
+.event-card-footer-finalizado .event-button{width:100%}
 .event-price{display:flex;flex-direction:column;gap:3px}.event-price small{color:#94a3b8;font-size:12px}.event-price strong{color:#0f172a;font-size:22px;line-height:1}
 .event-button{min-height:48px;padding:0 22px;display:inline-flex;align-items:center;justify-content:center;border-radius:13px;background:#1677ff;color:#fff;text-decoration:none;font-weight:800;box-shadow:0 8px 20px rgba(22,119,255,.22);transition:background .2s ease,transform .2s ease,box-shadow .2s ease}
 .event-button:hover{background:#0f66db;transform:translateY(-2px);box-shadow:0 12px 26px rgba(22,119,255,.3)}

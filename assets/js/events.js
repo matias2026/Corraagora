@@ -163,7 +163,7 @@
           Evento oficial
         </div>
 
-        <div class="event-card-footer">
+        <div class="event-card-footer${finalizado ? " event-card-footer-finalizado" : ""}">
 
           <div class="event-price">
             <small>Inscrição a partir de</small>
